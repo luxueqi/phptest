@@ -6,12 +6,21 @@ bin-release/
 
 # Other files and folders
 .settings/
+conf/
+
 
 # Executables
 *.swf
 *.air
 *.ipa
 *.apk
+sftp-config.json
+wb.php
+twb.php
+wbblock.php
+w.html
+index.php
+
 
 # Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
 # should NOT be excluded as they contain compiler settings and other important
