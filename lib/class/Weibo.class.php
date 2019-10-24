@@ -38,7 +38,7 @@ class Weibo extends Http {
 
 		}
 
-		throw new Exception("get list error", Error::WEIBO_LIST_DEF);
+		throw new Exception("get list error", Errorc::WEIBO_LIST_DEF);
 
 	}
 
@@ -112,7 +112,7 @@ class Weibo extends Http {
 			//var_dump($ee->getCode());exit();
 			if ($ee->getCode() == -1) {
 				sendMail('wbreport故障', '<h1>cookie失效</h1>', '705178580@qq.com');
-				throw new Exception("cookie失效", Error::WEIBO_COOKIE_DEF);
+				throw new Exception("cookie失效", Errorc::WEIBO_COOKIE_DEF);
 
 			}
 
@@ -137,6 +137,7 @@ class Weibo extends Http {
 				//var_dump($value, $cook);exit;
 
 			}
+			$cook = trim($cook);
 			if ($cook != '') {
 				return true;
 			}
@@ -191,7 +192,7 @@ class Weibo extends Http {
 				return;
 			}
 
-			throw new Exception("get uid error", Error::WEIBO_UID_DEF);
+			throw new Exception("get uid error", Errorc::WEIBO_UID_DEF);
 
 		}
 

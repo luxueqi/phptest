@@ -3,7 +3,9 @@
 /**
  *
  */
-class Error {
+class Errorc {
+
+	//public function __construct() {echo "string";}
 
 	const HTTP_CODE = 1001; //httpclass 请求错误
 
@@ -13,6 +15,6 @@ class Error {
 
 	const WEIBO_UID_DEF = 102; //weibo.uid获取失败
 
-}
-
+};
+//var_dump(Errorc::HTTP_CODE);
 ?>

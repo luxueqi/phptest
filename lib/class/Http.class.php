@@ -80,7 +80,7 @@ class Http {
 
 		if ($content === false) {
 
-			throw new Exception(curl_error($curl), Error::HTTP_CODE);
+			throw new Exception(curl_error($curl), Errorc::HTTP_CODE);
 		}
 		if ($this->is_header && preg_match_all('/Set-Cookie:([^\n]+)/', $content, $matchs)) {
 			//var_dump($matchs);exit();
