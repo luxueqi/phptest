@@ -14,13 +14,12 @@ conf/
 *.air
 *.ipa
 *.apk
-sftp-config.json
-wb.php
-twb.php
-wbblock.php
-w.html
-index.php
-login.php
+
+
+/*
+
+!/init.php
+
 
 
 # Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`

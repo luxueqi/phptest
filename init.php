@@ -24,5 +24,5 @@ spl_autoload_register(function ($className) {
 	require ('./lib/class/' . $className . '.class.php');
 
 }, TRUE, TRUE);
-
+//
 ?>
