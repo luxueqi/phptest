@@ -15,6 +15,8 @@ class Errorc {
 
 	const WEIBO_UID_DEF = 102; //weibo.uid获取失败
 
+    const VALIDATE_ERRNO=2001;
+
 };
 //var_dump(Errorc::HTTP_CODE);
 ?>
