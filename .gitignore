@@ -14,7 +14,7 @@ conf/
 *.air
 *.ipa
 *.apk
-
+.DS_Store
 
 /*
 

@@ -6,6 +6,31 @@ function C($v) {
 
 }
 
+
+function G($k,$m='',$f=''){
+
+    $data=['post.'=>$_POST,'get.'=>$_GET,'k'=>isset($_REQUEST[$k])?$_REQUEST[$k]:$m];
+    $returnArr=false;
+    if($k=='post.'||$k=='get.'){
+        $returnArr=true;
+        $data=$data[$k];
+    }else{
+        $data=['k'=>$data['k']];
+    }
+
+    if($f!=''&&function_exists($f)){
+       // var_dump($_REQUEST,$data);
+        foreach ($data as $k=>$v){
+            $data[$k]=$f($v);
+        }
+    }
+
+    return $returnArr?$data:$data['k'];
+}
+
+
+
+
 function sendMail($title, $content, $sendemail) {
 
 	require_once './lib/vendor/mail/PHPMailer.php';
@@ -113,5 +138,8 @@ function randStr($len = 4, $type = 0) {
 	return $str;
 
 }
-
+function exitMsg($code,$msg,$data=[]){
+    echo json_encode(['code'=>$code,'msg'=>$msg,'data'=>$data]);
+    exit;
+}
 ?>
