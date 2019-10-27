@@ -142,4 +142,29 @@ function exitMsg($code,$msg,$data=[]){
     echo json_encode(['code'=>$code,'msg'=>$msg,'data'=>$data]);
     exit;
 }
+
+
+function Cookie(...$param){
+    $count=func_num_args();
+    if($count==1){
+        return isset($_COOKIE[$param[0]])?$_COOKIE[$param[0]]:false;
+    }elseif ($count==3||$count==2){
+
+        return setcookie($param[0],$param[1],isset($param[2])?time()+$param[2]:0);
+    }
+    return false;
+}
+
+function Session(...$param){
+    $count=func_num_args();
+    if($count==1){
+        return isset($_SESSION[$param[0]])?$_SESSION[$param[0]]:false;
+    }elseif ($count==2){
+         $_SESSION[$param[0]]=$param[1];
+         return true;
+    }
+    return false;
+}
+
+
 ?>
