@@ -6,30 +6,38 @@ function C($v) {
 
 }
 
+function G($k, $m = '', $f = '') {
 
-function G($k,$m='',$f=''){
+	$data = ['post.' => $_POST, 'get.' => $_GET, 'k' => isset($_REQUEST[$k]) ? $_REQUEST[$k] : $m];
+	$returnArr = false;
+	if ($k == 'post.' || $k == 'get.') {
+		$returnArr = true;
+		$data = $data[$k];
+	} else {
+		$data = ['k' => $data['k']];
+	}
 
-    $data=['post.'=>$_POST,'get.'=>$_GET,'k'=>isset($_REQUEST[$k])?$_REQUEST[$k]:$m];
-    $returnArr=false;
-    if($k=='post.'||$k=='get.'){
-        $returnArr=true;
-        $data=$data[$k];
-    }else{
-        $data=['k'=>$data['k']];
-    }
+	if ($f != '' && function_exists($f)) {
+		// var_dump($_REQUEST,$data);
+		foreach ($data as $k => $v) {
+			$data[$k] = $f($v);
+		}
+	}
 
-    if($f!=''&&function_exists($f)){
-       // var_dump($_REQUEST,$data);
-        foreach ($data as $k=>$v){
-            $data[$k]=$f($v);
-        }
-    }
-
-    return $returnArr?$data:$data['k'];
+	return $returnArr ? $data : $data['k'];
 }
 
+function Run() {
 
-
+	if (isset($_SERVER['REDIRECT_SCRIPT_URL']) && stripos($_SERVER['REDIRECT_SCRIPT_URL'], '/api/') == 0) {
+		$arr = explode('/', $_SERVER['REDIRECT_SCRIPT_URL'], 4);
+		unset($arr[0]);
+		require "./{$arr[1]}/{$arr[2]}/Api.php";
+		(new Api)->$arr[3]();
+	} else {
+		echo "index";
+	}
+}
 
 function sendMail($title, $content, $sendemail) {
 
@@ -138,33 +146,31 @@ function randStr($len = 4, $type = 0) {
 	return $str;
 
 }
-function exitMsg($code,$msg,$data=[]){
-    echo json_encode(['code'=>$code,'msg'=>$msg,'data'=>$data]);
-    exit;
+function exitMsg($code, $msg, $data = []) {
+	echo json_encode(['code' => $code, 'msg' => $msg, 'data' => $data]);
+	exit;
 }
 
+function Cookie(...$param) {
+	$count = func_num_args();
+	if ($count == 1) {
+		return isset($_COOKIE[$param[0]]) ? $_COOKIE[$param[0]] : false;
+	} elseif ($count == 3 || $count == 2) {
 
-function Cookie(...$param){
-    $count=func_num_args();
-    if($count==1){
-        return isset($_COOKIE[$param[0]])?$_COOKIE[$param[0]]:false;
-    }elseif ($count==3||$count==2){
-
-        return setcookie($param[0],$param[1],isset($param[2])?time()+$param[2]:0);
-    }
-    return false;
+		return setcookie($param[0], $param[1], isset($param[2]) ? time() + $param[2] : 0);
+	}
+	return false;
 }
 
-function Session(...$param){
-    $count=func_num_args();
-    if($count==1){
-        return isset($_SESSION[$param[0]])?$_SESSION[$param[0]]:false;
-    }elseif ($count==2){
-         $_SESSION[$param[0]]=$param[1];
-         return true;
-    }
-    return false;
+function Session(...$param) {
+	$count = func_num_args();
+	if ($count == 1) {
+		return isset($_SESSION[$param[0]]) ? $_SESSION[$param[0]] : false;
+	} elseif ($count == 2) {
+		$_SESSION[$param[0]] = $param[1];
+		return true;
+	}
+	return false;
 }
-
 
 ?>
