@@ -6,7 +6,7 @@ bin-release/
 
 # Other files and folders
 .settings/
-conf/
+conf/*
 
 
 # Executables
@@ -16,9 +16,9 @@ conf/
 *.apk
 .DS_Store
 
-/*
 
-!/init.php
+
+
 
 
 
