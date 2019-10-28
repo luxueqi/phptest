@@ -3,6 +3,9 @@
 /**
  *
  */
+if (!defined('EXITFORBID')) {
+	exit('forbid');
+}
 class Weibo extends Http {
 
 	private $cookie;
@@ -38,7 +41,7 @@ class Weibo extends Http {
 
 		}
 
-		throw new Exception("get list error", Errorc::WEIBO_LIST_DEF);
+		throw new Exception("get list error", ErrorConst::WEIBO_LIST_DEF);
 
 	}
 
@@ -52,7 +55,7 @@ class Weibo extends Http {
 		$data = $ct[array_rand($ct)] . '&url=%2Fu%2F' . $guid . '&type=1&rid=' . $rid . '&uid=' . $this->uid . '&r_uid=' . $guid . '&from=10106&getrid=' . $rid . '&appGet=0&weiboGet=0&blackUser=0&_t=0';
 		//var_dump($data);exit();
 
-		return $this->request('https://service.account.weibo.com/aj/reportspam', $data, $header);
+		return $this->request(WeiboConst::REPORT_URL, $data, $header);
 
 	}
 
@@ -112,7 +115,7 @@ class Weibo extends Http {
 			//var_dump($ee->getCode());exit();
 			if ($ee->getCode() == -1) {
 				sendMail('wbreport故障', '<h1>cookie失效</h1>', '705178580@qq.com');
-				throw new Exception("cookie失效", Errorc::WEIBO_COOKIE_DEF);
+				throw new Exception("cookie失效", ErrorConst::WEIBO_COOKIE_DEF);
 
 			}
 
@@ -127,7 +130,7 @@ class Weibo extends Http {
 		$httpHeader = new HttpHeader();
 		$header = $httpHeader->setContentType()->setReferer('https://passport.weibo.cn/signin/login?entry=mweibo&res=wel&wm=3349&r=https%3A%2F%2Fm.weibo.cn%2F')->setUserAgent()->getHeader();
 
-		$res = $this->setHeader($header)->setUrl('https://passport.weibo.cn/sso/login')->setData('username=' . $un . '&password=' . $pwd . '&savestate=1&r=https%3A%2F%2Fm.weibo.cn%2F&ec=0&pagerefer=https%3A%2F%2Fm.weibo.cn%2Flogin%3FbackURL%3Dhttps%25253A%25252F%25252Fm.weibo.cn%25252F&entry=mweibo&wentry=&loginfrom=&client_id=&code=&qq=&mainpageflag=1&hff=&hfp=')->setIsHeader(1)->http();
+		$res = $this->setHeader($header)->setUrl(WeiboConst::LOGIN_URL)->setData('username=' . $un . '&password=' . $pwd . '&savestate=1&r=https%3A%2F%2Fm.weibo.cn%2F&ec=0&pagerefer=https%3A%2F%2Fm.weibo.cn%2Flogin%3FbackURL%3Dhttps%25253A%25252F%25252Fm.weibo.cn%25252F&entry=mweibo&wentry=&loginfrom=&client_id=&code=&qq=&mainpageflag=1&hff=&hfp=')->setIsHeader(1)->http();
 		$res = substr($res, strpos($res, '{"'));
 		if (strpos($res, 'retcode":20000000') !== false) {
 			$ck = $this->getCookie();
@@ -154,7 +157,7 @@ class Weibo extends Http {
 		$httpHeader = new HttpHeader();
 		$header = $httpHeader->setContentType()->setCookie($this->cookie)->setReferer('https://weibo.com/p/' . $huati . '/super_index')->setUserAgent()->isAjax(true)->getHeader();
 
-		return $this->request('https://weibo.com/aj/proxy?ajwvr=6', $data, $header);
+		return $this->request(WeiboConst::BLOCK_URL, $data, $header);
 
 	}
 
@@ -184,7 +187,7 @@ class Weibo extends Http {
 
 		if (empty($this->uid)) {
 
-			$res = json_decode($this->request('https://m.weibo.cn/api/config', '', (new HttpHeader(['Cookie' => $this->cookie]))->getHeader()));
+			$res = json_decode($this->request(WeiboConst::CONFIG_URL, '', (new HttpHeader(['Cookie' => $this->cookie]))->getHeader()));
 			//var_dump($res);exit;
 
 			if (isset($res->data->login) && $res->data->login == true) {
@@ -192,7 +195,7 @@ class Weibo extends Http {
 				return;
 			}
 
-			throw new Exception("get uid error", Errorc::WEIBO_UID_DEF);
+			throw new Exception("get uid error", ErrorConst::WEIBO_UID_DEF);
 
 		}
 

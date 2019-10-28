@@ -1,11 +1,17 @@
 <?php
-
+if (!defined('EXITFORBID')) {
+	exit('forbid');
+}
 function C($v) {
 
 	return require './conf/' . $v . '.php';
 
 }
-
+/***
+获取get or post 数据或者 指定key数据
+m 不存在时的默认值
+f 过滤 函数
+ ***/
 function G($k, $m = '', $f = '') {
 
 	$data = ['post.' => $_POST, 'get.' => $_GET, 'k' => isset($_REQUEST[$k]) ? $_REQUEST[$k] : $m];
@@ -25,18 +31,6 @@ function G($k, $m = '', $f = '') {
 	}
 
 	return $returnArr ? $data : $data['k'];
-}
-
-function Run() {
-
-	if (isset($_SERVER['REDIRECT_SCRIPT_URL']) && stripos($_SERVER['REDIRECT_SCRIPT_URL'], '/api/') == 0) {
-		$arr = explode('/', $_SERVER['REDIRECT_SCRIPT_URL'], 4);
-		unset($arr[0]);
-		require "./{$arr[1]}/{$arr[2]}/Api.php";
-		(new Api)->$arr[3]();
-	} else {
-		echo "index";
-	}
 }
 
 function sendMail($title, $content, $sendemail) {
@@ -169,6 +163,15 @@ function Session(...$param) {
 	} elseif ($count == 2) {
 		$_SESSION[$param[0]] = $param[1];
 		return true;
+	}
+	return false;
+}
+
+function isGetPostAjax($m = 'get') {
+	if ($m == 'get' || $m == 'post') {
+		return strtoupper($_SERVER['REQUEST_METHOD']) == strtoupper($m);
+	} elseif ($m == 'ajax') {
+		return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtoupper($_SERVER['HTTP_X_REQUESTED_WITH']) == 'XMLHTTPREQUEST';
 	}
 	return false;
 }

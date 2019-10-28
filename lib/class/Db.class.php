@@ -1,5 +1,7 @@
 <?php
-
+if (!defined('EXITFORBID')) {
+	exit('forbid');
+}
 class Db {
 
 	private static $instance = null;

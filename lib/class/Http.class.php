@@ -3,6 +3,9 @@
 /**
  *
  */
+if (!defined('EXITFORBID')) {
+	exit('forbid');
+}
 class Http {
 
 	private $url;
@@ -80,7 +83,7 @@ class Http {
 
 		if ($content === false) {
 
-			throw new Exception(curl_error($curl), Errorc::HTTP_CODE);
+			throw new Exception(curl_error($curl), ErrorConst::HTTP_CODE);
 		}
 		if ($this->is_header && preg_match_all('/Set-Cookie:([^\n]+)/', $content, $matchs)) {
 			//var_dump($matchs);exit();

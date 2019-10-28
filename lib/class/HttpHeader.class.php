@@ -3,6 +3,9 @@
 /**
  *
  */
+if (!defined('EXITFORBID')) {
+	exit('forbid');
+}
 class HttpHeader {
 
 	//const HEADERS = ['Content-Type' => 'application/x-www-form-urlencoded', 'Referer' => '', 'Cookie' => '', 'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'];

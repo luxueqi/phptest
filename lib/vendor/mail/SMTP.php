@@ -27,6 +27,9 @@
  * @author Chris Ryan
  * @author Marcus Bointon <phpmailer@synchromedia.co.uk>
  */
+if (!defined('EXITFORBID')) {
+	exit('forbid');
+}
 class SMTP {
 	/**
 	 * The PHPMailer SMTP version number.

@@ -28,6 +28,9 @@
  * @author Andy Prevost (codeworxtech) <codeworxtech@users.sourceforge.net>
  * @author Brent R. Matzelle (original founder)
  */
+if (!defined('EXITFORBID')) {
+	exit('forbid');
+}
 class PHPMailer {
 	const CHARSET_ASCII = 'us-ascii';
 	const CHARSET_ISO88591 = 'iso-8859-1';
@@ -1366,8 +1369,8 @@ class PHPMailer {
 			if ($this->has8bitChars($domain) && @mb_check_encoding($domain, $this->CharSet)) {
 				$domain = mb_convert_encoding($domain, 'UTF-8', $this->CharSet);
 				//Ignore IDE complaints about this line - method signature changed in PHP 5.4
-				$errorcode = 0;
-				$punycode = idn_to_ascii($domain, $errorcode, INTL_IDNA_VARIANT_UTS46);
+				$ErrorConstode = 0;
+				$punycode = idn_to_ascii($domain, $ErrorConstode, INTL_IDNA_VARIANT_UTS46);
 				if (false !== $punycode) {
 					return substr($address, 0, $pos) . $punycode;
 				}
