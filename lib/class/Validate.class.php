@@ -15,7 +15,11 @@ class Validate {
 	const VPHONE = 3;
 	// const VREGEXP='';
 	private static $rules = [FILTER_VALIDATE_EMAIL, FILTER_VALIDATE_IP, FILTER_VALIDATE_URL];
-
+	/**
+	 * [R description]
+	 * @param [string] $data [检查的数据]
+	 * @param [type] $r    [检查类型取值范围0-3 or regex:par ]
+	 */
 	public static function R($data, $r) {
 		if (!in_array($r, [0, 1, 2, 3], true) && !preg_match('/^regex:(.+)$/', $r, $match)) {
 			throw new Exception('规则ID错误', ErrorConst::VALIDATE_ERRNO);

@@ -201,12 +201,6 @@ class Weibo extends Http {
 
 	}
 
-	private function request($url, $data = '', $header = []) {
-
-		return $this->setUrl($url)->setHeader($header)->setData($data)->setIsHeader(0)->http();
-
-	}
-
 }
 
 ?>

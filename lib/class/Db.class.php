@@ -36,7 +36,12 @@ class Db {
 		$this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
 	}
-
+	/**
+	 * [exec description]
+	 * @param  [type] $sql  [占位符形式 select name from test where id=:id]
+	 * @param  array  $data [查询的条件[':id'=>1]]
+	 * @return [type]       [description]
+	 */
 	public function exec($sql, $data = []) {
 
 		$this->smt = $this->db->prepare($sql);

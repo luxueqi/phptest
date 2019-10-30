@@ -12,6 +12,10 @@ class ErrorConst {
 
 	const API_ERRNO = 0; //接口错误
 
+	const API_CATCH_REENO = 30001; //api执行错误
+
+	const API_PARAMS_ERRNO = 3000; //api传递参数错误
+
 	const HTTP_CODE = 1001; //httpclass 请求错误
 
 	const WEIBO_COOKIE_DEF = -1; //weibo.cookie 失效

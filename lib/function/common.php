@@ -83,7 +83,14 @@ function sendMail($title, $content, $sendemail) {
 	//var_dump($status);
 
 }
-
+/**
+ * [strMid description]
+ * @param  [string]  $left  [截取文本的左边]
+ * @param  [string]  $right [截取文本的右边]
+ * @param  [string]  $str   [要输入的文本]
+ * @param  boolean $pl    [是否批量]
+ * @return [type]         [批量返回array 否则 string ]
+ */
 function strMid($left, $right, $str, $pl = false) {
 
 	$i = 0;

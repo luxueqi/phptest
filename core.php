@@ -5,7 +5,7 @@ if (!defined('EXITFORBID')) {
 
 class Core {
 
-	static private function init() {
+	static public function init() {
 		self::setHeader();
 		self::setTimezone();
 		self::setDebug();
@@ -15,7 +15,8 @@ class Core {
 
 	static function run() {
 
-		self::init();
+		//self::init();
+
 		//经过重写,形如/api/wb/login?..... 经过此方法
 		$arr = explode('/', $_SERVER['REDIRECT_SCRIPT_URL'], 4);
 		unset($arr[0]);
@@ -24,6 +25,7 @@ class Core {
 			$f = $f . 'm';
 		}
 		//var_dump($f);exit;
+		//param  要执行的目录 要执行的方法名
 		$f::run($arr[2], $arr[3]);
 
 		//exitMsg(ErrorConst::API_ERRNO, 'no api');

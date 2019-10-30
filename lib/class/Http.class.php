@@ -55,6 +55,11 @@ class Http {
 		return $this;
 
 	}
+	public function request($url, $data = '', $header = []) {
+
+		return $this->setUrl($url)->setHeader($header)->setData($data)->setIsHeader(0)->http();
+
+	}
 	public function http() {
 
 		$curl = curl_init();

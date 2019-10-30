@@ -1,11 +1,12 @@
 <?php
 
 /**
- *
+ *api 模块执行类
  */
 if (!defined('EXITFORBID')) {
 	exit('forbid');
 }
+// api/ 模块启动类
 class Apim {
 
 	public static function run($api_file, $method) {

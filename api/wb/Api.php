@@ -18,7 +18,7 @@ class Api {
 		$pwd = G('pwd');
 
 		if (empty($un) || empty($pwd)) {
-			exitMsg(10001, '输入用户名或者密码');
+			exitMsg(ErrorConst::API_PARAMS_ERRNO, '输入用户名或者密码');
 		}
 
 		try {
@@ -30,13 +30,13 @@ class Api {
 			}
 			echo $res;
 		} catch (Exception $e) {
-			exitMsg(10003, $e->getMessage());
+			exitMsg(ErrorConst::API_CATCH_REENO, $e->getMessage());
 		}
 	}
 
 	public function block() {
 		if (G('ruid', 0) === 0 || empty(G('huati')) || empty(G('cookie'))) {
-			exitMsg(20001, '参数错误');
+			exitMsg(ErrorConst::API_PARAMS_ERRNO, '参数错误');
 		}
 
 		try {
@@ -44,7 +44,7 @@ class Api {
 			echo $wb->block(G('ruid'), G('huati'));
 
 		} catch (Exception $e) {
-			exitMsg(20003, $e->getMessage());
+			exitMsg(ErrorConst::API_CATCH_REENO, $e->getMessage());
 		}
 
 	}

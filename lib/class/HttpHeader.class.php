@@ -79,7 +79,7 @@ class HttpHeader {
 		return $header;
 	}
 
-	public static function getUserAgent() {
+	public static function getUserAgent($isMobile = false) {
 		$user_agent_list_2 = [
 			// Opera
 			"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2181.95 Safari/537.36 OPR/26.0.1656.60",
@@ -170,8 +170,14 @@ class HttpHeader {
 			"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.24 (KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24",
 			"Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/535.24 (KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24",
 		];
-		$ua = array_merge($user_agent_list_1, $user_agent_list_2, $user_agent_list_3);
-		//$ua = array_merge($user_agent_list_1, $user_agent_list_2);
+		$ua = [];
+		if (!$isMobile) {
+			$ua = array_merge($user_agent_list_1, $user_agent_list_2, $user_agent_list_3);
+		} else {
+			$ua = array_merge($user_agent_list_1, $user_agent_list_2);
+		}
+
+		//
 
 		return $ua[array_rand($ua)];
 	}
