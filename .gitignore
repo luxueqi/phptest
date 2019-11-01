@@ -1,5 +1,6 @@
 c/conf/
 conf/
+core/conf
 .DS_Store
 
 

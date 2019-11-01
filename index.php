@@ -4,10 +4,12 @@ define('EXITFORBID', 'api');
 
 define('DEBUG', false);
 
-require './core.php';
+define('ROOT_PATH', dirname(__FILE__));
+
+require './core/core.php';
 
 Core::init();
-
+//var_dump($_SERVER);exit();
 Core::run();
 
 ?>
