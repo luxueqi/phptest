@@ -35,7 +35,7 @@ class WsBase {
 
 	protected function encookie($id, $un, $pwd) {
 		$tt = time() + 86400 * 7;
-		return setcookie('auth', randStr(3, 2) . base64_encode($id . ':' . $tt . ':' . md5($pwd . 'woshishui' . $un)) . randStr(3, 2), $tt, '/', "", false, true);
+		return setcookie('auth', randStr(3, 2) . base64_encode($id . ':' . $tt . ':' . md5($pwd . C('wsign')['key'] . $un)) . randStr(3, 2), $tt, '/', "", false, true);
 	}
 
 	protected function decookie() {
@@ -46,7 +46,7 @@ class WsBase {
 				$db = Db::getInstance();
 				$info = $db->exec("select name,email,pwd,lastip,lasttime from login where id={$id}")->getOne();
 				//var_dump($arr, $info);exit();
-				if (time() < $arr[1] && $arr[2] === md5($info['pwd'] . 'woshishui' . $info['email'])) {
+				if (time() < $arr[1] && $arr[2] === md5($info['pwd'] . C('wsign')['key'] . $info['email'])) {
 					$info['id'] = $id;
 					$this->setLoginInfo($info, $db);
 
