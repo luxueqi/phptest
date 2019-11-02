@@ -1,5 +1,7 @@
 <?php
-
+if (!defined('EXITFORBID')) {
+	exit('forbid');
+}
 class RunBase {
 	public static function run($moudle, $api_file, $method) {
 

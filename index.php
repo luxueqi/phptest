@@ -2,7 +2,7 @@
 
 define('EXITFORBID', 'api');
 
-define('DEBUG', false);
+define('DEBUG', true);
 
 define('ROOT_PATH', dirname(__FILE__));
 

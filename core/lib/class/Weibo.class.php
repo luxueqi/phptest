@@ -246,7 +246,7 @@ class Weibo extends Http {
 
 	}
 
-	private function getUid() {
+	public function getUid() {
 
 		if (empty($this->uid)) {
 
@@ -262,6 +262,17 @@ class Weibo extends Http {
 
 		}
 
+	}
+
+	public function getUidName() {
+
+		$re = @json_decode($this->request('https://m.weibo.cn/profile/info', '', (new HttpHeader(['Cookie' => $this->cookie]))->getHeader()), true);
+		$uidname = array();
+		if (!empty($re['data'])) {
+			$uidname['id'] = $re['data']['user']['id'];
+			$uidname['name'] = $re['data']['user']['screen_name'];
+		}
+		return $uidname;
 	}
 
 }
