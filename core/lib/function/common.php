@@ -83,6 +83,29 @@ function sendMail($title, $content, $sendemail) {
 	//var_dump($status);
 
 }
+
+function creatCaptcha() {
+	require_once LIB_PATH . '/vendor/php-captcha/CaptchaBuilderInterface.php';
+
+	require_once LIB_PATH . '/vendor/php-captcha/CaptchaBuilder.php';
+
+	$captch = new CaptchaBuilder();
+
+	$captch->initialize([
+		'width' => 150, // 宽度
+		'height' => 50, // 高度
+		'line' => false, // 直线
+		'curve' => true, // 曲线
+		'noise' => 1, // 噪点背景
+		'fonts' => [], // 字体
+	]);
+
+	$captch->create();
+	$_SESSION['captcha'] = $captch->getText();
+	$captch->output(1);
+
+}
+
 /**
  * [strMid description]
  * @param  [string]  $left  [截取文本的左边]

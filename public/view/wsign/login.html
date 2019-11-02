@@ -39,11 +39,11 @@
           <input id="ipwd" name="pwd" type="password" placeholder="密码" class="input-text size-L">
         </div>
       </div>
-      <!-- <div class="row cl">
+       <div class="row cl">
         <div class="formControls col-xs-8 col-xs-offset-3">
-          <input class="input-text size-L" type="text" placeholder="验证码" onblur="if(this.value==''){this.value='验证码:'}" onclick="if(this.value=='验证码:'){this.value='';}" value="验证码:" style="width:150px;">
-          <img src=""> <a id="kanbuq" href="javascript:;">看不清，换一张</a> </div>
-      </div>-->
+          <input class="input-text size-L" type="text" placeholder="验证码" onblur="if(this.value==''){this.value='验证码:'}" onclick="if(this.value=='验证码:'){this.value='';}" value="验证码:" style="width:100px;" name="captcha">
+          <img src="/wsign/login/captcha"> <a id="kanbuq" href="javascript:;" onclick="$(this).prev('img').attr('src','/wsign/login/captcha?t='+Math.round())" >看不清，换一张</a> </div>
+      </div>
       <div class="row cl">
         <div class="formControls col-xs-8 col-xs-offset-3">
           <label for="online">
@@ -61,7 +61,6 @@
   </div>
 </div>
 <div class="footer">Copyright</div>
-<script type="text/javascript" src="/public/static/h-ui/js/H-ui.min.js"></script>
 <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script> 
 <script type="text/javascript" src="https://cdn.bootcss.com/layer/2.3/layer.js"></script>
 <script type="text/javascript">
@@ -89,6 +88,7 @@
           
         }else{
           layer.open({title:'信息提示',content:e.msg,icon:2});
+          $('#kanbuq').click();
         }
       });
       

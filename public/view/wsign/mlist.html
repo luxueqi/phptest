@@ -1,0 +1,86 @@
+<?php require WSIGN_VIEW_PATH.'/_meta.html';?>
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>用户管理</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户中心 <span class="c-gray en">&gt;</span> 用户管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="cl pd-5 bg-1 bk-gray mt-20">  <span class="r">共有数据：<strong><?php echo $count;?></strong> 条</span> </div>
+	<div class="mt-20">
+	<table class="table table-border table-bordered table-hover table-bg table-sort">
+		<thead>
+			<tr class="text-c">
+				<th width="80">ID</th>
+				<th width="90">wid</th>
+				<th width="90">关注数量</th>
+				<th width="100">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach($list as $v): ?>
+			<tr class="text-c">
+				<td><?php echo $v['id'];?></td>
+				<td><?php echo $v['weixin'];?></td>
+				<td><?php echo $v['count'];?></td>
+				<td class="td-manage"><a title="编辑" href="javascript:;" onclick="member_edit('编辑用户:<?php echo $v["id"];?>','/wsign-admin-mgadd.html?id=<?php echo $v["id"];?>&ct=<?php echo $v['count'];?>','','','410')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>  <a title="删除" href="javascript:;" onclick="member_del(this,<?php echo $v['id'];?>)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+			</tr>
+		<?php endforeach; ?>
+		</tbody>
+	</table>
+	</div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<?php require WSIGN_VIEW_PATH.'/_footer.html';?> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="/public/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="/public/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="/public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('.table-sort').dataTable({
+		"aaSorting": [[ 1, "desc" ]],//默认第几个排序
+		"bStateSave": true,//状态保存
+		"aoColumnDefs": [
+		  //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+		  //{"orderable":false,"aTargets":[0,8,9]}// 制定列不参与排序
+		]
+	});
+	
+});
+
+
+
+/*用户-编辑*/
+function member_edit(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+
+/*用户-删除*/
+function member_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: '/wsign/admin/gdel',
+			data:{id:id},
+			dataType: 'json',
+			success: function(e){
+				if(e.code==1){
+					$(obj).parents("tr").remove();
+					layer.msg('已删除!',{icon:1,time:1000});
+				}else{
+					layer.msg(e.msg,{icon:2,time:1000});
+				}
+				
+				
+
+			}
+		});		
+	});
+}
+</script> 
+</body>
+</html>

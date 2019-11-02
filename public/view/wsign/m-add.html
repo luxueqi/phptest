@@ -1,0 +1,51 @@
+<?php require WSIGN_VIEW_PATH . '/_meta.html';?>
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<!--/meta 作为公共模版分离出去-->
+
+<title>编辑用户</title>
+</head>
+<body>
+<article class="page-container">
+	<form action="" method="post" class="form form-horizontal" id="form-member-add">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>关注数量：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="<?php echo G('ct');?>" placeholder="" id="icount" name="count">
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input id="btnc" class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<?php require WSIGN_VIEW_PATH . '/_footer.html';?><!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript">
+	$(function(){
+		$('#btnc').click(function(){
+			var count=$('#icount').val();
+			if(/\D/.test(count)){
+				layer.alert('请输入正整数',{icon:2});
+			}else{
+				$.post('',{count:count},function success(ee) {
+					layer.alert(ee.msg,{icon:ee.code==1?1:2},function(){
+						//layer.close(index);
+						top.location.reload(true);});
+				},'json');
+			}
+			return false;
+
+		});
+	});
+</script>>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

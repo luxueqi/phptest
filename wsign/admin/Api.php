@@ -26,11 +26,7 @@ class Api extends WsBase {
 	}
 
 	public function member() {
-		$db = Db::getInstance();
-		$arr = $db->exec('select id,name,weixin as wid,wuid from user')->getAll();
-		$this->assign('list', $arr);
-		$this->assign('count', count($arr));
-		$this->view('member-list');
+		$this->slist('id,name,weixin as wid,wuid', 'user', 'member-list');
 	}
 	public function madd() {
 		if (isGetPostAjax('post')) {
@@ -59,15 +55,41 @@ class Api extends WsBase {
 	}
 
 	public function mdel() {
+		$this->comdel('user');
+
+	}
+
+	public function mlist() {
+		$this->slist('*', 'wcount', 'mlist');
+
+	}
+	public function mgadd() {
+		if (isGetPostAjax('post')) {
+			$id = G('id') + 0;
+			$count = G('count') + 0;
+			try {
+				Db::getInstance()->exec('update wcount set count=:count where id=:id', [':id' => $id, ':count' => $count]);
+				exitMsg(1, '修改成功');
+			} catch (PDOException $e) {
+				exitMsg(ErrorConst::API_CATCH_REENO, 'fail');
+			}
+		}
+		$this->view('m-add');
+	}
+
+	public function gdel() {
+		$this->comdel('wcount');
+	}
+
+	private function comdel($table) {
 		$id = G('id') + 0;
 
 		try {
-			Db::getInstance()->exec('delete from user where id=' . $id);
+			Db::getInstance()->exec('delete from ' . $table . ' where id=' . $id);
 			exitMsg(1, '删除成功');
 		} catch (PDOException $e) {
 			exitMsg(2, 'fail');
 		}
-
 	}
 
 	public function logout() {

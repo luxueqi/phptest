@@ -1,0 +1,60 @@
+<?php require WSIGN_VIEW_PATH.'/_meta.html';?>
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>用户管理</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户中心 <span class="c-gray en">&gt;</span> 用户管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="cl pd-5 bg-1 bk-gray mt-20">  <span class="r">共有数据：<strong><?php echo $count;?></strong> 条</span> </div>
+	<div class="mt-20">
+	<table class="table table-border table-bordered table-hover table-bg table-sort">
+		<thead>
+			<tr class="text-c">
+				<th width="80">ID</th>
+				<th width="90">name</th>
+				<th width="90">huiti</th>
+				<th width="90">info</th>
+				<th width="90">time</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach($list as $v): ?>
+			<tr class="text-c">
+				<td><?php echo $v['id'];?></td>
+				<td><?php echo $v['name'];?></td>
+				<td><?php echo $v['tname'];?></td>
+				<td><?php echo $v['info'];?></td>
+				<td><?php echo date('Y-m-d',$v['time']);?></td>
+			</tr>
+		<?php endforeach; ?>
+		</tbody>
+	</table>
+	</div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<?php require WSIGN_VIEW_PATH.'/_footer.html';?> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="/public/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="/public/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="/public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('.table-sort').dataTable({
+		"aaSorting": [[ 4, "asc" ]],//默认第几个排序
+		"bStateSave": true,//状态保存
+		"aoColumnDefs": [
+		  //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+		  //{"orderable":false,"aTargets":[0,8,9]}// 制定列不参与排序
+		]
+	});
+	
+});
+
+
+</script> 
+</body>
+</html>

@@ -11,9 +11,13 @@ class Api extends WsBase {
 	public function __construct() {
 		if ($this->checkLogin()) {
 
-			header("location:/wsign/admin/index");
+			header("location:/wsign-admin-index.html");
 			exit();
 		}
+	}
+
+	public function captcha() {
+		creatCaptcha();
 	}
 
 	public function login() {
@@ -21,10 +25,16 @@ class Api extends WsBase {
 		if (isGetPostAjax('post')) {
 			$un = G('un');
 			$pwd = G('pwd');
+			$captcha = G('captcha');
 			//var_dump($_POST);exit;
-			if (!Validate::R($un, Validate::VEMAIL) || !Validate::R($pwd, 'regex:^[\S]{6,12}$')) {
+			if (!Validate::R($un, Validate::VEMAIL) || !Validate::R($pwd, 'regex:^[\S]{6,12}$') || !Validate::R($captcha, 'regex:^[0-9A-Za-z]{4}$')) {
 				exitMsg(ErrorConst::API_PARAMS_ERRNO, '参数错误');
 			}
+			//var_dump(Session('captcha'), $captcha);exit;
+			if (strtoupper(Session('captcha')) != strtoupper($captcha)) {
+				exitMsg(3, '验证码错误');
+			}
+			Session('captcha', null);
 			try {
 				$db = Db::getInstance();
 
@@ -42,7 +52,7 @@ class Api extends WsBase {
 				}
 				exitMsg(2, '登陆失败,用户名或密码错误');
 			} catch (PDOException $e) {
-				exitMsg(ErrorConst::API_CATCH_REENO, $e->getMessage());
+				exitMsg(ErrorConst::API_CATCH_REENO, 'fail');
 			}
 
 		}

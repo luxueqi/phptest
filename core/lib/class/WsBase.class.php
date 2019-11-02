@@ -57,6 +57,14 @@ class WsBase {
 		return false;
 	}
 
+	protected function slist($field, $table, $view) {
+		$db = Db::getInstance();
+		$arr = $db->exec("select $field from $table")->getAll();
+		$this->assign('list', $arr);
+		$this->assign('count', count($arr));
+		$this->view($view);
+	}
+
 }
 
 ?>
