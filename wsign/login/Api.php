@@ -23,18 +23,14 @@ class Api extends WsBase {
 	public function login() {
 		//Cookie('auth', base64_encode($res['id'] . ':' . $tt . ':' . md5($pwd . 'woshishui' . $un)), 86400 * 7);exit;
 		if (isGetPostAjax('post')) {
-			$un = G('un');
-			$pwd = G('pwd');
-			$captcha = G('captcha');
-			//var_dump($_POST);exit;
-			if (!Validate::R($un, Validate::VEMAIL) || !Validate::R($pwd, 'regex:^[\S]{6,12}$') || !Validate::R($captcha, 'regex:^[0-9A-Za-z]{4}$')) {
-				exitMsg(ErrorConst::API_PARAMS_ERRNO, '参数错误');
-			}
-			//var_dump(Session('captcha'), $captcha);exit;
-			if (strtoupper(Session('captcha')) != strtoupper($captcha)) {
-				exitMsg(3, '验证码错误');
-			}
-			Session('captcha', null);
+
+			$params=$this->checkParams(['un'=>'email','pwd'=>'regex:^[\S]{6,12}$']);
+
+			$un = $params['un'];
+			$pwd =$params['pwd']
+			
+			checkCaptcha(G('captcha'));
+			
 			try {
 				$db = Db::getInstance();
 

@@ -106,6 +106,13 @@ function creatCaptcha() {
 
 }
 
+function checkCaptcha($captcha) {
+	if (strtoupper(Session('captcha')) != strtoupper($captcha)) {
+		exitMsg(ErrorConst::API_PARAMS_ERRNO, '验证码错误');
+	}
+	Session('captcha', null);
+}
+
 /**
  * [strMid description]
  * @param  [string]  $left  [截取文本的左边]

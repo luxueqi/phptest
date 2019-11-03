@@ -17,6 +17,12 @@
 			</div>
 		</div>
 		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>启用：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="<?php echo G('status');?>" placeholder="" id="istatus" name="status">
+			</div>
+		</div>
+		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
 				<input id="btnc" class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
 			</div>
@@ -32,10 +38,11 @@
 	$(function(){
 		$('#btnc').click(function(){
 			var cookie=$('.textarea').val();
-			if(cookie.indexOf('SUB=')==-1){
+			var status=$('#istatus').val();
+			if(cookie.indexOf('SUB=')==-1&&(status!=1&&status!=0)){
 				layer.alert('请输入正确数据',{icon:2});
 			}else{
-				$.post('',{cookie:cookie},function success(ee){
+				$.post('',{cookie:cookie,status:status},function success(ee){
 					layer.alert(ee.msg,{icon:ee.code==1?1:2},function(){
 						//layer.close(index);
 						top.location.reload(true);

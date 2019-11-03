@@ -9,9 +9,10 @@ class Api extends WsBase {
 		}
 
 	}
-
+//SELECT w.id,u.name,w.t_name,w.status from wgz w INNER JOIN user u on u.id=w.uid
+	//select $field from $table
 	public function info() {
-		$this->slist('id,uid,t_name as name,status', 'wgz', 'info');
+		$this->slist('w.id,u.name,w.t_name,w.status', 'wgz w INNER JOIN user u on u.id=w.uid', 'info');
 	}
 
 	public function einfo() {

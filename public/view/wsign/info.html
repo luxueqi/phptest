@@ -13,18 +13,18 @@
 	<table class="table table-border table-bordered table-hover table-bg table-sort">
 		<thead>
 			<tr class="text-c">
-				<th width="80">ID</th>
-				<th width="90">uid</th>
+				<th width="50">ID</th>
 				<th width="90">name</th>
-				<th width="90">status</th>
+				<th width="90">huati</th>
+				<th width="60">status</th>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach($list as $v): ?>
 			<tr class="text-c">
 				<td><?php echo $v['id'];?></td>
-				<td><?php echo $v['uid'];?></td>
 				<td><?php echo $v['name'];?></td>
+				<td><?php echo $v['t_name'];?></td>
 				<td><?php echo $v['status'];?></td>
 			</tr>
 		<?php endforeach; ?>
