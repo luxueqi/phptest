@@ -29,16 +29,26 @@ class Core {
 			} else {
 				$arr = explode('/', $r_url);
 			}
+			define('__M__', $arr[0]);
+			define('__C__', $arr[1]);
+			define('__A__', str_replace('.html', '', $arr[2]));
 
-			/*$f = ucfirst($arr[0]);
-			if ($f == 'Api') {
-			$f = $f . 'm';
-			}*/
-			//var_dump($f);exit;
-			//param  要执行的目录 要执行的方法名
-			RunBase::run($arr[0], $arr[1], str_replace('.html', '', $arr[2]));
+			$path = './' . __M__ . '/' . __C__ . '/Api.php';
 
-			//exitMsg(ErrorConst::API_ERRNO, 'no api');
+			if (is_file($path)) {
+				require_once $path;
+
+				if (method_exists('Api', __A__)) {
+					$a = __A__;
+
+					(new Api)->$a();
+					return;
+				}
+
+			}
+
+			exitMsg(ErrorConst::API_ERRNO, 'no api', [__M__, __C__, __A__]);
+
 		}
 
 	}

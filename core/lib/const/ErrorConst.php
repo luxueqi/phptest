@@ -12,7 +12,9 @@ class ErrorConst {
 
 	const API_ERRNO = 0; //接口错误
 
-	const API_CATCH_REENO = 30001; //api执行错误
+	const API_SUCCESS_ERRNO = 1; //接口执行成功
+
+	const API_CATCH_ERRNO = 30001; //api执行错误
 
 	const API_PARAMS_ERRNO = 3000; //api传递参数错误
 

@@ -24,13 +24,13 @@ class Api extends WsBase {
 		//Cookie('auth', base64_encode($res['id'] . ':' . $tt . ':' . md5($pwd . 'woshishui' . $un)), 86400 * 7);exit;
 		if (isGetPostAjax('post')) {
 
-			$params=$this->checkParams(['un'=>'email','pwd'=>'regex:^[\S]{6,12}$']);
+			$params = $this->checkParams(['un' => 'email', 'pwd' => 'regex:^[\S]{6,12}$']);
 
 			$un = $params['un'];
-			$pwd =$params['pwd']
-			
+			$pwd = $params['pwd'];
+
 			checkCaptcha(G('captcha'));
-			
+
 			try {
 				$db = Db::getInstance();
 
@@ -44,11 +44,11 @@ class Api extends WsBase {
 					$this->setLoginInfo($res, $db);
 					//var_dump();exit;
 					//$db->exec('update login set lasttime=' . time() . ',lastip=' . ip2long($_SERVER['REMOTE_ADDR']) . ' where id=' . $res['id']);
-					exitMsg(1, '登陆成功');
+					exitMsg(ErrorConst::API_SUCCESS_ERRNO, '登陆成功');
 				}
 				exitMsg(2, '登陆失败,用户名或密码错误');
 			} catch (PDOException $e) {
-				exitMsg(ErrorConst::API_CATCH_REENO, 'fail');
+				exitMsg(ErrorConst::API_CATCH_ERRNO, 'fail');
 			}
 
 		}

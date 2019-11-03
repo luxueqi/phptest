@@ -17,6 +17,7 @@
 				<th width="90">name</th>
 				<th width="90">huati</th>
 				<th width="60">status</th>
+				<th width="100">操作</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -26,6 +27,8 @@
 				<td><?php echo $v['name'];?></td>
 				<td><?php echo $v['t_name'];?></td>
 				<td><?php echo $v['status'];?></td>
+				<td class="td-manage"><a title="删除" href="javascript:;" onclick="member_del(this,<?php echo $v['id'];?>)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
 			</tr>
 		<?php endforeach; ?>
 		</tbody>
@@ -51,7 +54,28 @@ $(function(){
 	});
 	
 });
+/*用户-删除*/
+function member_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: '/wsign/info/del',
+			data:{id:id},
+			dataType: 'json',
+			success: function(e){
+				if(e.code==1){
+					$(obj).parents("tr").remove();
+					layer.msg('已删除!',{icon:1,time:1000});
+				}else{
+					layer.msg(e.msg,{icon:2,time:3000});
+				}
+				
+				
 
+			}
+		});		
+	});
+}
 
 </script> 
 </body>

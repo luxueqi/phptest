@@ -66,6 +66,10 @@
 <script type="text/javascript">
   $(function(){
     $('#btn').click(function(){
+      if($('input[name=captcha]').val().replace('验证码:','')==''){
+        layer.open({title:'信息提示',content:'请输入验证码',icon:2});
+        return false;
+      }
       var un=$('#iun').val();
       var pwd=$('#ipwd').val();
       if(!/^\w+@\w+\.\w+$/.test(un)||!/^[\S]{6,12}$/){

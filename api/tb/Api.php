@@ -21,7 +21,7 @@ class Api {
 			echo $tb->block($tname, $v, $type);
 
 		} catch (Exception $e) {
-			exitMsg(ErrorConst::API_CATCH_REENO, $e->getMessage());
+			exitMsg(ErrorConst::API_CATCH_ERRNO, $e->getMessage());
 		}
 
 	}

@@ -30,7 +30,7 @@ class Api {
 			}
 			echo $res;
 		} catch (Exception $e) {
-			exitMsg(ErrorConst::API_CATCH_REENO, $e->getMessage());
+			exitMsg(ErrorConst::API_CATCH_ERRNO, $e->getMessage());
 		}
 	}
 
@@ -44,7 +44,7 @@ class Api {
 			echo $wb->block(G('ruid'), G('huati'));
 
 		} catch (Exception $e) {
-			exitMsg(ErrorConst::API_CATCH_REENO, $e->getMessage());
+			exitMsg(ErrorConst::API_CATCH_ERRNO, $e->getMessage());
 		}
 
 	}
