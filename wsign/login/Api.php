@@ -39,7 +39,7 @@ class Api extends WsBase {
 				if (!empty($res)) {
 
 					if (isset($_POST['online'])) {
-						$this->encookie($res['id'], $un, $pwd);
+						$this->wencookie($res['id'], $un, $pwd);
 					}
 					$this->setLoginInfo($res, $db);
 					//var_dump();exit;

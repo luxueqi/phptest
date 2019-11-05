@@ -11,7 +11,7 @@ class Core {
 		self::setDebug();
 		self::setConstPath();
 		self::setLoad();
-		session_start();
+		self::setSession();
 
 	}
 
@@ -52,7 +52,11 @@ class Core {
 		}
 
 	}
+	static function setSession() {
+		session_name('wsign');
+		session_start();
 
+	}
 	static private function setTimezone() {
 		date_default_timezone_set('PRC');
 	}

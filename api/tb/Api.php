@@ -6,19 +6,14 @@
 if (!defined('EXITFORBID')) {
 	exit('forbid');
 }
-class Api {
+class Api extends Base {
 
 	public function block() {
-		$bduss = G('bduss');
-		$v = G('v');
-		$type = G('type');
-		$tname = G('tname');
-		if (empty($bduss) || empty($v) || !in_array($type, ['uid', 'portrait', 'un']) || empty($tname)) {
-			exitMsg(ErrorConst::API_PARAMS_ERRNO, '参数错误');
-		}
-		$tb = new Tieba($bduss);
+
+		$params = $this->checkParams(['bduss' => 'noempty', 'v' => 'noempty', 'tname' => 'noempty', 'type' => 'regex:^(uid|portrait|un)$'], ['type' => '取值只能为uid,portrait,un']);
+		$tb = new Tieba($params['bduss']);
 		try {
-			echo $tb->block($tname, $v, $type);
+			echo $tb->block($params['tname'], $params['v'], $params['type']);
 
 		} catch (Exception $e) {
 			exitMsg(ErrorConst::API_CATCH_ERRNO, $e->getMessage());

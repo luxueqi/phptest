@@ -11,7 +11,7 @@ class WsBase extends Base {
 			return true;
 
 		}
-		return $this->decookie();
+		return $this->wdecookie();
 	}
 	protected function needLogin($redricturl) {
 		if (!$this->checkLogin()) {
@@ -30,20 +30,19 @@ class WsBase extends Base {
 		$db->exec('update login set lasttime=' . time() . ',lastip=' . ip2long($_SERVER['REMOTE_ADDR']) . ' where id=' . $info['id']);
 	}
 
-	protected function encookie($id, $un, $pwd) {
+	protected function wencookie($id, $un, $pwd) {
 		$tt = time() + 86400 * 7;
-		return setcookie('auth', randStr(3, 2) . base64_encode($id . ':' . $tt . ':' . md5($pwd . C('wsign')['key'] . $un)) . randStr(3, 2), $tt, '/', "", false, true);
+		return setcookie('auth', $this->encookie($res['id'], $un, $pwd, $tt), $tt, '/', "", false, true);
 	}
 
-	protected function decookie() {
+	protected function wdecookie() {
 		if (isset($_COOKIE['auth'])) {
-			$arr = explode(':', base64_decode(substr($_COOKIE['auth'], 3, strlen($_COOKIE['auth']) - 6)));
-			if (count($arr) == 3) {
+
+			if ($this->decookie($_COOKIE['auth'], $arr)) {
 				$id = $arr[0] + 0;
 				$db = Db::getInstance();
 				$info = $db->exec("select name,email,pwd,lastip,lasttime from login where id={$id}")->getOne();
-				//var_dump($arr, $info);exit();
-				if (time() < $arr[1] && $arr[2] === md5($info['pwd'] . C('wsign')['key'] . $info['email'])) {
+				if ($this->verifycookie($arr, $info['email'], $info['pwd'])) {
 					$info['id'] = $id;
 					$this->setLoginInfo($info, $db);
 

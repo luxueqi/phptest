@@ -6,24 +6,14 @@
 if (!defined('EXITFORBID')) {
 	exit('forbid');
 }
-class Api {
-
-	function __construct() {
-
-	}
+class Api extends Base {
 
 	public function login() {
-		$un = G('un');
 
-		$pwd = G('pwd');
-
-		if (empty($un) || empty($pwd)) {
-			exitMsg(ErrorConst::API_PARAMS_ERRNO, '输入用户名或者密码');
-		}
-
+		$params = $this->checkParams(['un' => 'noempty', 'pwd' => 'noempty']);
 		try {
 			$weibo = new Weibo();
-			$res = $weibo->login($un, $pwd, $cookie);
+			$res = $weibo->login($params['un'], $params['pwd'], $cookie);
 			if (!empty($cookie)) {
 				exitMsg(10000, 'ok', ['cookie' => $cookie]);
 

@@ -42,7 +42,7 @@
        <div class="row cl">
         <div class="formControls col-xs-8 col-xs-offset-3">
           <input class="input-text size-L" type="text" placeholder="验证码" onblur="if(this.value==''){this.value='验证码:'}" onclick="if(this.value=='验证码:'){this.value='';}" value="验证码:" style="width:100px;" name="captcha">
-          <img src="/wsign/login/captcha"> <a id="kanbuq" href="javascript:;" onclick="$(this).prev('img').attr('src','/wsign/login/captcha?t='+Math.round())" >看不清，换一张</a> </div>
+          <img src="/wsign/login/captcha"> <a id="kanbuq" href="javascript:;" onclick="$(this).prev('img').attr('src','/wsign/login/captcha?t='+Math.random())" >看不清，换一张</a> </div>
       </div>
       <div class="row cl">
         <div class="formControls col-xs-8 col-xs-offset-3">
@@ -93,6 +93,7 @@
         }else{
           layer.open({title:'信息提示',content:e.msg,icon:2});
           $('#kanbuq').click();
+          $('input[name=captcha]').val('');
         }
       });
       

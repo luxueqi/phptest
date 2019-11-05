@@ -100,6 +100,7 @@ class Api extends WsBase {
 	public function logout() {
 		Session('name', null);
 		Cookie('auth', null, -1);
+		session_destroy();
 		echo "<script>alert('退出成功');location.href='/wsign-login-login.html';</script>";
 		//header("location: /wsign/login/login");
 		exit;

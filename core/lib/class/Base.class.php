@@ -14,9 +14,39 @@ class Base {
 		$this->assign[$name] = $data;
 	}
 
+	protected function encookie($id, $un, $pwd, $tt) {
+
+		return strrev(randStr(3, 2) . base64_encode($id . ':' . $tt . ':' . md5($pwd . C('wsign')['key'] . $un . $tt)) . randStr(3, 2));
+	}
+
+	protected function decookie($enstr, &$arr) {
+
+		$arr = explode(':', base64_decode(substr(strrev($enstr), 3, strlen($enstr) - 6)));
+		if (count($arr) == 3) {
+			return true;
+		}
+
+		return false;
+	}
+/**
+ * [verifycookie description]
+ * @param  [type] $arr [由cookie字符串(id:time:md5)解密出来的数组]
+ * @param  [type] $un  [description]
+ * @param  [type] $pwd [description]
+ * @return [type]      [description]
+ */
+	protected function verifycookie($arr, $un, $pwd) {
+		if (time() < $arr[1] && $arr[2] === md5($pwd . C('wsign')['key'] . $un . $arr[1])) {
+
+			return true;
+		}
+
+		return false;
+	}
+
 	/**
 	 * [checkParams description]
-	 * @param  array  $param [key=>检查的参数，val=>使用的规则【email|phone|url|ip|regex|int】]
+	 * @param  array  $param [key=>检查的参数，val=>使用的规则【email|noempty|phone|url|ip|regex|int】]
 	 * @return array  $returnParam      [返回数组]
 	 */
 	protected function checkParams($param, $msg = []) {
@@ -27,6 +57,8 @@ class Base {
 				$flag = is_numeric(G($key)) && G($key) > 0;
 			} elseif ($value == 'email') {
 				$flag = Validate::R(G($key), Validate::VEMAIL);
+			} elseif ($value == 'noempty') {
+				$flag = !empty(G($key));
 			} elseif ($value == 'phone') {
 				$flag = Validate::R(G($key), Validate::VPHONE);
 			} elseif ($value == 'url') {
