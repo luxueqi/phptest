@@ -155,7 +155,12 @@ function strMid($left, $right, $str, $pl = false) {
 	return $pl ? $rstr : $rstr[0];
 
 }
-
+/**
+ * [randStr description]
+ * @param  integer $len  []
+ * @param  integer $type [0.数字,1.英文字母,2.英文数字]
+ * @return [type]        [description]
+ */
 function randStr($len = 4, $type = 0) {
 	# code...
 	$strsarr = [

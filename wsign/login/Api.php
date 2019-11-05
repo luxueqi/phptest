@@ -6,7 +6,7 @@
 if (!defined('EXITFORBID')) {
 	exit('forbid');
 }
-class Api extends WsBase {
+class Api extends WsignBase {
 
 	public function __construct() {
 		if ($this->checkLogin()) {

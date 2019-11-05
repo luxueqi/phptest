@@ -3,7 +3,7 @@ if (!defined('EXITFORBID')) {
 	exit('forbid');
 }
 define('WSIGN_VIEW_PATH', ROOT_PATH . '/public/view/wsign');
-class WsBase extends Base {
+class WsignBase extends Base {
 
 	protected function checkLogin() {
 		if (Session('name') != false) {
@@ -32,7 +32,7 @@ class WsBase extends Base {
 
 	protected function wencookie($id, $un, $pwd) {
 		$tt = time() + 86400 * 7;
-		return setcookie('auth', $this->encookie($res['id'], $un, $pwd, $tt), $tt, '/', "", false, true);
+		return setcookie('auth', $this->encookie($id, $un, $pwd, $tt), $tt, '/', "", false, true);
 	}
 
 	protected function wdecookie() {

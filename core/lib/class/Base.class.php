@@ -16,12 +16,13 @@ class Base {
 
 	protected function encookie($id, $un, $pwd, $tt) {
 
-		return strrev(randStr(3, 2) . base64_encode($id . ':' . $tt . ':' . md5($pwd . C('wsign')['key'] . $un . $tt)) . randStr(3, 2));
+		return strrev(randStr(4, 2) . base64_encode($id . ':' . $tt . ':' . md5($pwd . C('wsign')['key'] . $un . $tt)) . randStr(4, 2));
 	}
 
 	protected function decookie($enstr, &$arr) {
 
-		$arr = explode(':', base64_decode(substr(strrev($enstr), 3, strlen($enstr) - 6)));
+		$arr = explode(':', base64_decode(substr(strrev($enstr), 4, strlen($enstr) - 8)));
+		//var_dump($enstr, $arr);exit;
 		if (count($arr) == 3) {
 			return true;
 		}

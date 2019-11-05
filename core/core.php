@@ -95,6 +95,8 @@ class Core {
 			if (strpos($className, 'Const') !== false) {
 				$path = LIB_PATH . '/const/' . $className . '.php';
 
+			} elseif (strpos($className, 'Base') > 0) {
+				$path = ROOT_PATH . '/' . lcfirst(str_replace('Base', '', $className)) . '/' . $className . '.php';
 			} else {
 				$path = LIB_PATH . '/class/' . $className . '.class.php';
 			}

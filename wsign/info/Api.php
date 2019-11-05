@@ -1,6 +1,8 @@
 <?php
-
-class Api extends WsBase {
+if (!defined('EXITFORBID')) {
+	exit('forbid');
+}
+class Api extends WsignBase {
 	public function __construct() {
 
 		$this->needLogin('/wsign-login-login.html');
