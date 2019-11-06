@@ -22,12 +22,14 @@ class WsignBase extends Base {
 			exit();
 		}
 	}
-	protected function setLoginInfo($info, &$db) {
+	protected function setLoginInfo($info) {
 		Session('name', $info['name']);
 		Session('uid', $info['id']);
 		Session('lasttime', date('Y-m-d H:i:s', $info['lasttime']));
 		Session('lastip', long2ip($info['lastip']));
-		$db->exec('update login set lasttime=' . time() . ',lastip=' . ip2long($_SERVER['REMOTE_ADDR']) . ' where id=' . $info['id']);
+		$this->db('login')->where('lasttime=' . time() . ',lastip=' . ip2long($_SERVER['REMOTE_ADDR']))->save($info['id']);
+		//var_dump($this->db('login')->where('lasttime=1,lastip=2,cc=:ii', [':ii' => 'as'])->save($info['id']));exit;
+		//$db->exec('update login set lasttime=' . time() . ',lastip=' . ip2long($_SERVER['REMOTE_ADDR']) . ' where id=' . $info['id']);
 	}
 
 	protected function wencookie($id, $un, $pwd) {

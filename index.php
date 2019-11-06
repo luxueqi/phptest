@@ -11,6 +11,7 @@ require './core/core.php';
 Core::init();
 //var_dump($_SERVER);exit();
 //captcha();
+
 Core::run();
 
 ?>

@@ -5,6 +5,17 @@ if (!defined('EXITFORBID')) {
 class Base {
 	protected $assign = [];
 
+	protected $table;
+//select * from w where id=
+	//delect from w where id=
+	//insert into w()values()
+	//update w set c=1,t=2 where id=
+	protected $dbfiled = '*';
+
+	protected $dbdata = [];
+
+	protected $dbwhere;
+
 	protected function view($path = __A__) {
 		extract($this->assign);
 		require './public/view/' . __M__ . '/' . $path . '.html';
@@ -76,6 +87,74 @@ class Base {
 			$returnParam[$key] = G($key);
 		}
 		return $returnParam;
+	}
+
+	protected function db($table) {
+		$this->dbfiled = '*';
+
+		$this->dbdata = [];
+
+		$this->dbwhere = '';
+		$this->table = $table;
+		return $this;
+	}
+//$s insert $s=:lastip,1,2 update lastip=:lastip,id=1
+	//$s select delete  $s='id=1&&lastip=:lastip'
+	protected function where($s, $data = []) {
+		$this->dbwhere = 'where ' . $s;
+		$this->dbdata = $data;
+		return $this;
+	}
+
+	protected function filed($v = '*') {
+		$this->dbfiled = $v;
+		return $this;
+	}
+
+	protected function select() {
+		$sql = "select {$this->dbfiled} from {$this->table} {$this->dbwhere}";
+
+		return Db::getInstance()->exec($sql, $this->dbdata)->getAll();
+	}
+
+	protected function getOne() {
+		$sql = "select {$this->dbfiled} from {$this->table} {$this->dbwhere}";
+		//var_dump($sql, $this->dbdata);exit;
+		return Db::getInstance()->exec($sql, $this->dbdata)->getOne();
+	}
+
+	protected function delete($id = '') {
+
+		if ($id == '' && $this->dbwhere == '') {
+			die('安全问题');
+		}
+		if ($id != '') {
+			$this->where('id=:id', [':id' => $id + 0]);
+		}
+		$sql = "delete from {$this->table} {$this->dbwhere}";
+
+		//($sql, $this->dbdata);exit;
+
+		return Db::getInstance()->exec($sql, $this->dbdata)->rowCount();
+	}
+
+//update login set lasttime=
+	protected function save($id = '') {
+		$sql = '';
+		$this->dbwhere = str_replace('where ', '', $this->dbwhere);
+
+		if ($id == '') {
+
+			$this->dbfiled = $this->dbfiled == '*' ? ' ' : "({$this->dbfiled})";
+			$sql = "insert into {$this->table}{$this->dbfiled} values({$this->dbwhere})";
+		} else {
+			//$this->dbwhere = str_replace('&', ',', $this->dbwhere);
+			//$this->dbwhere = str_replace('and', ',', $this->dbwhere);
+			$sql = "update {$this->table} set {$this->dbwhere} where id=:id";
+			$this->dbdata[':id'] = $id + 0;
+		}
+		//die($sql);
+		return Db::getInstance()->exec($sql, $this->dbdata)->rowCount();
 	}
 }
 
