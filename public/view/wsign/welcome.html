@@ -1,11 +1,32 @@
 ﻿<?php require WSIGN_VIEW_PATH.'/_meta.html';?>
-<title>我的桌面</title>
+<title>登陆信息</title>
 </head>
 <body>
 <div class="page-container">
-	<p class="f-20 text-success">欢迎使用H-ui.admin <span class="f-14">v3.1</span>后台模版！</p>
-	
-	<p>上次登录IP：<?php echo Session('lastip');?> 上次登录时间：<?php echo Session('lasttime');?></p>
+	<div class="cl pd-5 bg-1 bk-gray mt-20">  <span class="r">登陆记录：<strong><?php echo $count;?></strong> 条</span> </div>
+	<div class="mt-20">
+	<table class="table table-border table-bordered table-hover table-bg table-sort">
+		<thead>
+			<tr class="text-c">
+				<th width="80">ID</th>
+				<th width="100">name</th>
+				<th width="40">ip</th>
+				<th width="90">time</th>
+				
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach($list as $v): ?>
+			<tr class="text-c">
+				<td><?php echo $v['id'];?></td>
+				<td><?php echo $v['name'];?></td>
+				<td><?php echo long2ip($v['ip']);?></td>
+				<td><?php echo date('Y-m-d H:i:s',$v['time']);?></td>
+			</tr>
+		<?php endforeach; ?>
+		</tbody>
+	</table>
+	</div>
 </div>
 <?php require WSIGN_VIEW_PATH.'/_footer.html';?>
 </body>

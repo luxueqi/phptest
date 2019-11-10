@@ -25,9 +25,9 @@ class Base {
 		$this->assign[$name] = $data;
 	}
 
-	protected function encookie($id, $un, $pwd, $tt) {
-
-		return strrev(randStr(4, 2) . base64_encode($id . ':' . $tt . ':' . md5($pwd . C('wsign')['key'] . $un . $tt)) . randStr(4, 2));
+	protected function encookie($id, $un, $pwd, $tt, $key = '') {
+		$key = $key == '' ? C('base')['key'] : $key;
+		return strrev(randStr(4, 2) . base64_encode($id . ':' . $tt . ':' . md5($pwd . $key . $un . $tt)) . randStr(4, 2));
 	}
 
 	protected function decookie($enstr, &$arr) {
@@ -47,8 +47,9 @@ class Base {
  * @param  [type] $pwd [description]
  * @return [type]      [description]
  */
-	protected function verifycookie($arr, $un, $pwd) {
-		if (time() < $arr[1] && $arr[2] === md5($pwd . C('wsign')['key'] . $un . $arr[1])) {
+	protected function verifycookie($arr, $un, $pwd, $key = '') {
+		$key = $key == '' ? C('base')['key'] : $key;
+		if (time() < $arr[1] && $arr[2] === md5($pwd . $key . $un . $arr[1])) {
 
 			return true;
 		}
@@ -66,6 +67,7 @@ class Base {
 		$returnParam = [];
 		foreach ($param as $key => $value) {
 			if ($value == 'int') {
+
 				$flag = is_numeric(G($key)) && G($key) > 0;
 			} elseif ($value == 'email') {
 				$flag = Validate::R(G($key), Validate::VEMAIL);
@@ -98,8 +100,15 @@ class Base {
 		$this->table = $table;
 		return $this;
 	}
-//$s insert $s=:lastip,1,2 update lastip=:lastip,id=1
-	//$s select delete  $s='id=1&&lastip=:lastip'
+/**
+ * [where description]
+ * @param  [type] $s    [形如c1=r1,c2=r2,update;
+ *                      	c1=r2&&c2=r2,select delete;
+ *                      	c1,c2,c3,insert;
+ *                      ]
+ * @param  array  $data [description]
+ * @return [type]       [description]
+ */
 	protected function where($s, $data = []) {
 		$this->dbwhere = 'where ' . $s;
 		$this->dbdata = $data;
@@ -138,7 +147,11 @@ class Base {
 		return Db::getInstance()->exec($sql, $this->dbdata)->rowCount();
 	}
 
-//update login set lasttime=
+/**
+ * [save description]
+ * @param  string $id [ID=‘’insert操作，否则update操作]
+ * @return [type]     [description]
+ */
 	protected function save($id = '') {
 		$sql = '';
 		$this->dbwhere = str_replace('where ', '', $this->dbwhere);
@@ -146,7 +159,8 @@ class Base {
 		if ($id == '') {
 
 			$this->dbfiled = $this->dbfiled == '*' ? ' ' : "({$this->dbfiled})";
-			$sql = "insert into {$this->table}{$this->dbfiled} values({$this->dbwhere})";
+			$sql = "insert into {$this->table}{$this->dbfiled} values{$this->dbwhere}";
+			//var_dump($sql);exit;
 		} else {
 			//$this->dbwhere = str_replace('&', ',', $this->dbwhere);
 			//$this->dbwhere = str_replace('and', ',', $this->dbwhere);

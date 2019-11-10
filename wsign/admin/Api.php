@@ -18,7 +18,7 @@ class Api extends WsignBase {
 
 	public function welcome() {
 
-		$this->view();
+		$this->slist('i.id,i.ip,i.time,l.name', 'login_info i inner join login l on i.uid=l.id', 'welcome');
 	}
 
 	public function member() {
@@ -83,18 +83,13 @@ class Api extends WsignBase {
 		$this->comdel('wcount');
 	}
 
-	private function comdel($table) {
+	public function tl() {
 
-		$params = $this->checkParams(['id' => 'int']);
-		$id = $params['id'];
-		try {
-			if (Db::getInstance()->exec('delete from ' . $table . ' where id=' . $id)->rowCount() === 1) {
-				exitMsg(ErrorConst::API_SUCCESS_ERRNO, '删除成功');
-			}
-			exitMsg(ErrorConst::API_PARAMS_ERRNO, '删除失败,请检查参数是否正确');
-		} catch (PDOException $e) {
-			exitMsg(ErrorConst::API_CATCH_ERRNO, 'fail');
-		}
+		$this->slist('id,name,time,status', 'tb_zh', 'tlist');
+	}
+
+	public function ts() {
+		$this->statuscomm('tb_zh');
 	}
 
 	public function logout() {

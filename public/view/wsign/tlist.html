@@ -1,8 +1,5 @@
 <?php require WSIGN_VIEW_PATH.'/_meta.html';?>
-<!--[if IE 6]>
-<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
-<script>DD_belatedPNG.fix('*');</script>
-<![endif]-->
+
 <title>用户管理</title>
 </head>
 <body>
@@ -14,9 +11,9 @@
 		<thead>
 			<tr class="text-c">
 				<th width="50">ID</th>
-				<th width="90">name</th>
-				<th width="90">huati</th>
-				<th width="60">status</th>
+				<th width="90">un</th>
+				<th width="90">status</th>
+				<th width="60">time</th>
 				<th width="100">操作</th>
 			</tr>
 		</thead>
@@ -25,9 +22,9 @@
 			<tr class="text-c">
 				<td><?php echo $v['id'];?></td>
 				<td><?php echo $v['name'];?></td>
-				<td><?php echo $v['t_name'];?></td>
 				<td><?php echo $v['status'];?></td>
-				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(<?php echo $v['id'];?>,<?php echo $v['status'];?>)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,<?php echo $v['id'];?>)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				<td><?php echo date('Y-m-d H:i:s',$v['time']); ?></td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(<?php echo $v['id'];?>,<?php echo $v['status'];?>)" style="text-decoration:none"><i class="Hui-iconfont"></i></a>
 				</td>
 			</tr>
 		<?php endforeach; ?>
@@ -56,35 +53,14 @@ $(function(){
 	
 	
 });
-/*用户-删除*/
-function member_del(obj,id){
-	layer.confirm('确认要删除吗？',function(index){
-		$.ajax({
-			type: 'POST',
-			url: '/wsign/info/del',
-			data:{id:id},
-			dataType: 'json',
-			success: function(e){
-				if(e.code==1){
-					$(obj).parents("tr").remove();
-					layer.msg('已删除!',{icon:1,time:1000});
-				}else{
-					layer.msg(e.msg,{icon:2,time:3000});
-				}
-				
-				
 
-			}
-		});		
-	});
-}
 
 function status_change(id,status){
 	
 	layer.confirm('确认更改'+id+'状态吗？',function(index){
 		$.ajax({
 			type:'POSt',
-			url:'/wsign/info/status',
+			url:'/wsign/admin/ts',
 			data:{id:id,status:status},
 			dataType:'json',
 			success:function(e){
@@ -92,7 +68,7 @@ function status_change(id,status){
 				if(e.code==1){
 					
 					layer.alert('已成功!',{icon:1},function(){
-						location.href="/wsign-info-info.html";
+						location.href="/wsign-admin-tl.html";
 					});
 					
 				}else{

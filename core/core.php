@@ -37,17 +37,27 @@ class Core {
 
 			if (is_file($path)) {
 				require_once $path;
-
+				$ee = 'no api';
 				if (method_exists('Api', __A__)) {
 					$a = __A__;
 
-					(new Api)->$a();
-					return;
+					try {
+						(new Api)->$a();
+						return;
+					} catch (Exception $e) {
+						$ee = 'api err';
+						if (DEBUG == true) {
+							$ee = $e->getMessage();
+						}
+
+					}
+
+					//return;
 				}
 
 			}
 
-			exitMsg(ErrorConst::API_ERRNO, 'no api', [__M__, __C__, __A__]);
+			exitMsg(ErrorConst::API_ERRNO, $ee, [__M__, __C__, __A__]);
 
 		}
 

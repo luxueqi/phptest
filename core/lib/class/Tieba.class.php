@@ -81,6 +81,23 @@ class Tieba extends Http {
 		return $sc;
 	}
 
+	public function portrait2uid($portrait) {
+		$portrait = substr($portrait, 0, 4) . substr($portrait, -4, 4);
+		//var_dump(substr($portrait, 0, 4), substr($portrait, -4, 4));
+		$sc = '';
+		for ($i = 6; $i >= 0; $i -= 2) {
+			$sc .= substr($portrait, $i, 2);
+		}
+		return hexdec($sc);
+	}
+
+	public function name2uid($un) {
+		//http://tieba.baidu.com/home/get/panel?ie=utf-8&un
+		$res = @json_decode($this->request('http://tieba.baidu.com/home/get/panel?ie=utf-8&un=' . $un), true);
+		//var_dump($res['data']['id']);exit;
+		return isset($res['data']['id']) ? $res['data']['id'] : '';
+	}
+
 	private function md5sign() {
 		$tdata = '';
 		$datac = '';
@@ -146,6 +163,39 @@ class Tieba extends Http {
 
 		return $this->setDatac($tdata)->md5sign()->request(TiebaConst::APP_URL . '/c/c/bawu/commitprison', $this->data);
 
+	}
+
+	public function getUidName() {
+		$res = @json_decode($this->request('http://help.baidu.com/api/count', '', ['Cookie: BDUSS=' . $this->bduss]));
+		if (!isset($res->uid)) {
+			throw new Exception("get uidname error");
+
+		}
+		return ['name' => $res->uname, 'uid' => $res->uid];
+	}
+
+	public function like($pn = 1, $uid = '', $count = 60) {
+		if ($uid == '') {
+			$uid = $this->getUidName()['uid'];
+		}
+		$this->initCommonData();
+		$tdata = ['uid' => $uid, 'page_size' => $count, 'page_no' => $pn];
+		$list = json_decode($this->setDatac($tdata)->md5sign()->request(TiebaConst::APP_URL . '/c/f/forum/like', $this->data), true)['forum_list'];
+		$c = count($list);
+		//var_dump($list, $c);
+		if ($c) {
+			//array_push($list['non-gconforum'], $list['gconforum']);
+			return array_merge($list['non-gconforum'], isset($list['gconforum']) ? $list['gconforum'] : []);
+		}
+
+		return [];
+	}
+
+	public function sign($bduss, $tbs, $fid, $uid, $kw) {
+		$this->initCommonData();
+		$tdata = ['BDUSS' => $bduss, 'tbs' => $tbs, 'fid' => $fid, 'kw' => $kw, 'uid' => $uid];
+		$res = json_decode($this->setDatac($tdata)->md5sign()->request(TiebaConst::APP_URL . '/c/c/forum/sign', $this->data . '&sig=9b7c9d4ac0772d6d96a989e9651119b9'), true);
+		return $res;
 	}
 
 }

@@ -5,20 +5,20 @@
 <![endif]-->
 <!--/meta 作为公共模版分离出去-->
 
-<title>编辑用户</title>
+<title>add or update</title>
 </head>
 <body>
 <article class="page-container">
 	<form action="" method="post" class="form form-horizontal" id="form-member-add">
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>关注数量：</label>
+			<label class="form-label col-xs-4 col-sm-3">Cookie：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="<?php echo G('ct');?>" placeholder="" id="icount" name="count">
+				<textarea name="cookie" cols="" rows="" class="textarea"></textarea>
 			</div>
 		</div>
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
-				<input id="btnc" class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+				<input id="btnc" class="btn btn-primary radius" type="button" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
 			</div>
 		</div>
 	</form>
@@ -31,19 +31,25 @@
 <script type="text/javascript">
 	$(function(){
 		$('#btnc').click(function(){
-			var count=$('#icount').val();
-			if(/\D/.test(count)){
-				layer.alert('请输入正整数',{icon:2});
-			}else{
-				$.post('',{count:count},function success(ee) {
-					layer.alert(ee.msg,{icon:ee.code==1?1:2},function(){
-						//layer.close(index);
-						top.location.reload(true);});
-				},'json');
+			var cookie=/BDUSS=([^;]+);/.exec($('.textarea').val());
+			//alert(cookie);
+			if(!cookie){
+				layer.alert('请输入cookie',{icon:2});
+				return false;
 			}
-			return false;
+			//alert(cookie[1]);
+			$.post('',{cookie:cookie[1]},function(e){
+				if(e.code==1){
+					layer.alert('ok',{icon:1});
+					$('.textarea').val('');
+				}else{
+					layer.alert(e.msg,{icon:2});
+				}
+
+			},'json');
 
 		});
+		
 	});
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

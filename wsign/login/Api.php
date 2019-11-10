@@ -38,7 +38,7 @@ class Api extends WsignBase {
 
 				//$res = $db->exec("select id,name,lasttime,lastip from login where email=:un and pwd=:pwd", [':un' => $un, ':pwd' => $pwd])->getOne();
 
-				$res = $this->db('login')->filed('id,name,lasttime,lastip')->where('email=:un and pwd=:pwd', [':un' => $un, ':pwd' => $pwd])->getOne();
+				$res = $this->db('login')->filed('id,name')->where('email=:un and pwd=:pwd', [':un' => $un, ':pwd' => $pwd])->getOne();
 				//var_dump($res);exit;
 
 				if (!empty($res)) {
