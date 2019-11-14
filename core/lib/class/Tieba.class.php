@@ -72,7 +72,7 @@ class Tieba extends Http {
 	}
 
 	private function uid2portrait($uid) {
-		$strc = str_pad(dechex($uid), 8, 0, STR_PAD_LEFT);
+		$strc = str_pad(dechex(trim($uid)), 8, 0, STR_PAD_LEFT);
 		$sc = '';
 		for ($i = 6; $i >= 0; $i -= 2) {
 			$sc .= substr($strc, $i, 2);
@@ -163,6 +163,25 @@ class Tieba extends Http {
 
 		return $this->setDatac($tdata)->md5sign()->request(TiebaConst::APP_URL . '/c/c/bawu/commitprison', $this->data);
 
+	}
+
+	static public function blockStatic($word, $fid, $bduss, $tbs, $type, $value) {
+		$that = new self();
+		$that->initCommonData();
+		$portrait = '';
+		$un = '';
+		if ($type == 1) {
+			$portrait = $that->uid2portrait($value);
+		} else {
+			$un = $value;
+		}
+
+		$tdata = ['BDUSS' => $bduss, 'tbs' => $tbs, 'z' => '6233732579', 'day' => 1, 'word' => $word, 'nick_name' => '', 'portrait' => $portrait, 'm_api' => 'c/u/bawu/listreason', 'ntn' => 'banid', 'reason' => 'test', 'post_id' => '6233732579', 'un' => $un, 'fid' => $fid];
+		return $that->setDatac($tdata)->md5sign()->request(TiebaConst::APP_URL . '/c/c/bawu/commitprison', $that->data);
+	}
+
+	static public function u2p($uid) {
+		return (new self())->uid2portrait($uid);
 	}
 
 	public function getUidName() {
