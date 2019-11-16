@@ -57,6 +57,7 @@ class Api extends WsignBase {
 	public function cron() {
 		$plist = ['tb_gz', 'tb_block'];
 		$today = mktime(0, 0, 0);
+		$info = '';
 		//var_dump($today, time(), time() - $today);exit;
 		try {
 			if (G('q') == 1) {
@@ -72,7 +73,7 @@ class Api extends WsignBase {
 
 				}
 			} else {
-				if (time() - $today < 2500) {
+				if (time() - $today < 1500) {
 					$tt = $this->db('wsetting')->filed('v')->where('k="cron_time"')->getOne()['v'];
 					if ($today > $tt) {
 						foreach ($plist as $value) {
@@ -84,14 +85,22 @@ class Api extends WsignBase {
 					}
 				}
 
-				$this->sign();
+				foreach ($plist as $value) {
+					$info .= $this->cronWork($value) . '-';
+				}
+
 			}
 
+			$info = 'ok-' . rtrim($info, '-');
 			echo "ok";
+
 		} catch (PDOException $e) {
-			echo "no";
-			//echo $e->getMessage();
+			echo "no-s";
+			$info = 'no-' . $info . $e->getMessage();
+
 		}
+
+		$this->db('tb_cron')->filed('time,info')->where("(:time,'{$info}')", [':time' => time()])->save();
 
 	}
 	/*public function gzero() {
@@ -110,30 +119,55 @@ class Api extends WsignBase {
 
 	echo $r;
 	}*/
-
-	private function sign() {
+	private function cronWork($table) {
 		try {
-			$res = Db::getInstance()->exec('SELECT z.uid,z.cookie,z.tbs,g.fid,g.name,g.id from tb_zh z INNER JOIN tb_gz g on g.zid=z.id and g.status=0 and z.status=1 LIMIT 2')->getAll();
-			if (empty($res)) {
-				//exitMsg(ErrorConst::API_SUCCESS_ERRNO, 'ok-ok');
-				return 'sign-ok';
+			$sql = '';
+
+			if ($table == 'tb_gz') {
+
+				$sql = 'SELECT z.uid,z.cookie,z.tbs,g.fid,g.name,g.id,z.name un from tb_zh z INNER JOIN tb_gz g on g.zid=z.id and g.status=0 and z.status=1 LIMIT 2';
+			} elseif ($table == 'tb_block') {
+
+				$sql = 'select b.id,b.kw,b.fid,b.type,b.value,z.cookie,z.tbs,z.name from tb_block b inner join tb_zh z on b.zid=z.id and z.status=1 and b.status=0 limit 2';
 			}
-			$tb = new Tieba();
+			$res = Db::getInstance()->exec($sql)->getAll();
+			if (empty($res)) {
+
+				return "[{$table}-完成]";
+			}
+
 			$idstatus = ['y' => '', 'n' => ''];
 			for ($i = 0, $len = count($res); $i < $len; $i++) {
 
-				$rs = $tb->sign($res[$i]['cookie'], $res[$i]['tbs'], $res[$i]['fid'], $res[$i]['uid'], $res[$i]['name']);
-				$status = 0;
+				if ($table == 'tb_gz') {
+					$rs = (new Tieba)->sign($res[$i]['cookie'], $res[$i]['tbs'], $res[$i]['fid'], $res[$i]['uid'], $res[$i]['name']);
 
-				if (isset($rs['error_code']) && ($rs['error_code'] == '160002' || $rs['error_code'] == '0')) {
-					//$status = 1;
-					$idstatus['y'] .= $res[$i]['id'] . ',';
+					//var_dump($rs);exit;error_msg
 
-				} else {
-					$idstatus['n'] .= $res[$i]['id'] . ',';
+					if (isset($rs['error_code']) && ($rs['error_code'] == '160002' || $rs['error_code'] == '0')) {
+						//$status = 1;
 
+						$idstatus['y'] .= $res[$i]['id'] . ',';
+
+					} else {
+						$this->rwinfo($res[$i]['un'], $res[$i]['name'], $rs['error_msg']);
+
+						$idstatus['n'] .= $res[$i]['id'] . ',';
+
+					}
+
+				} elseif ($table == 'tb_block') {
+					$rs = Tieba::blockStatic($res[$i]['kw'], $res[$i]['fid'], $res[$i]['cookie'], $res[$i]['tbs'], $res[$i]['type'], $res[$i]['value']);
+
+					if (isset($rs['un']) && $rs['error_code'] == 0) {
+						$idstatus['y'] .= $res[$i]['id'] . ',';
+
+					} else {
+						$this->rwinfo($res[$i]['name'] . '-' . $res[$i]['value'], $res[$i]['kw'], $rs['error_msg']);
+						$idstatus['n'] .= $res[$i]['id'] . ',';
+					}
 				}
-				//$this->db('tb_gz')->where('status=' . $status)->save();
+
 				if ($i == $len - 1) {
 					break;
 				}
@@ -148,37 +182,19 @@ class Api extends WsignBase {
 
 				$value = rtrim($value, ',');
 				$status = $key == 'y' ? 1 : 2;
-				Db::getInstance()->exec("update tb_gz set status={$status} where id in({$value})");
+				Db::getInstance()->exec("update {$table} set status={$status} where id in({$value})");
 				//var_dump("update tb_gz set status={$status} where id in({$idstatus[$key]})");exit;
 			}
 
-			//echo "ok";
+			return "[$table]";
 
 		} catch (PDOException $ee) {
-			echo 'sign-fail';
+			return '[' . $table . '-' . $ee->getMessage() . ']';
 			//exitMsg(ErrorConst::API_CATCH_ERRNO, 'fail');
 		} catch (Exception $e) {
-			echo 'sign-' . $e->getMessage();
+			return "[{$table}-" . $e->getMessage() . ']';
 			//exitMsg(ErrorConst::API_CATCH_ERRNO, $e->getMessage());
 		}
-
-	}
-
-	public function block() {
-		//741aad1f
-		//531438196
-		//1920362691
-		//1042496
-		//948043122
-		//tb.1.727668c3.DsiLvk5KFe6kwxlhtT7hHQ
-		//tb.1.3881fd72.5_FH5O3JsjjsTj1iYLTtyw
-		//
-		//96cdea74
-		//
-		//SELECT z.id from tb_zh z INNER JOIN tb_user u on u.token='c83551352b1f091237fc91de6926697d' and u.id=z.w_id and z.id=2
-		//
-		//var_dump(json_decode(Tieba::blockStatic('凡雪', 1430795, 'H5lS0J3dlpEaWVkYVRYdGkydjRjR3RxU3pPUm5kYWdYVGhLTFZMczlkb01pcnRkSVFBQUFBJCQAAAAAAAAAAAEAAABA6A8AMTMxNDUyNwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAz9k10M~ZNda', '4b66fc9cc01876e21573633431', 'u', 1)));
-		//echo Tieba::u2p(1);
 	}
 
 	private function ba() {
@@ -224,6 +240,11 @@ class Api extends WsignBase {
 			}
 		}
 		//$this->view('badd');
+	}
+
+	private function rwinfo($un, $kw, $msg) {
+		$time = time();
+		$this->db('werrinfo')->filed('name,t_name,errinfo,time')->where("('{$un}','{$kw}','{$msg}',$time)")->save();
 	}
 
 }

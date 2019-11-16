@@ -8,7 +8,7 @@ define('ROOT_PATH', dirname(__FILE__));
 
 require './core/core.php';
 
-Core::init();
+//Core::init();
 
 Core::run();
 

@@ -17,7 +17,7 @@ class Core {
 
 	static function run() {
 
-		//self::init();
+		self::init();
 
 		//经过重写,形如/api/wb/login?..... 经过此方法
 		//var_dump($_SERVER);exit;

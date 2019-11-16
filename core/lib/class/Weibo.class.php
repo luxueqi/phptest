@@ -213,9 +213,9 @@ class Weibo extends Http {
 
 	}
 
-	public function block($ruid, $huati) {
+	public function block($ruid, $huati, $day = 1) {
 
-		$data = 'mid=&api=http%3A%2F%2Fi.huati.weibo.com%2FSuper_Shield%2FshieldUser%3Foperator%3D1%26user%3D' . $ruid . '%26pageid%3D' . $huati . '%26day%3D1%26sign%3D1836248554%26from%3Dpc';
+		$data = 'mid=&api=http%3A%2F%2Fi.huati.weibo.com%2FSuper_Shield%2FshieldUser%3Foperator%3D1%26user%3D' . $ruid . '%26pageid%3D' . $huati . '%26day%3D' . $day . '%26sign%3D1836248554%26from%3Dpc';
 
 		$httpHeader = new HttpHeader();
 		$header = $httpHeader->setContentType()->setCookie($this->cookie)->setReferer('https://weibo.com/p/' . $huati . '/super_index')->setUserAgent()->isAjax(true)->getHeader();

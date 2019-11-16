@@ -18,6 +18,8 @@ class ErrorConst {
 
 	const API_PARAMS_ERRNO = 3000; //api传递参数错误
 
+	const MYSQL_ERRNO = 3002; //mysql错误 统一代码
+
 	const HTTP_CODE = 1001; //httpclass 请求错误
 
 	const WEIBO_COOKIE_DEF = -1; //weibo.cookie 失效

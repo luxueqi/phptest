@@ -74,6 +74,7 @@ class WsignBase extends Base {
 
 	protected function slist($field, $table, $view) {
 		$db = Db::getInstance();
+		//exit("select $field from $table");
 		$arr = $db->exec("select $field from $table")->getAll();
 		$this->assign('list', $arr);
 		$this->assign('count', count($arr));

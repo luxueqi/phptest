@@ -177,7 +177,7 @@ class Tieba extends Http {
 		}
 
 		$tdata = ['BDUSS' => $bduss, 'tbs' => $tbs, 'z' => '6233732579', 'day' => 1, 'word' => $word, 'nick_name' => '', 'portrait' => $portrait, 'm_api' => 'c/u/bawu/listreason', 'ntn' => 'banid', 'reason' => 'test', 'post_id' => '6233732579', 'un' => $un, 'fid' => $fid];
-		return $that->setDatac($tdata)->md5sign()->request(TiebaConst::APP_URL . '/c/c/bawu/commitprison', $that->data);
+		return json_decode($that->setDatac($tdata)->md5sign()->request(TiebaConst::APP_URL . '/c/c/bawu/commitprison', $that->data), true);
 	}
 
 	static public function u2p($uid) {

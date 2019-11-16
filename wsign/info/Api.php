@@ -22,6 +22,14 @@ class Api extends WsignBase {
 		$this->slist('id,name,t_name as tname,errinfo info,time', 'werrinfo', 'einfo');
 	}
 
+	public function binfo() {
+		$this->slist('b.id,b.kw,z.name,b.type,b.value,b.status', 'tb_block b inner join tb_zh z on z.id=b.zid', 'binfo');
+	}
+
+	public function cron() {
+		$this->slist('id,time,info', 'tb_cron order by id desc limit 100', 'cron');
+	}
+
 	public function del() {
 
 		$this->comdel('wgz');
@@ -40,12 +48,21 @@ class Api extends WsignBase {
 		$this->comdel('tb_gz');
 	}
 
+	public function bd() {
+
+		$this->comdel('tb_block');
+	}
+
 	public function status() {
 		$this->statuscomm('wgz');
 	}
 
 	public function ts() {
 		$this->statuscomm('tb_gz');
+	}
+
+	public function bs() {
+		$this->statuscomm('tb_block');
 	}
 
 }
