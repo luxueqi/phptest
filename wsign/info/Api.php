@@ -11,11 +11,26 @@ class Api extends WsignBase {
 //SELECT w.id,u.name,w.t_name,w.status from wgz w INNER JOIN user u on u.id=w.uid
 	//select $field from $table
 	public function info() {
+		$this->strsatusinfo('wgz', '签到');
 		$this->slist('w.id,u.name,w.t_name,w.status', 'wgz w INNER JOIN user u on u.id=w.uid', 'info');
 	}
 
 	public function tinfo() {
+		$this->strsatusinfo('tb_gz', '签到');
+
 		$this->slist('g.id,z.name un,g.name,g.status', 'tb_gz g inner join tb_zh z on g.zid=z.id', 'tinfo');
+	}
+
+	private function strsatusinfo($table, $type) {
+		$res = Db::getInstance()->exec('select status,count(*) as c from ' . $table . ' group by status')->getAll();
+
+		$liststatus = [0, 0, 0];
+
+		foreach ($res as $value) {
+			$liststatus[$value['status']] = $value['c'];
+		}
+		$strstatus = "已{$type}:{$liststatus[1]},未{$type}:{$liststatus[0]},失败:{$liststatus[2]}";
+		$this->assign('strstatus', $strstatus);
 	}
 
 	public function einfo() {
@@ -23,11 +38,12 @@ class Api extends WsignBase {
 	}
 
 	public function binfo() {
+		$this->strsatusinfo('tb_block', '封禁');
 		$this->slist('b.id,b.kw,z.name,b.type,b.value,b.status', 'tb_block b inner join tb_zh z on z.id=b.zid', 'binfo');
 	}
 
 	public function cron() {
-		$this->slist('id,time,info', 'tb_cron order by id desc limit 100', 'cron');
+		$this->slist('id,time,info', 'tb_cron order by id desc limit 30', 'cron');
 	}
 
 	public function del() {

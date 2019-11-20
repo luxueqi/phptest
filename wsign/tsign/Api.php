@@ -125,7 +125,7 @@ class Api extends WsignBase {
 
 			if ($table == 'tb_gz') {
 
-				$sql = 'SELECT z.uid,z.cookie,z.tbs,g.fid,g.name,g.id,z.name un from tb_zh z INNER JOIN tb_gz g on g.zid=z.id and g.status=0 and z.status=1 LIMIT 2';
+				$sql = 'SELECT z.uid,z.cookie,z.tbs,g.fid,g.name,g.id,z.name un from tb_zh z INNER JOIN tb_gz g on g.zid=z.id and g.status=0 and z.status=1 LIMIT 3';
 			} elseif ($table == 'tb_block') {
 
 				$sql = 'select b.id,b.kw,b.fid,b.type,b.value,z.cookie,z.tbs,z.name from tb_block b inner join tb_zh z on b.zid=z.id and z.status=1 and b.status=0 limit 2';
@@ -146,7 +146,7 @@ class Api extends WsignBase {
 
 					if (isset($rs['error_code']) && ($rs['error_code'] == '160002' || $rs['error_code'] == '0')) {
 						//$status = 1;
-
+						//$this->rwinfo($res[$i]['un'], $res[$i]['name'], $rs['error_msg']);
 						$idstatus['y'] .= $res[$i]['id'] . ',';
 
 					} else {
@@ -244,7 +244,7 @@ class Api extends WsignBase {
 
 	private function rwinfo($un, $kw, $msg) {
 		$time = time();
-		$this->db('werrinfo')->filed('name,t_name,errinfo,time')->where("('{$un}','{$kw}','{$msg}',$time)")->save();
+		$this->db('werrinfo')->filed('name,t_name,errinfo,time')->where("('贴吧：{$un}','{$kw}','{$msg}',$time)")->save();
 	}
 
 }
