@@ -57,6 +57,13 @@ class Core {
 
 			}
 
+			if (isGetPostAjax('get') && !DEBUG) {
+				header("HTTP/1.1 404 Not Found");
+				header("Status: 404 Not Found");
+				include ROOT_PATH . '/public/view/wsign/404.html';
+				exit;
+			}
+
 			exitMsg(ErrorConst::API_ERRNO, $ee, [__M__, __C__, __A__]);
 
 		}

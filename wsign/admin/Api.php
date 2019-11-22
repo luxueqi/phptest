@@ -85,7 +85,15 @@ class Api extends WsignBase {
 
 	public function tl() {
 
-		$this->slist('id,name,time,status', 'tb_zh', 'tlist');
+		$this->slist('id,name,time,status,`order`', 'tb_zh', 'tlist');
+	}
+
+	public function torder() {
+		$params = $this->checkParams(['id' => 'int', 'order' => 'int']);
+
+		$this->db('tb_zh')->where('`order`=:order', [':order' => $params['order']])->save($params['id']);
+
+		exitMsg(ErrorConst::API_SUCCESS_ERRNO, '修改成功');
 	}
 
 	public function ts() {

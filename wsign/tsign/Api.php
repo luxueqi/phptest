@@ -125,10 +125,10 @@ class Api extends WsignBase {
 
 			if ($table == 'tb_gz') {
 
-				$sql = 'SELECT z.uid,z.cookie,z.tbs,g.fid,g.name,g.id,z.name un from tb_zh z INNER JOIN tb_gz g on g.zid=z.id and g.status=0 and z.status=1 LIMIT 3';
+				$sql = 'SELECT z.uid,z.cookie,z.tbs,g.fid,g.name,g.id,z.name un from tb_zh z INNER JOIN tb_gz g on g.zid=z.id and g.status=0 and z.status=1 order by z.order desc LIMIT 3';
 			} elseif ($table == 'tb_block') {
 
-				$sql = 'select b.id,b.kw,b.fid,b.type,b.value,z.cookie,z.tbs,z.name from tb_block b inner join tb_zh z on b.zid=z.id and z.status=1 and b.status=0 limit 2';
+				$sql = 'select b.id,b.kw,b.fid,b.type,b.value,z.cookie,z.tbs,z.name from tb_block b inner join tb_zh z on b.zid=z.id and z.status=1 and b.status=0 order by z.order desc limit 2';
 			}
 			$res = Db::getInstance()->exec($sql)->getAll();
 			if (empty($res)) {
@@ -150,7 +150,7 @@ class Api extends WsignBase {
 						$idstatus['y'] .= $res[$i]['id'] . ',';
 
 					} else {
-						$this->rwinfo($res[$i]['un'], $res[$i]['name'], $rs['error_msg']);
+						$this->rwinfo('贴吧签到:' . $res[$i]['un'], $res[$i]['name'], $rs['error_msg']);
 
 						$idstatus['n'] .= $res[$i]['id'] . ',';
 
@@ -163,7 +163,7 @@ class Api extends WsignBase {
 						$idstatus['y'] .= $res[$i]['id'] . ',';
 
 					} else {
-						$this->rwinfo($res[$i]['name'] . '-' . $res[$i]['value'], $res[$i]['kw'], $rs['error_msg']);
+						$this->rwinfo('贴吧封禁:' . $res[$i]['name'] . '-' . $res[$i]['value'], $res[$i]['kw'], $rs['error_msg']);
 						$idstatus['n'] .= $res[$i]['id'] . ',';
 					}
 				}
@@ -244,7 +244,7 @@ class Api extends WsignBase {
 
 	private function rwinfo($un, $kw, $msg) {
 		$time = time();
-		$this->db('werrinfo')->filed('name,t_name,errinfo,time')->where("('贴吧：{$un}','{$kw}','{$msg}',$time)")->save();
+		$this->db('werrinfo')->filed('name,t_name,errinfo,time')->where("('{$un}','{$kw}','{$msg}',$time)")->save();
 	}
 
 }

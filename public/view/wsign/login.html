@@ -84,11 +84,11 @@
       })
       .done(function(e) {
         if(e.code==1){
-          layer.alert('登陆成功',{icon:1},function(cc){
-            layer.close(cc);
-            location.href='/wsign-admin-index.html';
 
+          layer.msg('登陆成功',{icon:1,time:2000},function(){
+            location.href='/wsign-admin-index.html';
           });
+          
           
         }else{
           layer.open({title:'信息提示',content:e.msg,icon:2});

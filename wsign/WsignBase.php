@@ -23,11 +23,12 @@ class WsignBase extends Base {
 		}
 	}
 	protected function setLoginInfo($info) {
-		Session('name', $info['name']);
-		Session('uid', $info['id']);
 		$time = time();
 		$ip = ip2long($_SERVER['REMOTE_ADDR']);
 		$this->db('login_info')->filed('uid,time,ip')->where("({$info['id']},$time,$ip)")->save();
+		Session('name', $info['name']);
+		Session('uid', $info['id']);
+
 		//Session('lasttime', date('Y-m-d H:i:s', $info['lasttime']));
 		//Session('lastip', long2ip($info['lastip']));
 		//$this->db('login')->where('time=' . time() . ',ip=' . ip2long($_SERVER['REMOTE_ADDR']))->save($info['id']);
@@ -76,6 +77,7 @@ class WsignBase extends Base {
 		$db = Db::getInstance();
 		//exit("select $field from $table");
 		$arr = $db->exec("select $field from $table")->getAll();
+
 		$this->assign('list', $arr);
 		$this->assign('count', count($arr));
 		$this->view($view);

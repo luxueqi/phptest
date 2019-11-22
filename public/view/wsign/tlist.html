@@ -1,5 +1,4 @@
 <?php require WSIGN_VIEW_PATH.'/_meta.html';?>
-
 <title>用户管理</title>
 </head>
 <body>
@@ -13,6 +12,7 @@
 				<th width="50">ID</th>
 				<th width="90">un</th>
 				<th width="90">status</th>
+				<th width="90">order</th>
 				<th width="60">time</th>
 				<th width="100">操作</th>
 			</tr>
@@ -23,6 +23,7 @@
 				<td><?php echo $v['id'];?></td>
 				<td><?php echo $v['name'];?></td>
 				<td><?php echo $v['status'];?></td>
+				<td ondblclick="orderchange(<?php echo $v['id'];?>,<?php echo $v['order'];?>)"><?php echo $v['order'];?></td>
 				<td><?php echo date('Y-m-d H:i:s',$v['time']); ?></td>
 				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(<?php echo $v['id'];?>,<?php echo $v['status'];?>)" style="text-decoration:none"><i class="Hui-iconfont"></i></a>
 				</td>
@@ -42,17 +43,44 @@
 <script type="text/javascript">
 $(function(){
 	$('.table-sort').dataTable({
-		"aaSorting": [[ 3, "asc" ]],//默认第几个排序
+		"aaSorting": [[ 3, "desc" ]],//默认第几个排序
 		"bStateSave": true,//状态保存
 		"aoColumnDefs": [
 		  //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
-		  //{"orderable":false,"aTargets":[0,8,9]}// 制定列不参与排序
+		  {"orderable":false,"aTargets":[5]}// 制定列不参与排序
 		]
 	});
 
 	
 	
 });
+
+function orderchange(id,orderid){
+	//console.log(id);
+	layer.prompt({title:'order',value:orderid},function(text,index){
+		layer.close(index);
+		if(!/^[1-9][0-9]*$/.test(text)){
+			layer.alert('请输入一个正整数',{icon:2});
+		}else{
+			$.post('/wsign/admin/torder',{id:id,order:text},function(e){
+				if(e.code==1){
+							
+					layer.alert('已成功!',{icon:1},function(){
+						location.href="/wsign-admin-tl.html";
+					});	
+						
+							
+				}else{
+					
+					    layer.alert(e.msg,{icon:2});
+							
+				}
+			},'json');
+		}
+		
+	});
+}
+
 
 
 function status_change(id,status){
