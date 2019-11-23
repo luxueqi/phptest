@@ -48,6 +48,10 @@ class Core {
 						$ee = 'api err';
 						if (DEBUG == true) {
 							$ee = $e->getMessage();
+						} else {
+							header('HTTP/1.1 500 Internal Server Error');
+							exit;
+
 						}
 
 					}

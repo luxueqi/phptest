@@ -3,6 +3,7 @@ if (!defined('EXITFORBID')) {
 	exit('forbid');
 }
 define('WSIGN_VIEW_PATH', ROOT_PATH . '/public/view/wsign');
+
 class WsignBase extends Base {
 
 	protected function checkLogin() {
@@ -25,15 +26,10 @@ class WsignBase extends Base {
 	protected function setLoginInfo($info) {
 		$time = time();
 		$ip = ip2long($_SERVER['REMOTE_ADDR']);
+		//var_dump($ip);exit;
 		$this->db('login_info')->filed('uid,time,ip')->where("({$info['id']},$time,$ip)")->save();
 		Session('name', $info['name']);
 		Session('uid', $info['id']);
-
-		//Session('lasttime', date('Y-m-d H:i:s', $info['lasttime']));
-		//Session('lastip', long2ip($info['lastip']));
-		//$this->db('login')->where('time=' . time() . ',ip=' . ip2long($_SERVER['REMOTE_ADDR']))->save($info['id']);
-		//var_dump($this->db('login')->where('lasttime=1,lastip=2,cc=:ii', [':ii' => 'as'])->save($info['id']));exit;
-		//$db->exec('update login set lasttime=' . time() . ',lastip=' . ip2long($_SERVER['REMOTE_ADDR']) . ' where id=' . $info['id']);
 	}
 
 	protected function wencookie($id, $un, $pwd) {

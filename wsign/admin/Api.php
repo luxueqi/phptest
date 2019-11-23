@@ -13,6 +13,7 @@ class Api extends WsignBase {
 	}
 
 	public function index() {
+
 		$this->view();
 	}
 

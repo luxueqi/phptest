@@ -57,7 +57,7 @@ $(function(){
 
 function orderchange(id,orderid){
 	//console.log(id);
-	layer.prompt({title:'order',value:orderid},function(text,index){
+	layer.prompt({title:'修改排序',value:orderid},function(text,index){
 		layer.close(index);
 		if(!/^[1-9][0-9]*$/.test(text)){
 			layer.alert('请输入一个正整数',{icon:2});

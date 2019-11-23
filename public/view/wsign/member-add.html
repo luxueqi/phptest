@@ -39,14 +39,15 @@
 		$('#btnc').click(function(){
 			var cookie=$('.textarea').val();
 			var status=$('#istatus').val();
-			if(cookie.indexOf('SUB=')==-1&&(status!=1&&status!=0)){
+			
+			if(cookie.indexOf('SUB=')==-1&&(!/^[01]$/.test(status))){
 				layer.alert('请输入正确数据',{icon:2});
 			}else{
 				$.post('',{cookie:cookie,status:status},function success(ee){
 					layer.alert(ee.msg,{icon:ee.code==1?1:2},function(){
 						//layer.close(index);
-						top.location.reload(true);
-						//layer_close();
+						//top.location.reload(true);
+						layer_close();
 						//top.location.href="/wsign-admin-member.html";
 						
 					});

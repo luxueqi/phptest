@@ -1,11 +1,56 @@
 <?php
 
-/**
- *
- */
 if (!defined('EXITFORBID')) {
 	exit('forbid');
 }
+
+interface CronInterface {
+
+	public function sql();
+	public function run($resi, &$condition, &$info);
+}
+
+class TbGz implements CronInterface {
+
+	private $tieba;
+
+	function sql() {
+		return 'SELECT z.uid,z.cookie,z.tbs,g.fid,g.name,g.id,z.name un from tb_zh z INNER JOIN tb_gz g on g.zid=z.id and g.status=0 and z.status=1 order by z.order desc LIMIT 3';
+	}
+
+	function run($resi, &$condition, &$info) {
+
+		if (!$this->tieba) {
+			$this->tieba = new Tieba();
+		}
+
+		$rs = $this->tieba->sign($resi['cookie'], $resi['tbs'], $resi['fid'], $resi['uid'], $resi['name']);
+
+		$condition = isset($rs['error_code']) && ($rs['error_code'] == '160002' || $rs['error_code'] == '0');
+
+		$info = ['贴吧签到:' . $resi['un'], $resi['name'], $rs['error_msg']];
+
+	}
+
+}
+
+class TbBlock implements CronInterface {
+
+	function sql() {
+		return 'select b.id,b.kw,b.fid,b.type,b.value,z.cookie,z.tbs,z.name from tb_block b inner join tb_zh z on b.zid=z.id and z.status=1 and b.status=0 order by z.order desc limit 2';
+	}
+
+	function run($resi, &$condition, &$info) {
+		$rs = Tieba::blockStatic($resi['kw'], $resi['fid'], $resi['cookie'], $resi['tbs'], $resi['type'], $resi['value']);
+
+		$condition = isset($rs['un']) && $rs['error_code'] == 0;
+
+		$info = ['贴吧封禁:' . $resi['name'] . '-' . $resi['value'], $resi['kw'], $rs['error_msg']];
+
+	}
+
+}
+
 class Api extends WsignBase {
 
 	private $token;
@@ -86,7 +131,7 @@ class Api extends WsignBase {
 				}
 
 				foreach ($plist as $value) {
-					$info .= $this->cronWork($value) . '-';
+					$info .= $this->commWork($value) . '-';
 				}
 
 			}
@@ -102,99 +147,6 @@ class Api extends WsignBase {
 
 		$this->db('tb_cron')->filed('time,info')->where("(:time,'{$info}')", [':time' => time()])->save();
 
-	}
-	/*public function gzero() {
-	$r = 0;
-	if (G('q') == 1) {
-	$r = Db::getInstance()->exec('update tb_gz set status=0 where status=2')->rowCount();
-	} else {
-	$today = mktime(0, 0, 0);
-	$tt = $this->db('wsetting')->filed('v')->where('k="save2"')->getOne()['v'];
-
-	if ($today > $tt) {
-	$r = Db::getInstance()->exec('update tb_gz set status=0')->rowCount();
-	Db::getInstance()->exec("update wsetting set v='{$today}' where k='save2'");
-	}
-	}
-
-	echo $r;
-	}*/
-	private function cronWork($table) {
-		try {
-			$sql = '';
-
-			if ($table == 'tb_gz') {
-
-				$sql = 'SELECT z.uid,z.cookie,z.tbs,g.fid,g.name,g.id,z.name un from tb_zh z INNER JOIN tb_gz g on g.zid=z.id and g.status=0 and z.status=1 order by z.order desc LIMIT 3';
-			} elseif ($table == 'tb_block') {
-
-				$sql = 'select b.id,b.kw,b.fid,b.type,b.value,z.cookie,z.tbs,z.name from tb_block b inner join tb_zh z on b.zid=z.id and z.status=1 and b.status=0 order by z.order desc limit 2';
-			}
-			$res = Db::getInstance()->exec($sql)->getAll();
-			if (empty($res)) {
-
-				return "[{$table}-完成]";
-			}
-
-			$idstatus = ['y' => '', 'n' => ''];
-			for ($i = 0, $len = count($res); $i < $len; $i++) {
-
-				if ($table == 'tb_gz') {
-					$rs = (new Tieba)->sign($res[$i]['cookie'], $res[$i]['tbs'], $res[$i]['fid'], $res[$i]['uid'], $res[$i]['name']);
-
-					//var_dump($rs);exit;error_msg
-
-					if (isset($rs['error_code']) && ($rs['error_code'] == '160002' || $rs['error_code'] == '0')) {
-						//$status = 1;
-						//$this->rwinfo($res[$i]['un'], $res[$i]['name'], $rs['error_msg']);
-						$idstatus['y'] .= $res[$i]['id'] . ',';
-
-					} else {
-						$this->rwinfo('贴吧签到:' . $res[$i]['un'], $res[$i]['name'], $rs['error_msg']);
-
-						$idstatus['n'] .= $res[$i]['id'] . ',';
-
-					}
-
-				} elseif ($table == 'tb_block') {
-					$rs = Tieba::blockStatic($res[$i]['kw'], $res[$i]['fid'], $res[$i]['cookie'], $res[$i]['tbs'], $res[$i]['type'], $res[$i]['value']);
-
-					if (isset($rs['un']) && $rs['error_code'] == 0) {
-						$idstatus['y'] .= $res[$i]['id'] . ',';
-
-					} else {
-						$this->rwinfo('贴吧封禁:' . $res[$i]['name'] . '-' . $res[$i]['value'], $res[$i]['kw'], $rs['error_msg']);
-						$idstatus['n'] .= $res[$i]['id'] . ',';
-					}
-				}
-
-				if ($i == $len - 1) {
-					break;
-				}
-
-				sleep(2);
-			}
-
-			foreach ($idstatus as $key => $value) {
-				if ($value == '') {
-					continue;
-				}
-
-				$value = rtrim($value, ',');
-				$status = $key == 'y' ? 1 : 2;
-				Db::getInstance()->exec("update {$table} set status={$status} where id in({$value})");
-				//var_dump("update tb_gz set status={$status} where id in({$idstatus[$key]})");exit;
-			}
-
-			return "[$table]";
-
-		} catch (PDOException $ee) {
-			return '[' . $table . '-' . $ee->getMessage() . ']';
-			//exitMsg(ErrorConst::API_CATCH_ERRNO, 'fail');
-		} catch (Exception $e) {
-			return "[{$table}-" . $e->getMessage() . ']';
-			//exitMsg(ErrorConst::API_CATCH_ERRNO, $e->getMessage());
-		}
 	}
 
 	private function ba() {
@@ -240,6 +192,76 @@ class Api extends WsignBase {
 			}
 		}
 		//$this->view('badd');
+	}
+
+	private function commWork($table) {
+		try {
+
+			$class_name = '';
+
+			if (strripos($table, '_') !== false) {
+				$ls = explode('_', $table);
+
+				foreach ($ls as $value) {
+					$class_name .= ucwords($value);
+
+				}
+			} else {
+				$class_name = $table;
+			}
+
+			$classc = new $class_name();
+
+			$res = Db::getInstance()->exec($classc->sql())->getAll();
+
+			if (empty($res)) {
+
+				return "[{$table}-完成]";
+			}
+
+			$idstatus = ['y' => '', 'n' => ''];
+			for ($i = 0, $len = count($res); $i < $len; $i++) {
+
+				$rs = $classc->run($res[$i], $condition, $info);
+
+				if ($condition) {
+
+					$idstatus['y'] .= $res[$i]['id'] . ',';
+
+				} else {
+					$this->rwinfo($info[0], $info[1], $info[2]);
+
+					$idstatus['n'] .= $res[$i]['id'] . ',';
+
+				}
+
+				if ($i == $len - 1) {
+					break;
+				}
+
+				sleep(2);
+			}
+
+			foreach ($idstatus as $key => $value) {
+				if ($value == '') {
+					continue;
+				}
+
+				$value = rtrim($value, ',');
+				$status = $key == 'y' ? 1 : 2;
+				Db::getInstance()->exec("update {$table} set status={$status} where id in({$value})");
+
+			}
+			return "[$table]";
+
+		} catch (PDOException $ee) {
+			return '[' . $table . '-' . $ee->getMessage() . ']';
+			//exitMsg(ErrorConst::API_CATCH_ERRNO, 'fail');
+		} catch (Exception $e) {
+			return "[{$table}-" . $e->getMessage() . ']';
+			//exitMsg(ErrorConst::API_CATCH_ERRNO, $e->getMessage());
+		}
+
 	}
 
 	private function rwinfo($un, $kw, $msg) {
