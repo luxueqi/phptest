@@ -198,6 +198,13 @@ function Cookie(...$param) {
 	return false;
 }
 
+function qchche() {
+	if (isset(C(__M__)['cache']) ? C(__M__)['cache'] : false) {
+		echo '<a href="/' . __M__ . '-' . __C__ . '-' . __A__ . '.html?qflag=1">上次缓存时间【' . date('Y-m-d H:i:s', time()) . '】重新生成</a>';
+	}
+
+}
+
 function Session(...$param) {
 	$count = func_num_args();
 	if ($count == 1) {

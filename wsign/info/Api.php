@@ -3,9 +3,12 @@ if (!defined('EXITFORBID')) {
 	exit('forbid');
 }
 class Api extends WsignBase {
+	protected $cachet = ['info' => ['time' => 1800], 'tinfo' => ['time' => 1800], 'einfo', 'binfo' => ['time' => 144000], 'cron'];
 	public function __construct() {
 
 		$this->needLogin('/wsign-login-login.html');
+
+		$this->cacheitem(['time' => 72000, 'qflag' => G('qflag', false)]);
 
 	}
 //SELECT w.id,u.name,w.t_name,w.status from wgz w INNER JOIN user u on u.id=w.uid

@@ -90,6 +90,8 @@ class Core {
 		define('CORE_PATH', ROOT_PATH . '/core');
 		define('CONF_PATH', CORE_PATH . '/conf');
 		define('LIB_PATH', CORE_PATH . '/lib');
+		define('PUBLIC_PATH', ROOT_PATH . '/public');
+		define('CACHE_PATH', PUBLIC_PATH . '/cache');
 	}
 
 	static private function setDebug() {

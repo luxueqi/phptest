@@ -7,9 +7,14 @@ if (!defined('EXITFORBID')) {
 }
 class Api extends WsignBase {
 
+	protected $cachet = ['welcome', 'member', 'tl', 'mlist'];
+
 	public function __construct() {
 
 		$this->needLogin('/wsign-login-login.html');
+
+		$this->cacheitem(['time' => 144000, 'qflag' => G('qflag', false)]);
+
 	}
 
 	public function index() {
@@ -19,11 +24,14 @@ class Api extends WsignBase {
 
 	public function welcome() {
 
-		$this->slist('i.id,i.ip,i.time,l.name', 'login_info i inner join login l on i.uid=l.id', 'welcome');
+		$this->slist('i.id,i.ip,i.time,l.name', 'login_info i inner join login l on i.uid=l.id order by i.id desc limit 10', 'welcome');
+
 	}
 
 	public function member() {
+
 		$this->slist('id,name,weixin as wid,wuid,status', 'user', 'member-list');
+
 	}
 	public function madd() {
 		if (isGetPostAjax('post')) {

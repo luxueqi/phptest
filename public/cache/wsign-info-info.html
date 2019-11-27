@@ -1,0 +1,717 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="/public/static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="/public/static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="/public/lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="/public/static/h-ui.admin/skin/default/skin.css" id="skin" />
+
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]--><!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>用户管理</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户中心 <span class="c-gray en">&gt;</span> 用户管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<a href="/wsign-info-info.html?qflag=1">上次缓存时间【2019-11-27 15:07:17】重新生成</a>	<div class="cl pd-5 bg-1 bk-gray mt-20">  <span class="r">已签到:74,未签到:0,失败:0  共有数据：<strong>74</strong> 条</span> </div>
+	<div class="mt-20">
+	<table class="table table-border table-bordered table-hover table-bg table-sort">
+		<thead>
+			<tr class="text-c">
+				<th width="50">ID</th>
+				<th width="90">name</th>
+				<th width="90">huati</th>
+				<th width="60">status</th>
+				<th width="100">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+						<tr class="text-c">
+				<td>1167</td>
+				<td>可爱得泡泡君</td>
+				<td>倚天屠龙记</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1167,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1167)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1172</td>
+				<td>可爱得泡泡君</td>
+				<td>陆雪琪</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1172,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1172)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1150</td>
+				<td>可爱得泡泡君</td>
+				<td>魔卡少女樱</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1150,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1150)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1161</td>
+				<td>可爱得泡泡君</td>
+				<td>弄玉</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1161,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1161)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1162</td>
+				<td>可爱得泡泡君</td>
+				<td>李沁</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1162,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1162)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1155</td>
+				<td>可爱得泡泡君</td>
+				<td>名侦探柯南</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1155,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1155)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1163</td>
+				<td>可爱得泡泡君</td>
+				<td>刘亦菲</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1163,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1163)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1152</td>
+				<td>可爱得泡泡君</td>
+				<td>杨过小龙女</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1152,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1152)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1169</td>
+				<td>可爱得泡泡君</td>
+				<td>石兰</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1169,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1169)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1165</td>
+				<td>可爱得泡泡君</td>
+				<td>诛仙张小凡陆雪琪</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1165,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1165)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1159</td>
+				<td>可爱得泡泡君</td>
+				<td>桔梗</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1159,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1159)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1154</td>
+				<td>可爱得泡泡君</td>
+				<td>棠亭</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1154,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1154)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1147</td>
+				<td>可爱得泡泡君</td>
+				<td>二次元</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1147,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1147)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1149</td>
+				<td>可爱得泡泡君</td>
+				<td>赵敏</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1149,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1149)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1145</td>
+				<td>可爱得泡泡君</td>
+				<td>周杰伦</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1145,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1145)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1173</td>
+				<td>可爱得泡泡君</td>
+				<td>张小鼎</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1173,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1173)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1146</td>
+				<td>可爱得泡泡君</td>
+				<td>少司命</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1146,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1146)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1164</td>
+				<td>可爱得泡泡君</td>
+				<td>诛仙鬼厉</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1164,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1164)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1174</td>
+				<td>可爱得泡泡君</td>
+				<td>凡雪</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1174,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1174)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1153</td>
+				<td>可爱得泡泡君</td>
+				<td>忌敏</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1153,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1153)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1151</td>
+				<td>可爱得泡泡君</td>
+				<td>小龙女</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1151,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1151)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1156</td>
+				<td>可爱得泡泡君</td>
+				<td>每日一善</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1156,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1156)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1171</td>
+				<td>可爱得泡泡君</td>
+				<td>诛仙女主人公</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1171,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1171)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1166</td>
+				<td>可爱得泡泡君</td>
+				<td>灰原哀</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1166,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1166)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1170</td>
+				<td>可爱得泡泡君</td>
+				<td>紫女</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1170,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1170)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1168</td>
+				<td>可爱得泡泡君</td>
+				<td>赵灵儿</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1168,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1168)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1160</td>
+				<td>可爱得泡泡君</td>
+				<td>杨幂</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1160,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1160)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1148</td>
+				<td>可爱得泡泡君</td>
+				<td>表情包</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1148,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1148)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1175</td>
+				<td>可爱得泡泡君</td>
+				<td>诛仙陆雪琪</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1175,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1175)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1158</td>
+				<td>可爱得泡泡君</td>
+				<td>司空琪</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1158,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1158)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1157</td>
+				<td>可爱得泡泡君</td>
+				<td>波比一家萌萌哒</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1157,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1157)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1270</td>
+				<td>osinit</td>
+				<td>端木蓉</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1270,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1270)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1253</td>
+				<td>osinit</td>
+				<td>倚天屠龙记</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1253,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1253)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1252</td>
+				<td>osinit</td>
+				<td>陆雪琪</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1252,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1252)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1259</td>
+				<td>osinit</td>
+				<td>魔卡少女樱</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1259,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1259)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1247</td>
+				<td>osinit</td>
+				<td>李沁</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1247,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1247)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1256</td>
+				<td>osinit</td>
+				<td>杨过小龙女</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1256,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1256)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1262</td>
+				<td>osinit</td>
+				<td>韩非</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1262,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1262)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1275</td>
+				<td>osinit</td>
+				<td>石兰</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1275,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1275)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1273</td>
+				<td>osinit</td>
+				<td>诛仙张小凡陆雪琪</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1273,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1273)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1269</td>
+				<td>osinit</td>
+				<td>桔梗</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1269,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1269)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1279</td>
+				<td>osinit</td>
+				<td>诛仙</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1279,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1279)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1254</td>
+				<td>osinit</td>
+				<td>棠亭</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1254,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1254)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1260</td>
+				<td>osinit</td>
+				<td>二次元</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1260,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1260)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1250</td>
+				<td>osinit</td>
+				<td>叶修</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1250,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1250)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1258</td>
+				<td>osinit</td>
+				<td>赵敏</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1258,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1258)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1246</td>
+				<td>osinit</td>
+				<td>周杰伦</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1246,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1246)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1266</td>
+				<td>osinit</td>
+				<td>张小鼎</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1266,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1266)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1263</td>
+				<td>osinit</td>
+				<td>夏目友人帐</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1263,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1263)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1251</td>
+				<td>osinit</td>
+				<td>瓜皮</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1251,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1251)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1268</td>
+				<td>osinit</td>
+				<td>少司命</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1268,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1268)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1276</td>
+				<td>osinit</td>
+				<td>雪女</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1276,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1276)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1249</td>
+				<td>osinit</td>
+				<td>诛仙鬼厉</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1249,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1249)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1264</td>
+				<td>osinit</td>
+				<td>海贼王</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1264,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1264)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1271</td>
+				<td>osinit</td>
+				<td>凡雪</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1271,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1271)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1255</td>
+				<td>osinit</td>
+				<td>忌敏</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1255,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1255)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1257</td>
+				<td>osinit</td>
+				<td>小龙女</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1257,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1257)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1248</td>
+				<td>osinit</td>
+				<td>全职高手</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1248,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1248)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1277</td>
+				<td>osinit</td>
+				<td>诛仙女主人公</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1277,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1277)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1265</td>
+				<td>osinit</td>
+				<td>柯南</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1265,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1265)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1274</td>
+				<td>osinit</td>
+				<td>灰原哀</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1274,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1274)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1280</td>
+				<td>osinit</td>
+				<td>雪琪</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1280,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1280)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1267</td>
+				<td>osinit</td>
+				<td>紫女</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1267,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1267)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1272</td>
+				<td>osinit</td>
+				<td>赵灵儿</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1272,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1272)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1261</td>
+				<td>osinit</td>
+				<td>表情包</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1261,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1261)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1278</td>
+				<td>osinit</td>
+				<td>诛仙陆雪琪</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1278,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1278)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1283</td>
+				<td>天琊的天琊_</td>
+				<td>倚天屠龙记</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1283,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1283)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1286</td>
+				<td>天琊的天琊_</td>
+				<td>陆雪琪</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1286,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1286)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1284</td>
+				<td>天琊的天琊_</td>
+				<td>诛仙张小凡陆雪琪</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1284,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1284)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1285</td>
+				<td>天琊的天琊_</td>
+				<td>张小鼎</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1285,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1285)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1281</td>
+				<td>天琊的天琊_</td>
+				<td>诛仙鬼厉</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1281,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1281)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1287</td>
+				<td>天琊的天琊_</td>
+				<td>凡雪</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1287,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1287)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1282</td>
+				<td>天琊的天琊_</td>
+				<td>诛仙女主人公</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1282,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1282)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+					<tr class="text-c">
+				<td>1288</td>
+				<td>天琊的天琊_</td>
+				<td>诛仙陆雪琪</td>
+				<td>1</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(1288,1)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,1288)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+				</tbody>
+	</table>
+	</div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="/public/static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="/public/static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="https://cdn.bootcss.com/layer/2.3/layer.js"></script>
+ <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="/public/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="/public/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="/public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('.table-sort').dataTable({
+		"aaSorting": [[ 3, "asc" ]],//默认第几个排序
+		"bStateSave": true,//状态保存
+		"aoColumnDefs": [
+		  //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+		  //{"orderable":false,"aTargets":[0,8,9]}// 制定列不参与排序
+		]
+	});
+
+	
+	
+});
+/*用户-删除*/
+function member_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: '/wsign/info/del',
+			data:{id:id},
+			dataType: 'json',
+			success: function(e){
+				if(e.code==1){
+					$(obj).parents("tr").remove();
+					layer.msg('已删除!',{icon:1,time:1000});
+				}else{
+					layer.msg(e.msg,{icon:2,time:3000});
+				}
+				
+				
+
+			}
+		});		
+	});
+}
+
+function status_change(id,status){
+	
+	layer.confirm('确认更改'+id+'状态吗？',function(index){
+		$.ajax({
+			type:'POSt',
+			url:'/wsign/info/status',
+			data:{id:id,status:status},
+			dataType:'json',
+			success:function(e){
+				
+				if(e.code==1){
+					
+					layer.alert('已成功!',{icon:1},function(){
+						location.href="/wsign-info-info.html?qflag=1";
+					});
+					
+				}else{
+					layer.alert(e.msg,{icon:2});
+					
+				}
+			}
+		});
+		
+		
+	});
+}
+
+</script> 
+</body>
+</html>

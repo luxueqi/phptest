@@ -16,6 +16,51 @@ class Base {
 
 	protected $dbwhere;
 
+	protected $cachet = []; //['key'=>[],'key1']
+
+	private function boolcache(&$conf = []) {
+		if (C(__M__)['cache']) {
+
+			foreach ($this->cachet as $key => $value) {
+				if (is_array($value)) {
+					if (__A__ == $key) {
+						$conf = array_merge($conf, $value);
+						return true;
+					}
+				} elseif (__A__ == $value) {
+
+					return true;
+
+				}
+			}
+
+		}
+		return false;
+	}
+
+	protected function cacheitem($conf = ['time' => 72000, 'qflag' => false]) {
+
+		/*if (C(__M__)['cache'] && in_array(__A__, $this->cachet)) {
+
+		Cache::read($conf);
+		}*/
+
+		if ($this->boolcache($conf)) {
+			//var_dump($conf);exit;
+			Cache::read($conf);
+		}
+	}
+
+	public function __destruct() {
+		/*if (C(__M__)['cache'] && in_array(__A__, $this->cachet)) {
+		Cache::write();
+		}*/
+		if ($this->boolcache()) {
+			Cache::write();
+		}
+
+	}
+
 	protected function view($path = __A__) {
 		extract($this->assign);
 		require './public/view/' . __M__ . '/' . $path . '.html';
