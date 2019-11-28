@@ -3,7 +3,7 @@ if (!defined('EXITFORBID')) {
 	exit('forbid');
 }
 class Api extends WsignBase {
-	protected $cachet = ['info' => ['time' => 1800], 'tinfo' => ['time' => 1800], 'einfo', 'binfo' => ['time' => 144000], 'cron'];
+	protected $cachet = ['info' => ['time' => 1800], 'tinfo' => ['time' => 1800], 'einfo' => ['time' => 14400], 'binfo' => ['time' => 14400], 'cron'];
 	public function __construct() {
 
 		$this->needLogin('/wsign-login-login.html');
