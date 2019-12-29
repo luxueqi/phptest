@@ -1,7 +1,7 @@
 c/conf/
 conf/
 core/conf
-public/cache/.html
+public/cache/*.html
 .DS_Store
 
 
