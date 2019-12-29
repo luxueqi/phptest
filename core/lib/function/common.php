@@ -3,8 +3,12 @@ if (!defined('EXITFORBID')) {
 	exit('forbid');
 }
 function C($v) {
+	$path = CONF_PATH . '/' . $v . '.php';
+	if (is_file($path)) {
+		return require $path;
+	}
 
-	return require CONF_PATH . '/' . $v . '.php';
+	return [];
 
 }
 /***
@@ -121,9 +125,9 @@ function checkCaptcha($captcha) {
  * @param  boolean $pl    [是否批量]
  * @return [type]         [批量返回array 否则 string ]
  */
-function strMid($left, $right, $str, $pl = false) {
+function strMid($left, $right, $str, $pl = false, &$start = 0) {
 
-	$i = 0;
+	$i = $start;
 
 	$rstr = [];
 
@@ -142,11 +146,14 @@ function strMid($left, $right, $str, $pl = false) {
 
 		$i = $i + $r + strlen($right);
 
+		$start = $r;
+
 		if (!$pl) {
 			break;
 		}
 
 	}
+
 	if (empty($rstr)) {
 		//throw new Exception("没有截取到字符串");
 		$rstr = [''];

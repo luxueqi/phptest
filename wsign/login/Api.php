@@ -21,6 +21,30 @@ class Api extends WsignBase {
 		creatCaptcha();
 	}
 
+	public function callback() {
+
+		$msg = '授权失败,正在跳转...';
+		$url = '/wsign-login-login.html';
+		if ($token = OuthMy::create('WbOuth')->getToken()) {
+			//不能用uid做登陆状态，简单测试
+			$res = $this->db('login')->filed('id,name')->where('wbuid=' . ($token['uid'] + 0))->getOne();
+
+			if (!empty($res)) {
+				$this->setLoginInfo($res);
+				$msg = '授权成功,正在跳转...';
+				$url = '/wsign-admin-index.html';
+
+			} else {
+				$msg = '绑定微博账号错误';
+
+			}
+
+		}
+
+		$this->jump($url, $msg);
+
+	}
+
 	public function login() {
 		//var_dump($this->db('login')->filed('email,pwd')->where('"yu",:idf', [':idf' => 'sdsd'])->save());exit;
 		//Cookie('auth', base64_encode($res['id'] . ':' . $tt . ':' . md5($pwd . 'woshishui' . $un)), 86400 * 7);exit;
@@ -57,6 +81,8 @@ class Api extends WsignBase {
 			}
 
 		}
+
+		$this->assign('code_url', OuthMy::create('WbOuth')->getCodeUrl());
 
 		$this->view('login');
 	}

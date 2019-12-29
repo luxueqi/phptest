@@ -199,9 +199,11 @@ class Tieba extends Http {
 		}
 		$this->initCommonData();
 		$tdata = ['uid' => $uid, 'page_size' => $count, 'page_no' => $pn];
+		//var_dump(json_decode($this->setDatac($tdata)->md5sign()->request(TiebaConst::APP_URL . '/c/f/forum/like', $this->data), true));exit;
 		$list = json_decode($this->setDatac($tdata)->md5sign()->request(TiebaConst::APP_URL . '/c/f/forum/like', $this->data), true)['forum_list'];
+
 		$c = count($list);
-		//var_dump($list, $c);
+		//var_dump($list, $c);exit;
 		if ($c) {
 			//array_push($list['non-gconforum'], $list['gconforum']);
 			return array_merge($list['non-gconforum'], isset($list['gconforum']) ? $list['gconforum'] : []);

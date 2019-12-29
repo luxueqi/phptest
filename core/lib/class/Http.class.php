@@ -68,7 +68,7 @@ class Http {
 		curl_setopt($curl, CURLOPT_HEADER, $this->is_header);
 		curl_setopt($curl, CURLOPT_HTTPHEADER, $this->header);
 
-		curl_setopt($curl, CURLOPT_TIMEOUT, 15);
+		curl_setopt($curl, CURLOPT_TIMEOUT, 30);
 		if (!empty($this->data)) {
 			if (is_array($this->data)) {
 				$this->data = http_build_query($this->data);

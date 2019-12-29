@@ -18,8 +18,17 @@ class Base {
 
 	protected $cachet = []; //['key'=>[],'key1']
 
+	//protected $cachefalg = false;
+	//
+	public function __construct() {
+
+		$this->cacheitem(['time' => 144000, 'qflag' => G('qflag', false)]);
+
+	}
+
 	private function boolcache(&$conf = []) {
-		if (C(__M__)['cache']) {
+
+		if (isset(C(__M__)['cache']) ? C(__M__)['cache'] : false) {
 
 			foreach ($this->cachet as $key => $value) {
 				if (is_array($value)) {
@@ -38,7 +47,7 @@ class Base {
 		return false;
 	}
 
-	protected function cacheitem($conf = ['time' => 72000, 'qflag' => false]) {
+	private function cacheitem($conf = ['time' => 72000, 'qflag' => false]) {
 
 		/*if (C(__M__)['cache'] && in_array(__A__, $this->cachet)) {
 
@@ -55,7 +64,9 @@ class Base {
 		/*if (C(__M__)['cache'] && in_array(__A__, $this->cachet)) {
 		Cache::write();
 		}*/
+		//echo "string";
 		if ($this->boolcache()) {
+
 			Cache::write();
 		}
 
@@ -134,6 +145,13 @@ class Base {
 			$returnParam[$key] = G($key);
 		}
 		return $returnParam;
+	}
+
+	protected function jump($url, $msg, $time = 2) {
+
+		header("Refresh:{$time},Url={$url}");
+		exit($msg);
+
 	}
 
 	protected function db($table) {

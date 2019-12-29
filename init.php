@@ -8,8 +8,6 @@ define('ROOT_PATH', dirname(__FILE__));
 
 require './core/core.php';
 
-/**/
-
-Core::run();
+Core::init();
 
 ?>

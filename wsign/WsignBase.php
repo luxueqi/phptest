@@ -6,6 +6,10 @@ define('WSIGN_VIEW_PATH', ROOT_PATH . '/public/view/wsign');
 
 class WsignBase extends Base {
 
+	public function __construct() {
+		parent::__construct();
+	}
+
 	protected function checkLogin() {
 		if (Session('name') != false) {
 

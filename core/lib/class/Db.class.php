@@ -10,10 +10,12 @@ class Db {
 
 	private $db;
 
+	private static $conf;
+
 	private function __clone() {}
 
-	public static function getInstance() {
-
+	public static function getInstance($conf = []) {
+		self::$conf = $conf;
 		if (is_null(self::$instance)) {
 			self::$instance = new self();
 		}
@@ -29,9 +31,11 @@ class Db {
 
 		//echo __CLASS__;exit();
 
-		$confAll = C('db');
+		if (empty(self::$conf)) {
+			self::$conf = C('db');
+		}
 
-		$this->db = new PDO($confAll['DSN'], $confAll['username'], $confAll['password']);
+		$this->db = new PDO(self::$conf['DSN'], self::$conf['username'], self::$conf['password']);
 		$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 

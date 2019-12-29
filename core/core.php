@@ -38,7 +38,8 @@ class Core {
 			if (is_file($path)) {
 				require_once $path;
 				$ee = 'no api';
-				if (method_exists('Api', __A__)) {
+
+				if (in_array(__A__, get_class_methods('Api'))) {
 					$a = __A__;
 
 					try {

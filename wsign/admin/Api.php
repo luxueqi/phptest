@@ -9,11 +9,17 @@ class Api extends WsignBase {
 
 	protected $cachet = ['welcome', 'member', 'tl', 'mlist'];
 
+	//protected $cachefalg = true;
+
 	public function __construct() {
+
+		//echo "admin";
 
 		$this->needLogin('/wsign-login-login.html');
 
-		$this->cacheitem(['time' => 144000, 'qflag' => G('qflag', false)]);
+		parent::__construct();
+
+		//$this->cacheitem(['time' => 144000, 'qflag' => G('qflag', false)]);
 
 	}
 
@@ -112,6 +118,7 @@ class Api extends WsignBase {
 	public function logout() {
 		Session('name', null);
 		Cookie('auth', null, -1);
+		//Cookie('SUB', null, -1);
 		session_destroy();
 		echo "<script>alert('退出成功');location.href='/wsign-login-login.html';</script>";
 		//header("location: /wsign/login/login");

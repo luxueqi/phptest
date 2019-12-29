@@ -1,0 +1,126 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+
+<link rel="stylesheet" type="text/css" href="/public/static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="/public/static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="/public/lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="/public/static/h-ui.admin/skin/default/skin.css" id="skin" />
+
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]--><title>登陆信息</title>
+</head>
+<body>
+<div class="page-container">
+	<a href="/wsign-admin-welcome.html?qflag=1">上次缓存时间【2019-12-29 01:40:06】重新生成</a>	<div class="cl pd-5 bg-1 bk-gray mt-20">  <span class="r">最新10条登陆记录</span> </div>
+	<div class="mt-20">
+	<table class="table table-border table-bordered table-hover table-bg table-sort">
+		<thead>
+			<tr class="text-c">
+				<th width="80">ID</th>
+				<th width="100">name</th>
+				<th width="40">ip</th>
+				<th width="90">time</th>
+				
+			</tr>
+		</thead>
+		<tbody>
+						<tr class="text-c">
+				<td>130</td>
+				<td>chujian</td>
+				<td>219.133.46.179</td>
+				<td>2019-12-29 01:14:40</td>
+			</tr>
+					<tr class="text-c">
+				<td>129</td>
+				<td>chujian</td>
+				<td>219.133.46.179</td>
+				<td>2019-12-28 17:10:50</td>
+			</tr>
+					<tr class="text-c">
+				<td>128</td>
+				<td>chujian</td>
+				<td>219.133.46.24</td>
+				<td>2019-12-28 16:16:27</td>
+			</tr>
+					<tr class="text-c">
+				<td>127</td>
+				<td>chujian</td>
+				<td>14.116.142.25</td>
+				<td>2019-12-28 01:22:03</td>
+			</tr>
+					<tr class="text-c">
+				<td>126</td>
+				<td>chujian</td>
+				<td>113.65.152.110</td>
+				<td>2019-12-27 10:03:03</td>
+			</tr>
+					<tr class="text-c">
+				<td>125</td>
+				<td>chujian</td>
+				<td>113.65.152.110</td>
+				<td>2019-12-27 02:48:47</td>
+			</tr>
+					<tr class="text-c">
+				<td>124</td>
+				<td>chujian</td>
+				<td>59.41.118.132</td>
+				<td>2019-12-26 16:43:37</td>
+			</tr>
+					<tr class="text-c">
+				<td>123</td>
+				<td>chujian</td>
+				<td>59.41.118.132</td>
+				<td>2019-12-26 06:31:50</td>
+			</tr>
+					<tr class="text-c">
+				<td>122</td>
+				<td>chujian</td>
+				<td>219.133.46.54</td>
+				<td>2019-12-25 06:35:38</td>
+			</tr>
+					<tr class="text-c">
+				<td>121</td>
+				<td>chujian</td>
+				<td>219.133.46.82</td>
+				<td>2019-12-25 02:22:48</td>
+			</tr>
+				</tbody>
+	</table>
+	</div>
+</div>
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="/public/static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="/public/static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="https://cdn.bootcss.com/layer/2.3/layer.js"></script>
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="/public/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="/public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('.table-sort').dataTable({
+		"aaSorting": [[ 0, "desc" ]],//默认第几个排序
+		"bStateSave": true,//状态保存
+		"aoColumnDefs": [
+		  //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+		  //{"orderable":false,"aTargets":[0,8,9]}// 制定列不参与排序
+		]
+	});
+
+	
+	
+});
+</script>
+</body>
+</html>

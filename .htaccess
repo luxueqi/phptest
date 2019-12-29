@@ -4,6 +4,8 @@ RewriteBase /
 RewriteCond %REQUEST_FILENAME !-d
 RewriteCond %REQUEST_FILENAME !-f
 RewriteRule ^wx$ weixin/wx.php
+#RewriteRule ^id$ index.php
+RewriteRule ^bduss$ c/bduss.php
 RewriteRule ^[a-z]+-[a-z]+-[a-z]+\.html$ c/index.php 
 RewriteRule ^[a-z]+/[a-z]+/[a-z]+(\.html)?$ c/index.php 
 RewriteRule ^public/(.*)$ c/public/$1
