@@ -18,14 +18,16 @@ class Api extends WsignBase {
 
 	}
 
-	private function checkKc($id) {
+	private function checkKc($id, $count) {
 
 		$res = Db::getInstance(C('dbsh'))->exec('select name,price,count from test_product where id=?', [$id])->getOne();
 
-		if (empty($res) || $res['count'] < $params['count']) {
-			//exitMsg(-1, );
+		//var_dump($res);
 
-			die('商品不存在或库存不足');
+		if (empty($res) || $res['count'] < $count) {
+			//exitMsg(-1, );
+			$this->jump('/wsign-test-index.html', '商品不存在或库存不足,正在跳转...');
+			//die();
 
 		}
 		return $res;
@@ -39,7 +41,7 @@ class Api extends WsignBase {
 			$db = Db::getInstance(C('dbsh'));
 			try {
 
-				$res = $this->checkKc($params['id']);
+				$res = $this->checkKc($params['id'], $params['count']);
 
 				$rres = $db->exec('select order_no,pcount,price,payment from test_order where uid=? and spid=? and status=0', [Session('uid'), $params['id']])->getOne();
 
@@ -79,11 +81,11 @@ class Api extends WsignBase {
 	public function pay() {
 		if (isGetPostAjax('post')) {
 
-			$res = Db::getInstance(C('dbsh'))->exec('select spid,status,payment from test_order where order_no=?', [G('order_no')])->getOne();
+			$res = Db::getInstance(C('dbsh'))->exec('select spid,status,payment,pcount from test_order where order_no=?', [G('order_no')])->getOne();
 			if (empty($res)) {
 				die('订单不存在');
 			}
-			$this->checkKc($res['spid']);
+			$this->checkKc($res['spid'], $res['pcount']);
 			if ($res['status'] == 1) {
 				die('订单已支付');
 			}

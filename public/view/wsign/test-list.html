@@ -26,7 +26,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">数量(库存/<?php echo $info['count'];?>)：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="number" class="input-text" value="1" placeholder="" min=1 name="count">
+				<input type="number" class="input-text" value="1" min=1 name="count" id="pcount">
 			</div>
 		</div>
 		<div class="row cl">
@@ -49,8 +49,8 @@
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript">
 	$(function(){
-		$('input[type=number]').on('blur',function(){
-			$('#allcount').val(10.11*$(this).val());
+		$('#pcount').on('input',function(){
+			$('#allcount').val(<?php echo $info['price'];?>*parseInt($(this).val()));
 		});
 
 		/*$('#btnc').click(function(){
