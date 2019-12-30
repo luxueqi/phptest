@@ -69,6 +69,7 @@ class Db {
 	}
 
 	public function commit() {
+
 		$lastid = $this->getLastId();
 
 		$this->db->commit();
@@ -77,7 +78,7 @@ class Db {
 	}
 
 	public function rollback() {
-		$this->db->rollback();
+		return $this->db->rollback();
 
 		//return $this;
 	}

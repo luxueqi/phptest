@@ -10,7 +10,7 @@ if (G('sign') == '') {
 
 	$urlimg = 'https://passport.baidu.com/v2/api/qrcode?sign=' . $sign . '&lp=pc&qrloginfrom=pc';
 
-	echo "<h2 style='text-align:center'>BDUSS在线获取</h2><hr><center><a href='/bduss'>刷新验证码</a><p><img style='margin:5px auto' src='$urlimg'/></p><a href='/bduss?sign={$sign}'>先扫码确认登陆，再点击这个！！！</a></center>";
+	echo "<h2 style='text-align:center'>百度贴吧BDUSS在线获取</h2><hr><center><a href='/bduss'>刷新验证码</a><p><img style='margin:5px auto' src='$urlimg'/></p><a href='/bduss?sign={$sign}'>先扫码确认登陆，再点击这个！！！</a></center>";
 } else {
 
 	$urlnicast = 'https://passport.baidu.com/channel/unicast?channel_id=' . G('sign') . '&tpl=tb&gid=1577DB5-5C58-4CA6-BBE3-7733856F8BC1&callback=tangram_guid_1577606086641&apiver=v3&tt=1577606148507&_=1577606148507';
@@ -22,11 +22,18 @@ if (G('sign') == '') {
 
 		$res = $http->setUrl($url)->setIsHeader(1)->http();
 
-		echo 'BDUSS=' . strMid('BDUSS=', ';', $res);
+		if (preg_match_all('/Set-Cookie:([^=]+)=([^;]+)/', $res, $matchs)) {
+			$cookie = '';
+			foreach ($matchs[0] as $value) {
+				$cookie .= str_replace('Set-Cookie:', '', $value) . ';';
+			}
+			die($cookie);
 
-	} else {
-		die('bduss err');
+		}
+
 	}
+	die('bduss err');
+
 }
 
 ?>
