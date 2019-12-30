@@ -60,6 +60,28 @@ class Db {
 
 	}
 
+	public function beginTransaction() {
+
+		$this->db->beginTransaction();
+
+		return $this;
+
+	}
+
+	public function commit() {
+		$lastid = $this->getLastId();
+
+		$this->db->commit();
+
+		return $lastid;
+	}
+
+	public function rollback() {
+		$this->db->rollback();
+
+		//return $this;
+	}
+
 	public function getOne() {
 
 		return $this->smt->fetch(PDO::FETCH_ASSOC);
@@ -72,6 +94,10 @@ class Db {
 
 	public function rowCount() {
 		return $this->smt->rowCount();
+	}
+
+	public function getLastId() {
+		return $this->db->lastInsertId();
 	}
 
 }
