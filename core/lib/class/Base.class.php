@@ -6,6 +6,8 @@ class Base {
 	protected $assign = [];
 
 	protected $table;
+
+	protected $dbconf = [];
 //select * from w where id=
 	//delect from w where id=
 	//insert into w()values()
@@ -186,13 +188,13 @@ class Base {
 	protected function select() {
 		$sql = "select {$this->dbfiled} from {$this->table} {$this->dbwhere}";
 
-		return Db::getInstance()->exec($sql, $this->dbdata)->getAll();
+		return Db::getInstance($this->dbconf)->exec($sql, $this->dbdata)->getAll();
 	}
 
 	protected function getOne() {
 		$sql = "select {$this->dbfiled} from {$this->table} {$this->dbwhere}";
 		//var_dump($sql, $this->dbdata);exit;
-		return Db::getInstance()->exec($sql, $this->dbdata)->getOne();
+		return Db::getInstance($this->dbconf)->exec($sql, $this->dbdata)->getOne();
 	}
 
 	protected function delete($id = '') {
@@ -207,7 +209,7 @@ class Base {
 
 		//($sql, $this->dbdata);exit;
 
-		return Db::getInstance()->exec($sql, $this->dbdata)->rowCount();
+		return Db::getInstance($this->dbconf)->exec($sql, $this->dbdata)->rowCount();
 	}
 
 /**
@@ -231,7 +233,7 @@ class Base {
 			$this->dbdata[':id'] = $id + 0;
 		}
 		//die($sql);
-		return Db::getInstance()->exec($sql, $this->dbdata)->rowCount();
+		return Db::getInstance($this->dbconf)->exec($sql, $this->dbdata)->rowCount();
 	}
 }
 
