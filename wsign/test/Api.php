@@ -122,6 +122,16 @@ class Api extends WsignBase {
 		}
 
 	}
+
+	public function lis() {
+
+		$res = Db::getInstance(C('dbsh'))->exec('select o.id,p.name,o.order_no,o.pcount,o.price,o.payment,o.payment_type,o.status,o.payment_time,o.creat_time,o.platform_numbe from test_order o,test_product p where o.spid=p.id and uid=1')->getAll();
+
+		$this->assign('count', count($res));
+		$this->assign('list', $res);
+
+		$this->view('test-li');
+	}
 }
 
 ?>

@@ -99,7 +99,7 @@ class AliPay {
 
 			self::uporder();
 
-			echo "支付成功<br />支付宝交易号：{$trade_no}<br />商户订单号：{$out_trade_no}";
+			echo "支付成功<br />支付宝交易号：{$trade_no}<br />商户订单号：{$out_trade_no}<p><a href='/wsign-test-index.html'>返回商品页面</a></p>";
 
 			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
 
