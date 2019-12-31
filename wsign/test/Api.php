@@ -34,7 +34,7 @@ class Api extends WsignBase {
 	}
 
 	public function c() {
-		$ps = ['name' => '', 'price' => 0, 'count' => 0, 'ajg' => 0, 'order_no' => ''];
+		$ps = ['name' => '', 'price' => 0, 'count' => 0, 'ajg' => 0, 'order_no' => '', 'wzf' => ''];
 
 		if (isGetPostAjax('post')) {
 			$params = $this->checkParams(['id' => 'int', 'count' => 'int', 'ajiage' => 'regex:^[0-9]+(\.[0-9]+)?$']);
@@ -46,8 +46,9 @@ class Api extends WsignBase {
 				$rres = $db->exec('select order_no,pcount,price,payment from test_order where uid=? and spid=? and status=0', [Session('uid'), $params['id']])->getOne();
 
 				if (!empty($rres)) {
-					echo ("你有未支付的订单，请先支付<br>");
-					$ps = ['name' => $res['name'], 'price' => $rres['price'], 'count' => $rres['pcount'], 'ajg' => $rres['payment'], 'order_no' => $rres['order_no']];
+					//echo ("<p style='margin:15px 10px'></p>");
+
+					$ps = ['name' => $res['name'], 'price' => $rres['price'], 'count' => $rres['pcount'], 'ajg' => $rres['payment'], 'order_no' => $rres['order_no'], 'wzf' => '<p style="color:red">你有未支付的订单，请先支付</p>'];
 
 				} else {
 					$ajiage = $params['count'] * $res['price'];
@@ -105,6 +106,21 @@ class Api extends WsignBase {
 
 	public function returnu() {
 		AliPay::returnurl();
+	}
+
+	public function del() {
+		if (isGetPostAjax('post')) {
+			try {
+
+				Db::getInstance(C('dbsh'))->exec('delete from test_order where order_no=? and uid=?', [G('order_no'), Session('uid')]);
+
+				exitMsg(ErrorConst::API_SUCCESS_ERRNO, 'ok');
+
+			} catch (PDOException $e) {
+				exitMsg(ErrorConst::API_CATCH_ERRNO, 'fail');
+			}
+		}
+
 	}
 }
 
