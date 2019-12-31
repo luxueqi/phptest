@@ -10,29 +10,44 @@
 <body>
 <article class="page-container">
 	<form action="/wsign/test/c" method="post" class="form form-horizontal" id="form-member-add" >
-		<input type="hidden" name="id" value="1">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">选择类型</label>
+			<div class="formControls col-xs-8 col-sm-5"> <span class="select-box">
+				<select class="select" name="id">
+					<option value='0'>请选择商品</option>
+					<?php 
+						$strc='';
+						foreach($info as $v){
+						$strc.="<option value='{$v["id"]}'>{$v['name']}</option>";
+					}
+						echo $strc;
+					?>
+				</select>
+				</span> 
+			</div>
+		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">名称：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<?php echo $info['name'];?>
+			<div class="formControls col-xs-8 col-sm-5">
+				<input type="text" class="input-text"  id="pname" disabled >
 			</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">价格：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<?php echo $info['price'];?>
+			<div class="formControls col-xs-8 col-sm-5">
+				<input type="text" class="input-text"  id="price" disabled >
 			</div>
 		</div>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">数量(库存/<?php echo $info['count'];?>)：</label>
+			<label class="form-label col-xs-4 col-sm-3">数量(库存/<span id="pkc"></span>)：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="number" class="input-text" value="1" min=1 name="count" id="pcount">
+				<input type="number" class="input-text" value="1" min=0 name="count" id="pcount" max="">
 			</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">总价格：</label>
 			<div class="formControls col-xs-8 col-sm-9" >
-				<input type="number" class="input-text" name="ajiage" id="allcount" readonly="" value="10.11">
+				<input type="number" class="input-text" name="ajiage" id="allcount" readonly="" >
 			</div>
 		</div>
 		<div class="row cl">
@@ -48,21 +63,44 @@
 
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript">
+	var cinfo=<?php echo json_encode($info)?>;
 	$(function(){
-		$('#pcount').on('input',function(){
-			$('#allcount').val(<?php echo $info['price'];?>*parseInt($(this).val()));
+		//cinfo=jQuery.parseJSON(cinfo);
+		//console.log(cinfo[0].id);
+		//changep();
+		$('.select').on('change',function(){
+			changep();
 		});
 
-		/*$('#btnc').click(function(){
+		$('#pcount').on('input',function(){
+			pcounta();
+		});
 
-			$.post('/wsign/test/c',$('form').serialize(),function(e){
-
-			});
-		});*/
-
-
+		$('#btnc').click(function(){
+			if(parseFloat($('#allcount').val()+0)<=0.00){
+				layer.msg('请输入选择正确参数',{icon:2,time:2000});
+				return false;
+			}
+		});
 		
 	});
+
+	function pcounta(){
+		$('#allcount').val($('#price').val()*parseInt($('#pcount').val()));
+	}
+
+	function changep(){
+		if ($('.select').val()==0) {
+				$('#form-member-add')[0].reset();
+				return;
+			}
+			var pd=cinfo[$('.select').val()-1];
+			$('#pname').val(pd.name);
+			$('#price').val(pd.price);
+			$('#pkc').text(pd.count);
+			$('#pcount').attr('max',pd.count);
+			pcounta();
+	}
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
 </body>

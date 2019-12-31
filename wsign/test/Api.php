@@ -10,7 +10,7 @@ if (!defined('EXITFORBID')) {
 class Api extends WsignBase {
 
 	public function index() {
-		$res = Db::getInstance(C('dbsh'))->exec('select name,price,count from test_product')->getOne();
+		$res = Db::getInstance(C('dbsh'))->exec('select id,name,price,count from test_product')->getAll();
 
 		$this->assign('info', $res);
 
@@ -43,7 +43,7 @@ class Api extends WsignBase {
 
 				$res = $this->checkKc($params['id'], $params['count']);
 
-				$rres = $db->exec('select order_no,pcount,price,payment from test_order where uid=? and spid=? and status=0', [Session('uid'), $params['id']])->getOne();
+				$rres = $db->exec('select order_no,pcount,price,payment from test_order where uid=1 and spid=? and status=0', [$params['id']])->getOne();
 
 				if (!empty($rres)) {
 					//echo ("<p style='margin:15px 10px'></p>");
@@ -56,11 +56,11 @@ class Api extends WsignBase {
 					$order_no = date('YmdHi') . mt_rand(100000, 999999);
 
 					$time = time();
-					$sql = "insert into test_order(uid,spid,order_no,payment,pcount,price,creat_time)values(?,?,?,?,?,?,$time)";
+					$sql = "insert into test_order(uid,spid,order_no,payment,pcount,price,creat_time)values(1,?,?,?,?,?,$time)";
 
-					$db->exec($sql, [Session('uid'), $params['id'], $order_no, $ajiage, $params['count'], $res['price']]);
+					$db->exec($sql, [$params['id'], $order_no, $ajiage, $params['count'], $res['price']]);
 
-					$ps = ['name' => $res['name'], 'price' => $res['price'], 'count' => $params['count'], 'ajg' => $ajiage, 'order_no' => $order_no];
+					$ps = ['name' => $res['name'], 'price' => $res['price'], 'count' => $params['count'], 'ajg' => $ajiage, 'order_no' => $order_no, 'wzf' => ''];
 
 				}
 
@@ -112,7 +112,7 @@ class Api extends WsignBase {
 		if (isGetPostAjax('post')) {
 			try {
 
-				Db::getInstance(C('dbsh'))->exec('delete from test_order where order_no=? and uid=?', [G('order_no'), Session('uid')]);
+				Db::getInstance(C('dbsh'))->exec('delete from test_order where order_no=? and uid=1', [G('order_no')]);
 
 				exitMsg(ErrorConst::API_SUCCESS_ERRNO, 'ok');
 
