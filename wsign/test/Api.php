@@ -39,11 +39,12 @@ class Api extends WsignBase {
 		if (isGetPostAjax('post')) {
 			$params = $this->checkParams(['id' => 'int', 'count' => 'int', 'ajiage' => 'regex:^[0-9]+(\.[0-9]+)?$']);
 			$db = Db::getInstance(C('dbsh'));
+			$uip = ip2long($_SERVER['REMOTE_ADDR']);
 			try {
 
 				$res = $this->checkKc($params['id'], $params['count']);
 
-				$rres = $db->exec('select order_no,pcount,price,payment from test_order where uid=1 and spid=? and status=0', [$params['id']])->getOne();
+				$rres = $db->exec('select order_no,pcount,price,payment from test_order where uip=? and spid=? and status=0', [$uip, $params['id']])->getOne();
 
 				if (!empty($rres)) {
 					//echo ("<p style='margin:15px 10px'></p>");
@@ -56,9 +57,9 @@ class Api extends WsignBase {
 					$order_no = date('YmdHi') . mt_rand(100000, 999999);
 
 					$time = time();
-					$sql = "insert into test_order(uid,spid,order_no,payment,pcount,price,creat_time)values(1,?,?,?,?,?,$time)";
+					$sql = "insert into test_order(uip,spid,order_no,payment,pcount,price,creat_time)values(?,?,?,?,?,?,$time)";
 
-					$db->exec($sql, [$params['id'], $order_no, $ajiage, $params['count'], $res['price']]);
+					$db->exec($sql, [$uip, $params['id'], $order_no, $ajiage, $params['count'], $res['price']]);
 
 					$ps = ['name' => $res['name'], 'price' => $res['price'], 'count' => $params['count'], 'ajg' => $ajiage, 'order_no' => $order_no, 'wzf' => ''];
 
@@ -112,9 +113,23 @@ class Api extends WsignBase {
 		if (isGetPostAjax('post')) {
 			try {
 
-				Db::getInstance(C('dbsh'))->exec('delete from test_order where order_no=? and uid=1', [G('order_no')]);
+				$param = $this->checkParams(['order_no' => 'noempty']);
 
-				exitMsg(ErrorConst::API_SUCCESS_ERRNO, 'ok');
+				$sql = 'delete from test_order where order_no=?';
+
+				$data = [$param['order_no']];
+
+				if (!Session('uid')) {
+					$sql = $sql . ' and uip=?';
+					$data[] = ip2long($_SERVER['REMOTE_ADDR']);
+				}
+
+				if (Db::getInstance(C('dbsh'))->exec($sql, $data)->rowCount() == 1) {
+					exitMsg(ErrorConst::API_SUCCESS_ERRNO, 'ok');
+
+				}
+
+				exitMsg(ErrorConst::API_ERRNO, 'no');
 
 			} catch (PDOException $e) {
 				exitMsg(ErrorConst::API_CATCH_ERRNO, 'fail');
@@ -125,7 +140,27 @@ class Api extends WsignBase {
 
 	public function lis() {
 
-		$res = Db::getInstance(C('dbsh'))->exec('select o.id,p.name,o.order_no,o.pcount,o.price,o.payment,o.payment_type,o.status,o.payment_time,o.creat_time,o.platform_numbe from test_order o,test_product p where o.spid=p.id and uid=1')->getAll();
+		/*$sql = '';
+
+		$data = [];
+
+		if (isGetPostAjax('post') && !empty(G('pnum'))) {
+
+		$sql = "select o.id,o.uip,p.name,o.order_no,o.pcount,o.price,o.payment,o.payment_type,o.status,o.payment_time,o.creat_time,o.platform_numbe from test_order o,test_product p where o.spid=p.id and o.platform_numbe=?";
+		$data[] = G('pnum');
+		}*/
+
+		//if (isGetPostAjax('get')) {
+		//
+		$data = [];
+		$sql = 'select o.id,o.uip,p.name,o.order_no,o.pcount,o.price,o.payment,o.payment_type,o.status,o.payment_time,o.creat_time,o.platform_numbe from test_order o,test_product p where o.spid=p.id';
+		if (!Session('uid')) {
+			$sql = $sql . ' and uip=?';
+			$data[] = ip2long($_SERVER['REMOTE_ADDR']);
+		}
+		//}
+
+		$res = Db::getInstance(C('dbsh'))->exec($sql, $data)->getAll();
 
 		$this->assign('count', count($res));
 		$this->assign('list', $res);

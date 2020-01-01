@@ -4,12 +4,21 @@
 </head>
 <body>
 <div class="page-container">
-	<div class="cl pd-5 bg-1 bk-gray mt-20">  <span class="r"><a href='/wsign-test-index.html' style="margin-right:50px;" >返回商品页面</a>	共有数据：<strong><?php echo $count;?></strong> 条</span> </div>
+	<div class="cl pd-5 bg-1 bk-gray mt-20"><!-- <form  method="post" class="form form-horizontal" id="form-member-add" >
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">支付流水号：</label>
+			<div class="formControls col-xs-8 col-sm-5">
+				<input type="search" name="pnum" class="input-text" style="width: 300px;" required="">
+				<input id="btnc" class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form> --><span class="r"><a href='/wsign-test-index.html' style="margin-right:50px;" >返回商品页面</a>	共有数据：<strong><?php echo $count;?></strong> 条</span> </div>
 	<div class="mt-20">
 	<table class="table table-border table-bordered table-hover table-bg table-sort">
 		<thead>
 			<tr class="text-c">
 				<th width="80">ID</th>
+				<th width="90">用户标识</th>
 				<th width="90">商品名称</th>
 				<th width="90">商品订单号</th>
 				<th width="90">数量</th>
@@ -23,10 +32,11 @@
 				<th width="60">删除</th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody>	
 			<?php foreach($list as $v): ?>
 			<tr class="text-c">
 				<td><?php echo $v['id'];?></td>
+				<td><?php echo long2ip($v['uip']);?></td>
 				<td><?php echo $v['name'];?></td>
 				<td><?php echo $v['order_no'];?></td>
 				<td><?php echo $v['pcount'];?></td>
@@ -74,6 +84,8 @@ $(function(){
 	$('#payid').click(function(){
 		$(this).siblings().submit();
 	});
+
+
 	
 });
 

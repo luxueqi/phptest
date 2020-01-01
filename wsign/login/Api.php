@@ -21,6 +21,17 @@ class Api extends WsignBase {
 		creatCaptcha();
 	}
 
+	private function decodersa($endata) {
+		$endata = pack('H*', $endata);
+		if (openssl_private_decrypt($endata, $dedata, C('login')['rsa_private'], OPENSSL_NO_PADDING)) {
+			//var_dump(strrev(trim($dedata)));exit;
+			return strrev(substr(trim($dedata), 13));
+		}
+
+		return '';
+
+	}
+
 	public function callback() {
 
 		$msg = '授权失败,正在跳转...';
@@ -50,12 +61,10 @@ class Api extends WsignBase {
 		//Cookie('auth', base64_encode($res['id'] . ':' . $tt . ':' . md5($pwd . 'woshishui' . $un)), 86400 * 7);exit;
 		if (isGetPostAjax('post')) {
 
-			$params = $this->checkParams(['un' => 'email', 'pwd' => 'regex:^[\S]{6,12}$']);
-
-			$un = $params['un'];
-			$pwd = $params['pwd'];
-
+			$params = $this->checkParams(['un' => 'email', 'pwd' => 'regex:^[0-9a-f]{256}$']);
 			checkCaptcha(G('captcha'));
+			$un = $params['un'];
+			$pwd = $this->decodersa($params['pwd']);
 
 			try {
 				//$db = Db::getInstance();
