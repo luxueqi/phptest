@@ -26,7 +26,7 @@
 			<?php foreach($list as $v): ?>
 			<tr class="text-c">
 				<td><?php echo $v['id'];?></td>
-				<td><?php echo $v['name'];?></td>
+				<td><?php echo strReplaceStart($v['name']);?></td>
 				<td><?php echo $v['wuid'];?></td>
 				<td><?php echo $v['wid'];?></td>
 				<td><?php echo $v['status'];?></td>

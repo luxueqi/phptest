@@ -8,6 +8,9 @@ if (!defined('EXITFORBID')) {
  *
  */
 class Api extends WsignBase {
+	public function __construct() {
+		//$this->needLogin('/', ['only' => ['del', 'lis']]);
+	}
 
 	public function index() {
 		$res = Db::getInstance(C('dbsh'))->exec('select id,name,price,count from test_product')->getAll();
@@ -153,7 +156,7 @@ class Api extends WsignBase {
 		//if (isGetPostAjax('get')) {
 		//
 		$data = [];
-		$sql = 'select o.id,o.uip,p.name,o.order_no,o.pcount,o.price,o.payment,o.payment_type,o.status,o.payment_time,o.creat_time,o.platform_numbe from test_order o,test_product p where o.spid=p.id';
+		$sql = 'select o.uip,p.name,o.order_no,o.pcount,o.price,o.payment,o.payment_type,o.status,o.payment_time,o.creat_time,o.platform_numbe from test_order o,test_product p where o.spid=p.id';
 		if (!Session('uid')) {
 			$sql = $sql . ' and uip=?';
 			$data[] = ip2long($_SERVER['REMOTE_ADDR']);

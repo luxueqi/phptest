@@ -65,46 +65,6 @@
 <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script> 
 <script type="text/javascript" src="https://cdn.bootcss.com/layer/2.3/layer.js"></script>
 <script type="text/javascript" src="/public/static/bd/version.js"></script>
-<script type="text/javascript">
-  $(function(){
-    $('#btn').click(function(){
-      if($('input[name=captcha]').val().replace('验证码:','')==''){
-        layer.open({title:'信息提示',content:'请输入验证码',icon:2});
-        return false;
-      }
-      var un=$('#iun').val();
-      var pwd=$('#ipwd').val();
-      if(!/^\w+@\w+\.\w+$/.test(un)||!/^[\S]{6,12}$/){
-        layer.open({title:'信息提示',content:'请输入正确的用户名和密码',icon:2});
-        return false;
-      }
-      $('#ipwd').val(rsastr(pwd));
-      $.ajax({
-        url: '/wsign/login/login',
-        type: 'POST',
-        dataType: 'json',
-        data: $('#form1').serialize(),
-      })
-      .done(function(e) {
-        if(e.code==1){
-          layer.alert('登陆成功',{icon:1,title:'信息提示',closeBtn: 0},function(){
-             location.href='/wsign-admin-index.html';
-          });
-          
-          
-          
-        }else{
-          layer.alert(e.msg,{icon:2,title:'信息提示',closeBtn: 0});
-         
-          $('#kanbuq').click();
-          $('#ipwd').val('');
-          $('input[name=captcha]').val('');
-        }
-      });
-      
-      return false;
-    });
-  });
-</script>
+<script type="text/javascript" src="/public/static/bd/mylogin.js"></script>
 </body>
 </html>

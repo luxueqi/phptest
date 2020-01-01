@@ -33,9 +33,9 @@
 			</tr>
 		</thead>
 		<tbody>	
-			<?php foreach($list as $v): ?>
+			<?php $i=0;foreach($list as $v): ?>
 			<tr class="text-c">
-				<td><?php echo $v['id'];?></td>
+				<td><?php echo ++$i;?></td>
 				<td><?php echo long2ip($v['uip']);?></td>
 				<td><?php echo $v['name'];?></td>
 				<td><?php echo $v['order_no'];?></td>

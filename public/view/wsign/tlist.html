@@ -22,7 +22,7 @@
 			<?php foreach($list as $v): ?>
 			<tr class="text-c">
 				<td><?php echo $v['id'];?></td>
-				<td><?php echo $v['name'];?></td>
+				<td><?php echo strReplaceStart($v['name']);?></td>
 				<td><?php echo $v['status'];?></td>
 				<td ondblclick="orderchange(<?php echo $v['id'];?>,<?php echo $v['order'];?>)"><?php echo $v['order'];?></td>
 				<td><?php echo date('Y-m-d H:i:s',$v['time']); ?></td>

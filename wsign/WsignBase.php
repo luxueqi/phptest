@@ -18,14 +18,23 @@ class WsignBase extends Base {
 		}
 		return $this->wdecookie();
 	}
-	protected function needLogin($redricturl) {
-		if (!$this->checkLogin()) {
-			if (isGetPostAjax('post')) {
-				exitMsg(-1, 'no login');
+	/**
+	 * [needLogin description]
+	 * @param  [type] $redricturl [跳转的链接]
+	 * @param  array  $needlist   [需要检测的__A__,默认全检测,only只检测设置部分,w是排除不检测部分]
+	 * @return [type]             [description]
+	 */
+	protected function needLogin($redricturl, $needlist = []) {
+		if (empty($needlist) || (isset($needlist['only']) && is_array($needlist['only']) && in_array(__A__, $needlist['only'])) || (isset($needlist['w']) && is_array($needlist['w']) && !in_array(__A__, $needlist['w']))) {
+			if (!$this->checkLogin()) {
+				if (isGetPostAjax('post')) {
+					exitMsg(-1, 'no login');
+				}
+				header("location:{$redricturl}");
+				exit();
 			}
-			header("location:{$redricturl}");
-			exit();
 		}
+
 	}
 	protected function setLoginInfo($info) {
 		$time = time();

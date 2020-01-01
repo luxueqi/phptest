@@ -232,4 +232,8 @@ function isGetPostAjax($m = 'get') {
 	return false;
 }
 
+function strReplaceStart($strs, $lnum = 1, $rnum = 1, $rs = '*') {
+	return preg_replace('/^(.{' . $lnum . '})(.*?)(.{' . $rnum . '})$/u', '$1' . str_repeat($rs, 3) . '$3', $strs);
+}
+
 ?>
