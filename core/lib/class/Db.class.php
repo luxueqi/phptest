@@ -2,6 +2,7 @@
 if (!defined('EXITFORBID')) {
 	exit('forbid');
 }
+
 class Db {
 
 	private static $instance = null;
@@ -9,6 +10,16 @@ class Db {
 	private $smt;
 
 	private $db;
+
+	private $table;
+
+	private $where = '';
+
+	private $preparedata = [];
+
+	private $colfield = '*';
+
+	private $isgetSql = false;
 
 	private static $conf;
 
@@ -47,7 +58,9 @@ class Db {
 	 * @return [type]       [description]
 	 */
 	public function exec($sql, $data = []) {
-
+		$sql = trim($sql);
+		//var_dump($data);
+		$this->echoSql($sql);
 		$this->smt = $this->db->prepare($sql);
 
 		if (empty($data)) {
@@ -81,6 +94,158 @@ class Db {
 		return $this->db->rollback();
 
 		//return $this;
+	}
+
+	public static function config($conf) {
+		self::$conf = $conf;
+	}
+
+	public static function table($table) {
+		$db = self::getInstance(self::$conf);
+		$db->table = $table;
+		$db->isgetSql = false;
+		return $db;
+	}
+
+	private function isprepareParam($v) {
+
+		return is_string($v) && $v != '?' && strpos($v, ':') !== 0 ? "'$v'" : $v;
+	}
+
+	public function where($where, $data = []) {
+
+		if (is_array($where)) {
+			$condition = 'and';
+			foreach ($where as $key => $value) {
+				if (is_array($value)) {
+					$condition = $key;
+					foreach ($value as $k => $v) {
+
+						$v = $this->isprepareParam($v);
+						$this->where .= "{$k}={$v} {$key} ";
+					}
+					//$this->where = rtrim($this->where);
+					//$this->where = substr($this->where, 0, strlen($this->where) - strlen($key));
+
+				} else {
+
+					$value = $this->isprepareParam($value);
+					$this->where .= "{$key}={$value} {$condition} ";
+
+				}
+
+			}
+			$this->where = rtrim($this->where);
+			$this->where = "where " . substr($this->where, 0, strlen($this->where) - strlen($condition));
+
+		} else {
+			$this->where = "where " . $where;
+		}
+
+		$this->preparedata = $data;
+
+		return $this;
+	}
+
+	public function filed($col = '*') {
+		if (is_array($col)) {
+			$this->colfield = '';
+			foreach ($col as $value) {
+				$this->colfield .= $value . ',';
+			}
+			$this->colfield = rtrim($this->colfield, ',');
+		} else {
+			$this->colfield = $col;
+		}
+
+		return $this;
+	}
+
+	public function select($id = '') {
+		if (is_int($id) && $id > 0) {
+			$this->where('id=?', [$id]);
+		}
+
+		return $this->exec("select {$this->colfield} from {$this->table} {$this->where}", $this->preparedata)->getAll();
+	}
+
+	public function find($id = '') {
+		if (is_int($id) && $id > 0) {
+			$this->where('id=?', [$id]);
+		}
+		return $this->exec("select {$this->colfield} from {$this->table} {$this->where}", $this->preparedata)->getOne();
+	}
+/**
+ * [insert description]
+ * @param  array $insertdata  [要插入的数据，多数据插入格式为二维数组]
+ * @param  array  $preparedata [description]
+ * @return [type]              [description]
+ */
+	public function insert($insertdata, $preparedata = []) {
+
+		if (empty($this->colfield) || $this->colfield == '*') {
+			throw new Exception("未知列");
+		}
+
+		$sql = '';
+
+		$more = false;
+
+		foreach ($insertdata as $value) {
+			if (is_array($value)) {
+				$more = true;
+				$sql .= '(';
+				foreach ($value as $v) {
+					$v = $this->isprepareParam($v);
+					$sql .= "{$v},";
+				}
+				$sql = rtrim($sql, ',') . '),';
+			} else {
+				$value = $this->isprepareParam($value);
+				$sql .= "{$value},";
+			}
+		}
+		$sql = rtrim($sql, ',');
+		$sql = $more ? $sql : "({$sql})";
+
+		return $this->exec("insert into {$this->table}({$this->colfield})values{$sql}", $preparedata)->getLastId();
+
+	}
+
+	public function update($udata, $preparedata = []) {
+		$sql = "update {$this->table} set ";
+
+		foreach ($udata as $key => $value) {
+			$value = $this->isprepareParam($value);
+			$sql .= "{$key}={$value},";
+		}
+		$sql = rtrim($sql, ',') . " {$this->where}";
+		$this->preparedata = array_merge($preparedata, $this->preparedata);
+		return $this->exec($sql, $this->preparedata)->rowCount();
+
+	}
+
+	public function delete($id = []) {
+		$sql = "delete from {$this->table}";
+		if (is_int($id) && $id > 0) {
+			$this->where('id=?', [$id]);
+		}
+		if (empty($this->where)) {
+			die('警告,你没有设置删除条件');
+		}
+		$sql .= " {$this->where}";
+		return $this->exec($sql, $this->preparedata)->rowCount();
+	}
+
+	public function getSql() {
+		$this->isgetSql = true;
+		return $this;
+	}
+
+	private function echoSql($sql) {
+		if ($this->isgetSql) {
+			die($sql);
+		}
 	}
 
 	public function getOne() {
