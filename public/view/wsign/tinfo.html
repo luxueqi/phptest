@@ -25,8 +25,8 @@
 			<?php foreach($list as $v): ?>
 			<tr class="text-c">
 				<td><?php echo $v['id'];?></td>
-				<td><?php echo strReplaceStart($v['un']);?></td>
-				<td><?php echo $v['name'];?></td>
+				<td><?php echo strReplaceStart($v['un'],0);?></td>
+				<td><?php echo strReplaceStart($v['name'],0);?></td>
 				<td><?php echo $v['status'];?></td>
 				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(<?php echo $v['id'];?>,<?php echo $v['status'];?>)" style="text-decoration:none"><i class="Hui-iconfont"></i></a><a title="删除" href="javascript:;" onclick="member_del(this,<?php echo $v['id'];?>)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
 				</td>

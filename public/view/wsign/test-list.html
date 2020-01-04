@@ -82,7 +82,7 @@
 	});
 
 	function pcounta(){
-		$('#allcount').val($('#price').val()*parseInt($('#pcount').val()));
+		$('#allcount').val(($('#price').val()*parseInt($('#pcount').val())).toFixed(2));
 	}
 
 	function changep(){

@@ -20,7 +20,7 @@ class WsignBase extends Base {
 	}
 	/**
 	 * [needLogin description]
-	 * @param  [type] $redricturl [跳转的链接]
+	 * @param  [type] $redricturl [未登陆需要跳转的链接]
 	 * @param  array  $needlist   [需要检测的__A__,默认全检测,only只检测设置部分,w是排除不检测部分]
 	 * @return [type]             [description]
 	 */

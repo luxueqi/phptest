@@ -24,6 +24,7 @@ class AliPay {
 
 	public static function notify() {
 		$arr = $_POST;
+		$config = C('alipay');
 		$alipaySevice = new AlipayTradeService($config);
 		$alipaySevice->writeLog(var_export($_POST, true));
 		$result = $alipaySevice->check($arr);
@@ -33,10 +34,11 @@ class AliPay {
 			//交易状态
 			$trade_status = $_POST['trade_status'];
 
-			if ($_POST['trade_status'] == 'TRADE_FINISHED' || $_POST['trade_status'] == 'TRADE_SUCCESS') {
+			if ($trade_status == 'TRADE_FINISHED' || $trade_status == 'TRADE_SUCCESS') {
 				self::uporder();
 
 			}
+
 			echo "success"; //请不要修改或删除
 		} else {
 			//验证失败
@@ -59,13 +61,18 @@ class AliPay {
 
 			$res = $db->exec('select status,pcount from test_order where order_no=?', [$out_trade_no])->getOne();
 
-			if (!empty($res) && $res['status'] == 0) {
+			if (empty($res)) {
+				return 2;
+			}
+
+			if ($res['status'] == 0) {
 				$db->beginTransaction()->exec("update test_order set payment_type=1,status=1,payment_time=?,platform_numbe=? where order_no=?", [time(), $trade_no, $out_trade_no])->exec('update test_product set count=count-?', [$res['pcount']])->commit();
 			}
+			return 1;
 		} catch (PDOException $e) {
-			$db->rollback();
 
-			echo "更新订单错误联系QQ705178580";
+			$db->rollback();
+			return 0;
 
 		}
 
@@ -96,11 +103,16 @@ class AliPay {
 
 			//支付宝交易号
 			$trade_no = htmlspecialchars($_GET['trade_no']);
-
-			self::uporder();
-
-			echo "支付成功<br />支付宝交易号：{$trade_no}<br />商户订单号：{$out_trade_no}<p><a href='/wsign-test-index.html'>返回商品页面</a></p>";
-
+			$s = self::uporder();
+			$rs = '';
+			if ($s == 1) {
+				$rs = "支付成功<br />支付宝交易号：{$trade_no}<br />商户订单号：{$out_trade_no}";
+			} elseif ($s == 0) {
+				$rs = "up order error";
+			} elseif ($s == 2) {
+				$rs = "订单不存在";
+			}
+			echo $rs . "<p><a href='/wsign-test-index.html'>返回商品页面</a></p>";
 			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
 
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

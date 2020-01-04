@@ -233,7 +233,8 @@ function isGetPostAjax($m = 'get') {
 }
 
 function strReplaceStart($strs, $lnum = 1, $rnum = 1, $rs = '*') {
-	return preg_replace('/^(.{' . $lnum . '})(.*?)(.{' . $rnum . '})$/u', '$1' . str_repeat($rs, 3) . '$3', $strs);
+	return mb_substr($strs, 0, $lnum, 'utf-8') . str_repeat($rs, 3) . mb_substr($strs, 0 - $rnum, $rnum, 'utf-8');
+	//return preg_replace('/^(.{' . $lnum . '})(.*?)(.{' . $rnum . '})$/u', '$1' . str_repeat($rs, 3) . '$3', $strs);
 }
 
 ?>

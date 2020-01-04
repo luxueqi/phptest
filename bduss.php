@@ -19,7 +19,9 @@ if (G('sign') == '') {
 	if ($bduss) {
 
 		$url = 'https://passport.baidu.com/v3/login/main/qrbdusslogin?v=1577607039317&bduss=' . $bduss . '&u=https%253A%252F%252Ftieba.baidu.com%252Fp%252F4910301386%253Fpn%253D1&loginVersion=v4&qrcode=1&tpl=tb&apiver=v3&tt=1577607039318&traceid=&time=1577607039&alg=v3&callback=bd__cbs__n430h';
+
 		$res = $http->setUrl($url)->setIsHeader(1)->http();
+
 		if (preg_match_all('/Set-Cookie:([^=]+)=([^;]+)/', $res, $matchs)) {
 			$cookie = '';
 			foreach ($matchs[0] as $value) {

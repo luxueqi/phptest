@@ -74,7 +74,7 @@ class Core {
 		}
 
 	}
-	static function setSession() {
+	private static function setSession() {
 		session_name('wsign');
 		session_start();
 

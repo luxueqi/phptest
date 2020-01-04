@@ -26,16 +26,16 @@
 			<tr class="text-c">
 				<td><?php echo $v['id'];?></td>
 				<td><?php 
-						$lnum=1;
+						$lnum=0;
 						if(strpos($v['name'],'贴吧签到:')===0){
-						$lnum=6;
+						$lnum=5;
 					}
 						echo strReplaceStart($v['name'],$lnum);
 						
 					?>
 						
 					</td>
-				<td><?php echo $v['tname'];?></td>
+				<td><?php echo  strReplaceStart($v['tname'],0);?></td>
 				<td><?php echo $v['info'];?></td>
 				<td><?php echo date('Y-m-d',$v['time']);?></td>
 			</tr>

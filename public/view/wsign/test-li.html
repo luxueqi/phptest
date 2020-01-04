@@ -45,7 +45,7 @@
 				<td><?php echo $v['payment_type']==1?'支付宝':'其它';?></td>
 				<td><?php  
 					if($v['status']==0){
-						echo "<form action='/wsign/test/pay' method='post' ><input type='hidden' name='order_no' value='{$v['order_no']}'></form><a href='#' id ='payid' style='text-decoration:underline;color: blue'>未支付</a>";
+						echo "<form action='/wsign/test/pay' method='post' ><input type='hidden' name='order_no' value='{$v['order_no']}'></form><a href='#' class='payid' style='text-decoration:underline;color: blue'>未支付</a>";
 					}elseif($v['status']==1){
 						echo "已支付";
 					}elseif($v['status']==2){
@@ -81,7 +81,7 @@ $(function(){
 		]
 	});
 
-	$('#payid').click(function(){
+	$('.payid').click(function(){
 		$(this).siblings().submit();
 	});
 
