@@ -13,6 +13,8 @@ class Api extends WsignBase {
 	}
 
 	public function index() {
+		//dump(Db::table('zd_sign')->where("uid=?")->getSql()->update(['stoken' => '']));
+
 		$res = Db::getInstance(C('dbsh'))->exec('select id,name,price,count from test_product')->getAll();
 
 		$this->assign('info', $res);
@@ -132,7 +134,7 @@ class Api extends WsignBase {
 
 				}
 
-				exitMsg(ErrorConst::API_ERRNO, 'no');
+				exitMsg(ErrorConst::API_ERRNO, 'no order_no');
 
 			} catch (PDOException $e) {
 				exitMsg(ErrorConst::API_CATCH_ERRNO, 'fail');

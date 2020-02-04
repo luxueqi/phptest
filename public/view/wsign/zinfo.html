@@ -9,26 +9,25 @@
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户中心 <span class="c-gray en">&gt;</span> 用户管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<?php qchche();?>
-	<div class="cl pd-5 bg-1 bk-gray mt-20">  <span class="r">共有数据：<strong><?php echo $count;?></strong> 条</span> </div>
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="r"><?php echo $strstatus;?>  共有数据：<strong><?php echo $count;?></strong> 条</span> </div>
 	<div class="mt-20">
 	<table class="table table-border table-bordered table-hover table-bg table-sort">
 		<thead>
 			<tr class="text-c">
-				<th width="80">ID</th>
-				<th width="90">name</th>
-				<th width="90">huiti</th>
-				<th width="90">info</th>
-				<th width="90">time</th>
+				<th width="50">ID</th>
+				<th width="90">un</th>
+				<th width="60">status</th>
+				<th width="100">操作</th>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach($list as $v): ?>
 			<tr class="text-c">
 				<td><?php echo $v['id'];?></td>
-				<td><?php echo $v['name'];?></td>
-				<td><?php echo $v['tname'];?></td>
-				<td><?php echo $v['info'];?></td>
-				<td><?php echo date('Y-m-d',$v['time']);?></td>
+				<td><?php echo strReplaceStart($v['name'],0);?></td>
+				<td><?php echo $v['status'];?></td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(<?php echo $v['id'];?>,<?php echo $v['status'];?>)" style="text-decoration:none"><i class="Hui-iconfont"></i></a>
+				</td>
 			</tr>
 		<?php endforeach; ?>
 		</tbody>
@@ -45,15 +44,44 @@
 <script type="text/javascript">
 $(function(){
 	$('.table-sort').dataTable({
-		"aaSorting": [[ 0, "desc" ]],//默认第几个排序
+		"aaSorting": [[ 3, "asc" ]],//默认第几个排序
 		"bStateSave": true,//状态保存
 		"aoColumnDefs": [
 		  //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
 		  //{"orderable":false,"aTargets":[0,8,9]}// 制定列不参与排序
 		]
 	});
+
+	
 	
 });
+function status_change(id,status){
+	
+	layer.confirm('确认更改'+id+'状态吗？',function(index){
+		$.ajax({
+			type:'POSt',
+			url:'/wsign/info/zs',
+			data:{id:id,status:status},
+			dataType:'json',
+			success:function(e){
+				
+				if(e.code==1){
+					
+					layer.alert('已成功!',{icon:1},function(){
+						location.href="/wsign-info-zinfo.html?qflag=1";
+					});
+					
+				}else{
+					layer.alert(e.msg,{icon:2});
+					
+				}
+			}
+		});
+		
+		
+	});
+}
+
 
 
 </script> 

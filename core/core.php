@@ -48,7 +48,7 @@ class Core {
 					} catch (Exception $e) {
 						$ee = 'api err';
 						if (DEBUG == true) {
-							$ee = $e->getMessage();
+							$ee = "Exception " . $e->getCode() . " :" . $e->getMessage() . " in File " . $e->getFile() . " on line " . $e->getLine();
 						} else {
 							header('HTTP/1.1 500 Internal Server Error');
 							exit;

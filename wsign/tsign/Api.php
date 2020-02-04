@@ -26,9 +26,13 @@ class TbGz implements CronInterface {
 
 		$rs = $this->tieba->sign($resi['cookie'], $resi['tbs'], $resi['fid'], $resi['uid'], $resi['name']);
 
+		//dump($rs);exit;
+
 		$condition = isset($rs['error_code']) && ($rs['error_code'] == '160002' || $rs['error_code'] == '0');
 
-		$info = ['贴吧签到:' . $resi['un'], $resi['name'], $rs['error_msg']];
+		if (!$condition) {
+			$info = ['贴吧签到:' . $resi['un'], $resi['name'], $rs['error_msg']];
+		}
 
 	}
 
@@ -49,6 +53,65 @@ class TbBlock implements CronInterface {
 
 	}
 
+}
+
+class ZdSign implements CronInterface {
+
+	function sql() {
+		return 'SELECT s.id,s.stoken,z.cookie,z.name from zd_sign s INNER JOIN tb_zh z on s.uid=z.id and s.status=0  LIMIT 1';
+	}
+
+	function run($resi, &$condition, &$info) {
+
+		try {
+			$stoken = $resi['stoken'];
+			$info = ['知道签到:' . $resi['name'], '知道签到', ''];
+			if (empty($stoken)) {
+				$stoken = Zhidao::getStoken('BDUSS=' . $resi['cookie']);
+				if (!empty($stoken)) {
+					Db::getInstance()->exec("update zd_sign set stoken='{$stoken}' where id={$resi['id']}");
+				}
+			}
+
+			$rs = Zhidao::sign('BDUSS=' . $resi['cookie'], $stoken);
+
+			//dump($rs);
+
+			$condition = isset($rs['errorNo']) && ($rs['errorNo'] == 0 || $rs['errorNo'] == 2);
+
+			if (!$condition) {
+				$info[2] = $rs['errorNo'] . '-' . $rs['errorMsg'];
+			}
+		} catch (Exception $e) {
+			$info[2] = $e->getMessage();
+		}
+	}
+}
+
+class WkSign implements CronInterface {
+	function sql() {
+		return 'SELECT s.id,z.cookie,z.name from wk_sign s INNER JOIN tb_zh z on s.uid=z.id and s.status=0  LIMIT 1';
+	}
+
+	function run($resi, &$condition, &$info) {
+
+		try {
+			$info = ['文库签到:' . $resi['name'], '文库签到', ''];
+
+			$rs = WenKu::sign('BDUSS=' . $resi['cookie']);
+
+			//dump($rs);
+
+			$condition = isset($rs['errno']) && $rs['errno'] == 0;
+
+			if (!$condition) {
+				$info[2] = $rs['errno'] . '-' . $rs['errmsg'];
+			}
+		} catch (Exception $e) {
+			$info[2] = $e->getMessage();
+		}
+
+	}
 }
 
 class Api extends WsignBase {
@@ -82,12 +145,14 @@ class Api extends WsignBase {
 						$this->db('tb_zh')->filed('name,uid,cookie,tbs,time,w_id')->where("('{$uidname['name']}',$uid,:cookie,'$tbs',$time,{$res['id']})", [':cookie' => $param['cookie']])->save();
 
 					} else {
-						$this->db('tb_zh')->where("cookie='{$param['cookie']}',tbs='{$tbs}'")->save($info['id']);
+						$this->db('tb_zh')->where("cookie=:ck,tbs='{$tbs}'", [':ck' => $param['cookie']])->save($info['id']);
+						Db::table('zd_sign')->where("uid={$info['id']}")->update(['stoken' => '']);
 					}
 					//
 					exitMsg(ErrorConst::API_SUCCESS_ERRNO, 'ok');
 
 				} catch (PDOException $ee) {
+					//dump($ee);
 					exitMsg(ErrorConst::API_CATCH_ERRNO, 'fail');
 				} catch (Exception $e) {
 					exitMsg(ErrorConst::API_CATCH_ERRNO, $e->getMessage());
@@ -99,41 +164,64 @@ class Api extends WsignBase {
 		$this->view('tadd');
 
 	}
+
+	private function cronlist($status = false) {
+		$db = Db::table('cron_list');
+		if ($status === false) {
+			return $db->filed('cronname')->where('isstop=0')->select();
+		}
+		return $db->filed('cronname')->where('status=0 and isstop=0')->select();
+	}
 	public function cron() {
-		$plist = ['tb_gz', 'tb_block'];
+		//$plist = ['tb_gz', 'tb_block'];
 		$today = mktime(0, 0, 0);
 		$info = '';
 		//var_dump($today, time(), time() - $today);exit;
 		try {
-			if (G('q') == 1) {
-				foreach ($plist as $value) {
+			if (G('q') == 1 || G('q') == 2) {
 
-					Db::getInstance()->exec("update {$value} set status=0 where status=2");
+				$plistc = $this->cronlist();
 
-				}
-			} elseif (G('q') == 2) {
-				foreach ($plist as $value) {
-
-					Db::getInstance()->exec("update {$value} set status=0");
+				foreach ($plistc as $value) {
+					$tbname = $value['cronname'];
+					if (G('q') == 1) {
+						Db::getInstance()->exec("update {$tbname} set status=0 where status=2");
+					} elseif (G('q') == 2) {
+						Db::getInstance()->exec("update {$tbname} set status=0");
+					}
 
 				}
 			} else {
-				if (time() - $today < 1500) {
+				if (time() - $today < 3700) {
+
 					$tt = $this->db('wsetting')->filed('v')->where('k="cron_time"')->getOne()['v'];
 					if ($today > $tt) {
-						foreach ($plist as $value) {
 
-							Db::getInstance()->exec("update {$value} set status=0");
+						$plist = $this->cronlist();
+
+						array_push($plist, ['cronname' => 'cron_list']);
+
+						//dump($plist);
+
+						foreach ($plist as $value) {
+							$tbname = $value['cronname'];
+							Db::getInstance()->exec("update {$tbname} set status=0");
 
 						}
+						//exit;
 						Db::getInstance()->exec("update wsetting set v='{$today}' where k='cron_time'");
 					}
 				}
-
+				$plist = $this->cronlist(true);
+				//dump($plist);
 				foreach ($plist as $value) {
-					$info .= $this->commWork($value) . '-';
+					$tbname = $value['cronname'];
+					$info .= $this->commWork($tbname) . '-';
+					//var_dump($tbname, $info);
 				}
-
+				if (empty($plist)) {
+					$info = 'all-';
+				}
 			}
 
 			$info = 'ok-' . rtrim($info, '-');
@@ -215,6 +303,8 @@ class Api extends WsignBase {
 			$res = Db::getInstance()->exec($classc->sql())->getAll();
 
 			if (empty($res)) {
+
+				Db::table('cron_list')->where("cronname='{$table}'")->update(['status' => 1, 'endtime' => time()]);
 
 				return "[{$table}-完成]";
 			}

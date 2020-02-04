@@ -24,13 +24,16 @@ class Api extends WsignBase {
 	}
 
 	public function index() {
+		//dump($_SERVER);exit;
 
 		$this->view();
 	}
 
 	public function welcome() {
 
-		$this->slist('i.id,i.ip,i.time,l.name', 'login_info i inner join login l on i.uid=l.id order by i.id desc limit 10', 'welcome');
+		//dump($_SERVER);
+
+		$this->slist('i.id,i.ip,i.time,i.ua,l.name', 'login_info i inner join login l on i.uid=l.id order by i.id desc limit 10', 'welcome');
 
 	}
 
@@ -104,6 +107,8 @@ class Api extends WsignBase {
 	}
 
 	public function torder() {
+		//dump(Request::Csrf());exit;
+
 		$params = $this->checkParams(['id' => 'int', 'order' => 'int']);
 
 		$this->db('tb_zh')->where('`order`=:order', [':order' => $params['order']])->save($params['id']);

@@ -9,10 +9,11 @@
 	<table class="table table-border table-bordered table-hover table-bg table-sort">
 		<thead>
 			<tr class="text-c">
-				<th width="80">ID</th>
-				<th width="100">name</th>
+				<th width="30">ID</th>
+				<th width="30">name</th>
+				<th width="150">ua</th>
 				<th width="40">ip</th>
-				<th width="90">time</th>
+				<th width="70">time</th>
 				
 			</tr>
 		</thead>
@@ -21,6 +22,7 @@
 			<tr class="text-c">
 				<td><?php echo $v['id'];?></td>
 				<td><?php echo $v['name'];?></td>
+				<td><?php echo $v['ua'];?></td>
 				<td><?php echo long2ip($v['ip']);?></td>
 				<td><?php echo date('Y-m-d H:i:s',$v['time']);?></td>
 			</tr>

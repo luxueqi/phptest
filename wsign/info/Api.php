@@ -3,7 +3,7 @@ if (!defined('EXITFORBID')) {
 	exit('forbid');
 }
 class Api extends WsignBase {
-	protected $cachet = ['info' => ['time' => 1800], 'tinfo' => ['time' => 1800], 'einfo' => ['time' => 14400], 'binfo' => ['time' => 14400], 'cron'];
+	protected $cachet = ['info' => ['time' => 1800], 'tinfo' => ['time' => 1800], 'einfo' => ['time' => 14400], 'binfo' => ['time' => 14400], 'cron' => ['time' => 1200], 'zinfo', 'winfo', 'cls' => ['time' => 1200]];
 	//protected $cachefalg = false;
 	public function __construct() {
 
@@ -23,6 +23,21 @@ class Api extends WsignBase {
 		$this->strsatusinfo('tb_gz', '签到');
 
 		$this->slist('g.id,z.name un,g.name,g.status', 'tb_gz g inner join tb_zh z on g.zid=z.id', 'tinfo');
+	}
+
+	public function zinfo() {
+		$this->strsatusinfo('zd_sign', '签到');
+		$this->slist('s.id,z.name,s.status', 'zd_sign s INNER JOIN tb_zh z on z.id=s.uid', 'zinfo');
+	}
+
+	public function winfo() {
+		$this->strsatusinfo('wk_sign', '签到');
+		$this->slist('s.id,z.name,s.status', 'wk_sign s INNER JOIN tb_zh z on z.id=s.uid', 'winfo');
+	}
+
+	public function cls() {
+		$this->strsatusinfo('cron_list', '完成');
+		$this->slist('id,cronname as name,status,isstop,endtime', 'cron_list', 'cronlist');
 	}
 
 	private function strsatusinfo($table, $type) {
@@ -83,6 +98,31 @@ class Api extends WsignBase {
 
 	public function bs() {
 		$this->statuscomm('tb_block');
+	}
+
+	public function zs() {
+		//dump(G('status'));
+		/*if (G('status') != 0) {
+		Db::getInstance()->exec('update cron_list set status=0 where cronname="zd_sign"');
+		}*/
+
+		$this->statuscomm('zd_sign');
+
+	}
+	public function ws() {
+		/*if (G('status') != 0) {
+		Db::getInstance()->exec('update cron_list set status=0 where cronname="wk_sign"');
+		}*/
+
+		$this->statuscomm('wk_sign');
+
+	}
+	public function cs() {
+		$this->statuscomm('cron_list');
+	}
+
+	public function sstop() {
+		$this->statuscomm('cron_list', 'isstop');
 	}
 
 }

@@ -24,7 +24,7 @@ class Base {
 	//
 	public function __construct() {
 
-		$this->cacheitem(['time' => 144000, 'qflag' => G('qflag', false)]);
+		$this->cacheitem(['time' => 14400, 'qflag' => G('qflag', false)]);
 
 	}
 
@@ -49,7 +49,7 @@ class Base {
 		return false;
 	}
 
-	private function cacheitem($conf = ['time' => 72000, 'qflag' => false]) {
+	private function cacheitem($conf) {
 
 		/*if (C(__M__)['cache'] && in_array(__A__, $this->cachet)) {
 
@@ -229,8 +229,8 @@ class Base {
 		} else {
 			//$this->dbwhere = str_replace('&', ',', $this->dbwhere);
 			//$this->dbwhere = str_replace('and', ',', $this->dbwhere);
-			$sql = "update {$this->table} set {$this->dbwhere} where id=:id";
-			$this->dbdata[':id'] = $id + 0;
+			$sql = "update {$this->table} set {$this->dbwhere} where id=" . ($id + 0);
+			//$this->dbdata[':id'] = $id + 0;
 		}
 		//die($sql);
 		return Db::getInstance($this->dbconf)->exec($sql, $this->dbdata)->rowCount();

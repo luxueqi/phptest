@@ -42,7 +42,7 @@ class Db {
 
 		//echo __CLASS__;exit();
 
-		if (empty(self::$conf)) {
+		if (empty(self::$conf) && function_exists('C')) {
 			self::$conf = C('db');
 		}
 
@@ -211,7 +211,12 @@ class Db {
 		return $this->exec("insert into {$this->table}({$this->colfield})values{$sql}", $preparedata)->getLastId();
 
 	}
-
+/**
+ * [update description]
+ * @param  array  $udata       [['列'=>'值']]
+ * @param  array  $preparedata [使用预处理的数据]
+ * @return int              影响的行数
+ */
 	public function update($udata, $preparedata = []) {
 		$sql = "update {$this->table} set ";
 

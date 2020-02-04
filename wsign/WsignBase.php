@@ -39,8 +39,9 @@ class WsignBase extends Base {
 	protected function setLoginInfo($info) {
 		$time = time();
 		$ip = ip2long($_SERVER['REMOTE_ADDR']);
+		$ua = $_SERVER['HTTP_USER_AGENT'];
 		//var_dump($ip);exit;
-		$this->db('login_info')->filed('uid,time,ip')->where("({$info['id']},$time,$ip)")->save();
+		$this->db('login_info')->filed('uid,time,ip,ua')->where("({$info['id']},$time,$ip,?)", [$ua])->save();
 		Session('name', $info['name']);
 		Session('uid', $info['id']);
 	}
@@ -92,11 +93,11 @@ class WsignBase extends Base {
 		$this->view($view);
 	}
 
-	protected function statuscomm($table) {
-		$param = $this->checkParams(['id' => 'int', 'status' => 'regex:^[012]$']);
+	protected function statuscomm($table, $filed = 'status') {
+		$param = $this->checkParams(['id' => 'int', "{$filed}" => 'regex:^[012]$']);
 
 		try {
-			$this->db($table)->where('status=:status', [':status' => !$param['status'] + 0])->save($param['id']);
+			$this->db($table)->where("{$filed}=:status", [':status' => !$param[$filed] + 0])->save($param['id']);
 			exitMsg(ErrorConst::API_SUCCESS_ERRNO, '更改成功');
 
 		} catch (PDOException $e) {
