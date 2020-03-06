@@ -59,19 +59,24 @@ class AliPay {
 			$trade_no = G('trade_no');
 			$db = Db::getInstance(C('dbsh'));
 
-			$res = $db->exec('select status,pcount from test_order where order_no=?', [$out_trade_no])->getOne();
+			$res = $db->exec('select status,pcount,spid from test_order where order_no=?', [$out_trade_no])->getOne();
 
 			if (empty($res)) {
 				return 2;
 			}
-
+			//var_dump($e);exit;
 			if ($res['status'] == 0) {
-				$db->beginTransaction()->exec("update test_order set payment_type=1,status=1,payment_time=?,platform_numbe=? where order_no=?", [time(), $trade_no, $out_trade_no])->exec('update test_product set count=count-?', [$res['pcount']])->commit();
+				//$db->beginTransaction()->exec("update test_order set payment_type=1,status=1,payment_time=?,platform_numbe=? where order_no=?", [time(), $trade_no, $out_trade_no])->exec('update test_product set count=count-? where id=?', [$res['pcount'], $res['spid']])->commit();
+				//Db::table('test_order')->where('order_no=?', [$out_trade_no])->update(['payment_time' => time(), 'platform_numbe' => '?'], [$trade_no]);
+				$db->exec("update test_order set payment_type=1,status=1,payment_time=?,platform_numbe=? where order_no=?", [time(), $trade_no, $out_trade_no])->exec('update test_product set count=count-? where id=?', [$res['pcount'], $res['spid']]);
+
 			}
+
 			return 1;
 		} catch (PDOException $e) {
 
-			$db->rollback();
+			//$db->rollback();
+
 			return 0;
 
 		}
@@ -105,11 +110,11 @@ class AliPay {
 			$trade_no = htmlspecialchars($_GET['trade_no']);
 			$s = self::uporder();
 			$rs = '';
-			if ($s == 1) {
+			if ($s === 1) {
 				$rs = "支付成功<br />支付宝交易号：{$trade_no}<br />商户订单号：{$out_trade_no}";
-			} elseif ($s == 0) {
+			} elseif ($s === 0) {
 				$rs = "up order error";
-			} elseif ($s == 2) {
+			} elseif ($s === 2) {
 				$rs = "订单不存在";
 			}
 			echo $rs . "<p><a href='/wsign-test-index.html'>返回商品页面</a></p>";

@@ -21,57 +21,60 @@ class Core {
 
 		//经过重写,形如/api/wb/login?..... 经过此方法
 		//var_dump($_SERVER);exit;
-		if (isset($_SERVER['REDIRECT_URL'])) {
-			$arr = [];
-			$r_url = ltrim($_SERVER['REDIRECT_URL'], '/');
-			if (strpos($r_url, '-') !== false) {
-				$arr = explode('-', $r_url);
-			} else {
-				$arr = explode('/', $r_url);
-			}
-			define('__M__', $arr[0]);
-			define('__C__', $arr[1]);
-			define('__A__', str_replace('.html', '', $arr[2]));
+		$r_url = Request::ReDirectUrl();
 
-			$path = './' . __M__ . '/' . __C__ . '/Api.php';
+		$arr = [];
 
-			if (is_file($path)) {
-				require_once $path;
-				$ee = 'no api';
+		if (strpos($r_url, '-') !== false) {
+			$arr = explode('-', $r_url);
+		} else {
+			$arr = explode('/', $r_url);
+		}
+		if (count($arr) != 3) {
+			die('index');
+		}
+		//dump($arr);
+		define('__M__', $arr[0]);
+		define('__C__', $arr[1]);
+		define('__A__', str_replace('.html', '', $arr[2]));
 
-				if (in_array(__A__, get_class_methods('Api'))) {
-					$a = __A__;
+		$path = './' . __M__ . '/' . __C__ . '/Api.php';
 
-					try {
-						(new Api)->$a();
-						return;
-					} catch (Exception $e) {
-						$ee = 'api err';
-						if (DEBUG == true) {
-							$ee = "Exception " . $e->getCode() . " :" . $e->getMessage() . " in File " . $e->getFile() . " on line " . $e->getLine();
-						} else {
-							header('HTTP/1.1 500 Internal Server Error');
-							exit;
+		if (is_file($path)) {
+			require_once $path;
+			$ee = 'no api';
 
-						}
+			if (in_array(__A__, get_class_methods('Api'))) {
+				$a = __A__;
+
+				try {
+					(new Api)->$a();
+					return;
+				} catch (Exception $e) {
+					$ee = 'api err';
+					if (DEBUG == true) {
+						$ee = "Exception " . $e->getCode() . " :" . $e->getMessage() . " in File " . $e->getFile() . " on line " . $e->getLine();
+					} else {
+						header('HTTP/1.1 500 Internal Server Error');
+						exit;
 
 					}
 
-					//return;
 				}
 
+				//return;
 			}
-
-			if (isGetPostAjax('get') && !DEBUG) {
-				header("HTTP/1.1 404 Not Found");
-				header("Status: 404 Not Found");
-				include ROOT_PATH . '/public/view/wsign/404.html';
-				exit;
-			}
-
-			exitMsg(ErrorConst::API_ERRNO, $ee, [__M__, __C__, __A__]);
 
 		}
+
+		if (isGetPostAjax('get') && !DEBUG) {
+			header("HTTP/1.1 404 Not Found");
+			header("Status: 404 Not Found");
+			include ROOT_PATH . '/public/view/wsign/404.html';
+			exit;
+		}
+
+		exitMsg(ErrorConst::API_ERRNO, $ee, [__M__, __C__, __A__]);
 
 	}
 	private static function setSession() {

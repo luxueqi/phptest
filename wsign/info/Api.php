@@ -3,7 +3,7 @@ if (!defined('EXITFORBID')) {
 	exit('forbid');
 }
 class Api extends WsignBase {
-	protected $cachet = ['info' => ['time' => 1800], 'tinfo' => ['time' => 1800], 'einfo' => ['time' => 14400], 'binfo' => ['time' => 14400], 'cron' => ['time' => 1200], 'zinfo', 'winfo', 'cls' => ['time' => 1200]];
+	protected $cachet = ['info' => ['time' => 1800], 'tinfo' => ['time' => 1800], 'einfo' => ['time' => 14400], 'binfo' => ['time' => 14400], 'cron' => ['time' => 1200], 'zinfo', 'winfo', 'dinfo', 'cls' => ['time' => 1200]];
 	//protected $cachefalg = false;
 	public function __construct() {
 
@@ -33,6 +33,11 @@ class Api extends WsignBase {
 	public function winfo() {
 		$this->strsatusinfo('wk_sign', '签到');
 		$this->slist('s.id,z.name,s.status', 'wk_sign s INNER JOIN tb_zh z on z.id=s.uid', 'winfo');
+	}
+
+	public function dinfo() {
+		$this->strsatusinfo('wb_day', '完成');
+		$this->slist('s.id,z.name,s.status', 'wb_day s INNER JOIN user z on z.id=s.uid', 'dinfo');
 	}
 
 	public function cls() {
@@ -123,6 +128,10 @@ class Api extends WsignBase {
 
 	public function sstop() {
 		$this->statuscomm('cron_list', 'isstop');
+	}
+
+	public function ds() {
+		$this->statuscomm('wb_day');
 	}
 
 }

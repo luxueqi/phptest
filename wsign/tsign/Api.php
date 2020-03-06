@@ -114,6 +114,38 @@ class WkSign implements CronInterface {
 	}
 }
 
+/**
+ *
+ */
+class WbDay implements CronInterface {
+	function sql() {
+		return 'SELECT w.id,u.cookie,u.name from wb_day w INNER JOIN user u on w.uid=u.id and w.status=0  LIMIT 1';
+	}
+
+	function run($resi, &$condition, &$info) {
+		try {
+			$info = ['每日一善:' . $resi['name'], '每日一善', ''];
+			$rs = (new Weibo())->dayGy($resi['cookie']);
+			$condition = true;
+
+			foreach ($rs as $value) {
+				if ($value['code'] != '100000') {
+					$condition = false;
+
+					$info[2] = addslashes(json_encode($rs));
+					break;
+				}
+			}
+		} catch (Exception $e) {
+			$condition = false;
+			$info[2] = $e->getMessage();
+
+		}
+
+	}
+
+}
+
 class Api extends WsignBase {
 
 	private $token;

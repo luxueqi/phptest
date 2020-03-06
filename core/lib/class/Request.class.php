@@ -28,6 +28,18 @@ class Request {
 		return $_SERVER['SERVER_NAME'];
 	}
 
+	public static function ReDirectUrl() {
+		/*$r_url = isset($_SERVER['REDIRECT_URL']) ? $_SERVER['REDIRECT_URL'] : $_SERVER['REQUEST_URI'];
+
+		$r_url = ltrim($r_url, '/');
+
+		if (($i = strpos($r_url, '?')) !== false) {
+		$r_url = substr($r_url, 0, $i);
+		}*/
+		//dump(parse_url($_SERVER['REQUEST_URI'])['path']);
+		return ltrim(parse_url($_SERVER['REQUEST_URI'])['path'], '/');
+	}
+
 	public static function Csrf() {
 		if (!preg_match('/^http(s)?:\/\/' . self::ServerName() . '/', self::Referer())) {
 			exitMsg(ErrorConst::API_PARAMS_ERRNO, 'csrf');

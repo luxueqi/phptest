@@ -198,7 +198,7 @@ class Tieba extends Http {
 			$uid = $this->getUidName()['uid'];
 		}
 		$this->initCommonData();
-		$tdata = ['uid' => $uid, 'page_size' => $count, 'page_no' => $pn];
+		$tdata = ['BDUSS' => $this->bduss, 'uid' => $uid, 'page_size' => $count, 'page_no' => $pn];
 		//var_dump(json_decode($this->setDatac($tdata)->md5sign()->request(TiebaConst::APP_URL . '/c/f/forum/like', $this->data), true));exit;
 		$list = json_decode($this->setDatac($tdata)->md5sign()->request(TiebaConst::APP_URL . '/c/f/forum/like', $this->data), true)['forum_list'];
 

@@ -23,7 +23,7 @@ class Api extends Base {
 
 	public function like() {
 
-		$tb = new Tieba();
+		$tb = new Tieba(G('bduss'));
 		$uid = G('u');
 		if ($uid == '') {
 			if (G('p') != '') {
@@ -36,6 +36,7 @@ class Api extends Base {
 
 		$_REQUEST['psize'] = G('psize', 60);
 		$_REQUEST['u'] = $uid;
+
 		$params = $this->checkParams(['u' => 'int', 'psize' => 'int', 'type' => 'regex:^[01]$', 'pn' => 'int'], ['u' => '支持n=用户名，或u=uid,p=portrait三种模式']);
 
 		try {

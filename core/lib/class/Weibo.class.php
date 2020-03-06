@@ -18,6 +18,23 @@ class Weibo extends Http {
 
 	}
 
+	public function dayGy($cookie) {
+		$res = [];
+		$h = new HttpHeader();
+		$postdata = ['aj_profile_task' => 'task=sign&_t=0', 'aj_mblog_addmblog' => 'action=1&pid=&preview=false&gid=4&type=&shortURL=&task=repost&content=%23%E6%AF%8F%E6%97%A5%E4%B8%80%E5%96%84%23%20%20%E5%85%B3%E6%B3%A8%E4%BB%96%E4%BB%AC%EF%BC%8C%E5%B8%AE%E5%8A%A9%E4%BB%96%E4%BB%AC%EF%BC%8C%E4%B8%80%E6%AC%A1%E8%BD%AC%E5%8F%91%E8%83%BD%E8%AE%A9%E6%9B%B4%E5%A4%9A%E4%BA%BA%E8%A1%8C%E5%8A%A8%E8%B5%B7%E6%9D%A5%EF%BC%81&appkey=&style_type=1&location=partner&module=shissue&_t=0', 'aj_profile_task?__rnd=1582146752671' => 'task=repost&content=%23%E6%AF%8F%E6%97%A5%E4%B8%80%E5%96%84%23%20%20%E5%85%B3%E6%B3%A8%E4%BB%96%E4%BB%AC%EF%BC%8C%E5%B8%AE%E5%8A%A9%E4%BB%96%E4%BB%AC%EF%BC%8C%E4%B8%80%E6%AC%A1%E8%BD%AC%E5%8F%91%E8%83%BD%E8%AE%A9%E6%9B%B4%E5%A4%9A%E4%BA%BA%E8%A1%8C%E5%8A%A8%E8%B5%B7%E6%9D%A5%EF%BC%81&gid=4&_t=0'];
+		$header = $h->setContentType()->setCookie($cookie)->setReferer('https://gongyi.weibo.com/2150961184/profile')->setUserAgent('Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Mobile Safari/537.36')->isAjax(true)->getHeader();
+		foreach ($postdata as $key => $value) {
+			//防止频繁
+			if ($key == 'aj_mblog_addmblog') {
+				sleep(3);
+			}
+			$res[] = json_decode($this->request('https://gongyi.weibo.com/' . $key, $value, $header), true);
+		}
+
+		return $res;
+
+	}
+
 	public function getHuatiList($huati, &$since_id = '') {
 		$url = 'https://m.weibo.cn/api/container/getIndex?extparam=%E9%99%86%E9%9B%AA%E7%90%AA&containerid=100808' . md5($huati) . '_-_feed&luicode=20000174&since_id=' . $since_id;
 

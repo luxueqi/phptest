@@ -22,7 +22,7 @@ class Api extends WsignBase {
 		$this->view('test-list');
 
 	}
-
+//检测库存
 	private function checkKc($id, $count) {
 
 		$res = Db::getInstance(C('dbsh'))->exec('select name,price,count from test_product where id=?', [$id])->getOne();
@@ -37,18 +37,19 @@ class Api extends WsignBase {
 		}
 		return $res;
 	}
-
+//创建订单
 	public function c() {
 		$ps = ['name' => '', 'price' => 0, 'count' => 0, 'ajg' => 0, 'order_no' => '', 'wzf' => ''];
 
 		if (isGetPostAjax('post')) {
 			$params = $this->checkParams(['id' => 'int', 'count' => 'int', 'ajiage' => 'regex:^[0-9]+(\.[0-9]+)?$']);
+
 			$db = Db::getInstance(C('dbsh'));
 			$uip = ip2long($_SERVER['REMOTE_ADDR']);
 			try {
-
+				//检查库存
 				$res = $this->checkKc($params['id'], $params['count']);
-
+				//检查当前用户的当前订单是否有未支付
 				$rres = $db->exec('select order_no,pcount,price,payment from test_order where uip=? and spid=? and status=0', [$uip, $params['id']])->getOne();
 
 				if (!empty($rres)) {
@@ -92,6 +93,7 @@ class Api extends WsignBase {
 			if (empty($res)) {
 				die('订单不存在');
 			}
+			//检查库存
 			$this->checkKc($res['spid'], $res['pcount']);
 			if ($res['status'] == 1) {
 				die('订单已支付');

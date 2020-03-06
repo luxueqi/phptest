@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>泄露数据</title>
+</head>
+<body style="text-align: center;">
+	<div style="margin: 100px auto;">
+		<form method="post">
+			<input type="text" name="so" id="so" style="width: 300px;height: 30px" placeholder="邮箱或手机号或身份证">
+			<button id="btn" style="width: 70px;height: 30px">GO</button>
+			<div id='content'></div>
+		</form>
+	</div>
+<script src="http://libs.baidu.com/jquery/2.1.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+	$(function(){
+		
+		$('#btn').click(function(){
+			var txt=$('#so').val();
+			if(txt==''){
+
+				alert('请输入数据');
+				return false;
+			}
+			if(!new RegExp('^[0-9a-zA-Z-_.@]+$').test(txt)){
+				$('#so').val('');
+				alert('请输入正确数据');
+
+				return false;
+			}
+			var data={'txt':txt,'type':-1};
+			if(new RegExp('^[^@]+@[^.]+\.[\\w]+$').test(txt)){
+				data.type=0;
+			}
+			if(new RegExp('^1[34578]\\d{9}$').test(txt)){
+				data.type=1;
+			}
+			if(new RegExp('^[0-9]{17}[0-9xX]$').test(txt)){
+				data.type=2;
+			}
+			if(data.type==-1)
+			{
+				$('#so').val('');
+				alert('请输入正确数据');
+
+				return false;
+
+			}
+			$('#btn').attr('disabled',true);
+			$.post('/sou/index/cha',data,function(e){
+
+				if(e.code==1)
+				{	data=e.data;
+					var str='';
+					for(var i=0,len=data.length;i<len;i++){
+						//console.log(data[i].phone);
+						str+=(i+1)+'.name-'+data[i].name+'-pwd-'+data[i].password+'-apwd-'+data[i].apasspord+'-phone-'+data[i].phone+'-idcard-'+data[i].idcard+"<br>";
+					}
+					if(str=='')str='没有查询到';
+					
+					$('#content').html("<br>"+str);
+					
+				}else{
+					alert(e.msg);
+				}
+				$('#btn').attr('disabled',false);
+			},'json');
+
+			return false;
+		})
+	})
+</script>
+</body>
+</html>
