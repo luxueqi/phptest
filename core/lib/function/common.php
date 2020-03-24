@@ -154,7 +154,7 @@ function strMid($left, $right, $str, $pl = false) {
 
 		}
 
-		$i = $i + $r + strlen($right);
+		$i = $r + strlen($right);
 
 		//$start = $r;
 
