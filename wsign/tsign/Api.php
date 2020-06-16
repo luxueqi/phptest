@@ -338,7 +338,7 @@ class Api extends WsignBase {
 
 		}
 
-		$this->db('tb_cron')->filed('time,info')->where("(:time,'{$info}')", [':time' => time()])->save();
+		$this->db('tb_cron')->filed('time,info')->where("(:time,:info)", [':time' => time(), ':info' => $info])->save();
 
 	}
 
@@ -445,7 +445,7 @@ class Api extends WsignBase {
 				$value = rtrim($value, ',');
 				$status = $key == 'y' ? 1 : 2;
 
-				$classc->end($values, $status);
+				$classc->end($value, $status);
 				// $filedtmp = "status={$status}";
 				// if ($table == 'tb_top') {
 				// 	$filedtmp = $filedtmp . ",lasttime=" . ($status == 1 ? time() : 0);
