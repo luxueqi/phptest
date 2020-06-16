@@ -24,7 +24,7 @@ class Base {
 	//
 	public function __construct() {
 
-		$this->cacheitem(['time' => 14400, 'qflag' => G('qflag', false)]);
+		$this->cacheitem(['time' => 1800, 'qflag' => G('qflag', false)]);
 
 	}
 
@@ -76,7 +76,7 @@ class Base {
 
 	protected function view($path = __A__) {
 		extract($this->assign);
-		require './public/view/' . __M__ . '/' . $path . '.html';
+		require_once './public/view/' . __M__ . '/' . $path . '.html';
 	}
 
 	protected function assign($name, $data) {

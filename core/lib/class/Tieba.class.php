@@ -180,6 +180,13 @@ class Tieba extends Http {
 		return json_decode($that->setDatac($tdata)->md5sign()->request(TiebaConst::APP_URL . '/c/c/bawu/commitprison', $that->data), true);
 	}
 
+	static public function topStatic($word, $fid, $bduss, $tbs, $tid) {
+		$that = new self();
+		$that->initCommonData();
+		$tdata = ['BDUSS' => $bduss, 'tbs' => $tbs, 'z' => $tid, 'word' => $word, 'm_api' => 'c/s/newlog', 'ntn' => 'set', 'fid' => $fid];
+		return json_decode($that->setDatac($tdata)->md5sign()->request(TiebaConst::APP_URL . '/c/c/bawu/committop', $that->data), true);
+	}
+
 	static public function u2p($uid) {
 		return (new self())->uid2portrait($uid);
 	}

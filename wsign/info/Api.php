@@ -3,7 +3,7 @@ if (!defined('EXITFORBID')) {
 	exit('forbid');
 }
 class Api extends WsignBase {
-	protected $cachet = ['info' => ['time' => 1800], 'tinfo' => ['time' => 1800], 'einfo' => ['time' => 14400], 'binfo' => ['time' => 14400], 'cron' => ['time' => 1200], 'zinfo', 'winfo', 'dinfo', 'cls' => ['time' => 1200]];
+	protected $cachet = ['info' => ['time' => 1800], 'tinfo' => ['time' => 1800], 'einfo' => ['time' => 14400], 'binfo' => ['time' => 14400], 'cron' => ['time' => 1200], 'zinfo', 'winfo', 'dinfo', 'cls' => ['time' => 1200], 'top'];
 	//protected $cachefalg = false;
 	public function __construct() {
 
@@ -43,6 +43,11 @@ class Api extends WsignBase {
 	public function cls() {
 		$this->strsatusinfo('cron_list', '完成');
 		$this->slist('id,cronname as name,status,isstop,endtime', 'cron_list', 'cronlist');
+	}
+
+	public function top() {
+		$this->strsatusinfo('tb_top', '置顶');
+		$this->slist('s.id,s.word,z.name,s.status,s.lasttime', 'tb_top s INNER JOIN tb_zh z on z.id=s.uid', 'toplist');
 	}
 
 	private function strsatusinfo($table, $type) {
@@ -100,6 +105,9 @@ class Api extends WsignBase {
 	public function ts() {
 		$this->statuscomm('tb_gz');
 	}
+	public function topcs() {
+		$this->statuscomm('tb_top');
+	}
 
 	public function bs() {
 		$this->statuscomm('tb_block');
@@ -127,6 +135,7 @@ class Api extends WsignBase {
 	}
 
 	public function sstop() {
+		//dump($_SERVER);
 		$this->statuscomm('cron_list', 'isstop');
 	}
 

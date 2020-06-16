@@ -34,6 +34,8 @@ class Cache {
 		} else {
 			self::$conf['filename'] = CACHE_PATH . '/' . self::$conf['filename'];
 
+			//var_dump(time() - filemtime(self::$conf['filename']), self::$conf['time']);
+
 			self::$flag = !self::$conf['qflag'] && file_exists(self::$conf['filename']) && time() - filemtime(self::$conf['filename']) < self::$conf['time'];
 
 		}

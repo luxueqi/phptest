@@ -117,6 +117,40 @@ class WkSign implements CronInterface {
 /**
  *
  */
+class TbTop implements CronInterface {
+
+	function sql() {
+
+		$time = time() - 10 * 24 * 3600;
+
+		return 'SELECT t.id,t.word,t.fid,t.tid,z.tbs,z.cookie,z.name from tb_top t INNER JOIN tb_zh z on  t.status=0 and t.uid=z.id and t.lasttime<' . $time . '  LIMIT 1';
+	}
+
+	function run($resi, &$condition, &$info) {
+
+		try {
+			$info = ['贴吧置顶:' . $resi['name'], '贴吧置顶', ''];
+			//$word, $fid, $bduss, $tbs, $tid
+
+			$rs = Tieba::topStatic($resi['word'], $resi['fid'], $resi['cookie'], $resi['tbs'], $resi['tid']);
+
+			//dump($rs);
+
+			$condition = isset($rs['error_code']) && $rs['error_code'] == 0;
+
+			if (!$condition) {
+				$info[2] = $rs['error_code'] . '-' . $rs['error_msg'];
+			}
+		} catch (Exception $e) {
+			$info[2] = $e->getMessage();
+		}
+
+	}
+}
+
+/**
+ *
+ */
 class WbDay implements CronInterface {
 	function sql() {
 		return 'SELECT w.id,u.cookie,u.name from wb_day w INNER JOIN user u on w.uid=u.id and w.status=0  LIMIT 1';
@@ -371,7 +405,11 @@ class Api extends WsignBase {
 
 				$value = rtrim($value, ',');
 				$status = $key == 'y' ? 1 : 2;
-				Db::getInstance()->exec("update {$table} set status={$status} where id in({$value})");
+				$filedtmp = "status={$status}";
+				if ($table == 'tb_top') {
+					$filedtmp = $filedtmp . ",lasttime=" . ($status == 1 ? time() : 0);
+				}
+				Db::getInstance()->exec("update {$table} set {$filedtmp} where id in({$value})");
 
 			}
 			return "[$table]";
