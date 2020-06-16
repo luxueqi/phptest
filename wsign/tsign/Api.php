@@ -8,6 +8,7 @@ interface CronInterface {
 
 	public function sql();
 	public function run($resi, &$condition, &$info);
+	public function end($idstr, $status);
 }
 
 class TbGz implements CronInterface {
@@ -36,6 +37,12 @@ class TbGz implements CronInterface {
 
 	}
 
+	function end($idstr, $status) {
+
+		Db::getInstance()->exec("update tb_gz set status={$status} where id in({$idstr})");
+
+	}
+
 }
 
 class TbBlock implements CronInterface {
@@ -50,6 +57,12 @@ class TbBlock implements CronInterface {
 		$condition = isset($rs['un']) && $rs['error_code'] == 0;
 
 		$info = ['贴吧封禁:' . $resi['name'] . '-' . $resi['value'], $resi['kw'], $rs['error_msg']];
+
+	}
+
+	function end($idstr, $status) {
+
+		Db::getInstance()->exec("update tb_block set status={$status} where id in({$idstr})");
 
 	}
 
@@ -86,6 +99,12 @@ class ZdSign implements CronInterface {
 			$info[2] = $e->getMessage();
 		}
 	}
+
+	function end($idstr, $status) {
+
+		Db::getInstance()->exec("update zd_sign set status={$status} where id in({$idstr})");
+
+	}
 }
 
 class WkSign implements CronInterface {
@@ -110,6 +129,12 @@ class WkSign implements CronInterface {
 		} catch (Exception $e) {
 			$info[2] = $e->getMessage();
 		}
+
+	}
+
+	function end($idstr, $status) {
+
+		Db::getInstance()->exec("update wk_sign set status={$status} where id in({$idstr})");
 
 	}
 }
@@ -146,6 +171,14 @@ class TbTop implements CronInterface {
 		}
 
 	}
+
+	function end($idstr, $status) {
+
+		$filedtmp = "status={$status},lasttime=" . ($status == 1 ? time() : 0);
+
+		Db::getInstance()->exec("update tb_top set {$filedtmp} where id in({$idstr})");
+
+	}
 }
 
 /**
@@ -175,6 +208,12 @@ class WbDay implements CronInterface {
 			$info[2] = $e->getMessage();
 
 		}
+
+	}
+
+	function end($idstr, $status) {
+
+		Db::getInstance()->exec("update wb_day set status={$status} where id in({$idstr})");
 
 	}
 
@@ -405,11 +444,13 @@ class Api extends WsignBase {
 
 				$value = rtrim($value, ',');
 				$status = $key == 'y' ? 1 : 2;
-				$filedtmp = "status={$status}";
-				if ($table == 'tb_top') {
-					$filedtmp = $filedtmp . ",lasttime=" . ($status == 1 ? time() : 0);
-				}
-				Db::getInstance()->exec("update {$table} set {$filedtmp} where id in({$value})");
+
+				$classc->end($values, $status);
+				// $filedtmp = "status={$status}";
+				// if ($table == 'tb_top') {
+				// 	$filedtmp = $filedtmp . ",lasttime=" . ($status == 1 ? time() : 0);
+				// }
+				// Db::getInstance()->exec("update {$table} set {$filedtmp} where id in({$value})");
 
 			}
 			return "[$table]";
