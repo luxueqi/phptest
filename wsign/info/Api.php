@@ -46,8 +46,30 @@ class Api extends WsignBase {
 	}
 
 	public function top() {
+
+		$db = Db::getInstance();
+
+		$rs = $db->exec('SELECT t.id,t.word,t.fid,t.status,t.lasttime,t.endtime,z.name,z.tbs,z.cookie from tb_top t INNER JOIN tb_zh z on t.uid=z.id')->getAll();
+
+		foreach ($rs as &$v) {
+			$topendinfo = Tieba::topendTime($v['fid'], $v['cookie'], $v['tbs']);
+			$endtime = $topendinfo['data']['bawu_task']['end_time'] + 0;
+			if ($endtime != 0 && $v['endtime'] != $endtime) {
+				//dump(11111111111111);
+				$v['endtime'] = $endtime;
+				$db->exec('update tb_top set endtime=? where id=?', [$v['endtime'], $v['id']]);
+			}
+
+		}
 		$this->strsatusinfo('tb_top', '置顶');
-		$this->slist('s.id,s.word,z.name,s.status,s.lasttime', 'tb_top s INNER JOIN tb_zh z on z.id=s.uid', 'toplist');
+
+		$this->assign('list', $rs);
+
+		$this->assign('count', count($rs));
+
+		$this->view('toplist');
+
+		//$this->slist('s.id,s.word,z.name,s.status,s.lasttime', 'tb_top s INNER JOIN tb_zh z on z.id=s.uid', 'toplist');
 	}
 
 	private function strsatusinfo($table, $type) {

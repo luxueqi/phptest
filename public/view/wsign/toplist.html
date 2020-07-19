@@ -19,6 +19,7 @@
 				<th width="90">word</th>
 				<th width="60">完成状态</th>
 				<th width="60">完成时间</th>
+				<th width="60">结束时间</th>
 				<th width="100">操作</th>
 			</tr>
 		</thead>
@@ -30,6 +31,7 @@
 				<td><?php echo strReplaceStart($v['word'],0);?></td>
 				<td><?php echo $v['status'];?></td>
 				<td><?php echo date('Y-m-d H:i:s',$v['lasttime']);?></td>
+				<td><?php echo date('Y-m-d H:i:s',$v['endtime']);?></td>
 				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(<?php echo $v['id'];?>,<?php echo $v['status'];?>)" style="text-decoration:none"><i class="Hui-iconfont"></i></a>
 				</td>
 			</tr>

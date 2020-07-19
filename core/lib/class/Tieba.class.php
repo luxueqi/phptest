@@ -187,6 +187,12 @@ class Tieba extends Http {
 		return json_decode($that->setDatac($tdata)->md5sign()->request(TiebaConst::APP_URL . '/c/c/bawu/committop', $that->data), true);
 	}
 
+	static public function topendTime($fid, $bduss, $tbs) {
+		$that = new self();
+		return json_decode($that->request("https://tieba.baidu.com/mo/q/bawu/taskInfo?fid={$fid}&tbs={$tbs}", '', ["Cookie: BDUSS={$bduss}"]), true);
+
+	}
+
 	static public function u2p($uid) {
 		return (new self())->uid2portrait($uid);
 	}
