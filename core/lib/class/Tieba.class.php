@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ *https://tieba.baidu.com/mg/o/profile?format=json
  */
 if (!defined('EXITFORBID')) {
 	exit('forbid');
@@ -93,8 +93,8 @@ class Tieba extends Http {
 
 	public function name2uid($un) {
 		//http://tieba.baidu.com/home/get/panel?ie=utf-8&un
-		$res = @json_decode($this->request('http://tieba.baidu.com/home/get/panel?ie=utf-8&un=' . $un), true);
-		//var_dump($res['data']['id']);exit;
+		$res = @json_decode($this->request('https://tieba.baidu.com/home/get/panel?ie=utf-8&un=' . $un), true);
+		//var_dump($res);exit;
 		return isset($res['data']['id']) ? $res['data']['id'] : '';
 	}
 
@@ -171,7 +171,7 @@ class Tieba extends Http {
 		$portrait = '';
 		$un = '';
 		if ($type == 1) {
-			$portrait = $that->uid2portrait($value);
+			$portrait = $value; //tb.1.3881fd72.5_FH5O3JsjjsTj1iYLTtyw?t=1585825898
 		} else {
 			$un = $value;
 		}

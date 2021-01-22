@@ -9,13 +9,13 @@ if (!defined('EXITFORBID')) {
  */
 class Api extends WsignBase {
 	public function __construct() {
-		//$this->needLogin('/', ['only' => ['del', 'lis']]);
+		$this->needLogin('/wsign-login-login.html?r=/wsign-test-index.html', ['w' => ['index']]);
 	}
 
 	public function index() {
 		//dump(Db::table('zd_sign')->where("uid=?")->getSql()->update(['stoken' => '']));
 
-		$res = Db::getInstance(C('dbsh'))->exec('select id,name,price,count from test_product')->getAll();
+		$res = Db::getInstance()->exec('select id,name,price,count from test_product')->getAll();
 
 		$this->assign('info', $res);
 
@@ -25,7 +25,7 @@ class Api extends WsignBase {
 //检测库存
 	private function checkKc($id, $count) {
 
-		$res = Db::getInstance(C('dbsh'))->exec('select name,price,count from test_product where id=?', [$id])->getOne();
+		$res = Db::getInstance()->exec('select name,price,count from test_product where id=?', [$id])->getOne();
 
 		//var_dump($res);
 
@@ -41,16 +41,17 @@ class Api extends WsignBase {
 	public function c() {
 		$ps = ['name' => '', 'price' => 0, 'count' => 0, 'ajg' => 0, 'order_no' => '', 'wzf' => ''];
 
-		if (isGetPostAjax('post')) {
+		if (isGetPostAjax('get')) {
 			$params = $this->checkParams(['id' => 'int', 'count' => 'int', 'ajiage' => 'regex:^[0-9]+(\.[0-9]+)?$']);
 
-			$db = Db::getInstance(C('dbsh'));
-			$uip = ip2long($_SERVER['REMOTE_ADDR']);
+			$db = Db::getInstance();
+			//$uip = ip2long($_SERVER['REMOTE_ADDR']);
+			$uid = Session('uid');
 			try {
 				//检查库存
 				$res = $this->checkKc($params['id'], $params['count']);
 				//检查当前用户的当前订单是否有未支付
-				$rres = $db->exec('select order_no,pcount,price,payment from test_order where uip=? and spid=? and status=0', [$uip, $params['id']])->getOne();
+				$rres = $db->exec('select order_no,pcount,price,payment from test_order where uid=? and spid=? and status=0', [$uid, $params['id']])->getOne();
 
 				if (!empty($rres)) {
 					//echo ("<p style='margin:15px 10px'></p>");
@@ -63,9 +64,9 @@ class Api extends WsignBase {
 					$order_no = date('YmdHi') . mt_rand(100000, 999999);
 
 					$time = time();
-					$sql = "insert into test_order(uip,spid,order_no,payment,pcount,price,creat_time)values(?,?,?,?,?,?,$time)";
+					$sql = "insert into test_order(uid,spid,order_no,payment,pcount,price,creat_time)values(?,?,?,?,?,?,$time)";
 
-					$db->exec($sql, [$uip, $params['id'], $order_no, $ajiage, $params['count'], $res['price']]);
+					$db->exec($sql, [$uid, $params['id'], $order_no, $ajiage, $params['count'], $res['price']]);
 
 					$ps = ['name' => $res['name'], 'price' => $res['price'], 'count' => $params['count'], 'ajg' => $ajiage, 'order_no' => $order_no, 'wzf' => ''];
 
@@ -89,7 +90,7 @@ class Api extends WsignBase {
 	public function pay() {
 		if (isGetPostAjax('post')) {
 
-			$res = Db::getInstance(C('dbsh'))->exec('select spid,status,payment,pcount from test_order where order_no=?', [G('order_no')])->getOne();
+			$res = Db::getInstance()->exec('select spid,status,payment,pcount from test_order where order_no=? and uid=' . Session('uid'), [G('order_no')])->getOne();
 			if (empty($res)) {
 				die('订单不存在');
 			}
@@ -102,7 +103,7 @@ class Api extends WsignBase {
 				die('订单已关闭');
 			}
 
-			AliPay::pay(['subject' => '支付', 'body' => '', 'total_amount' => $res['payment'], 'out_trade_no' => G('order_no')]);
+			AliPay::pay(['subject' => 'zhifu', 'body' => 'zhi', 'total_amount' => $res['payment'], 'out_trade_no' => G('order_no')]);
 
 		}
 
@@ -122,16 +123,16 @@ class Api extends WsignBase {
 
 				$param = $this->checkParams(['order_no' => 'noempty']);
 
-				$sql = 'delete from test_order where order_no=?';
+				//$sql = 'delete from test_order where order_no=?';
 
-				$data = [$param['order_no']];
+				// $data = [$param['order_no']];
 
-				if (!Session('uid')) {
-					$sql = $sql . ' and uip=?';
-					$data[] = ip2long($_SERVER['REMOTE_ADDR']);
-				}
+				// if (!Session('uid')) {
+				// 	$sql = $sql . ' and uip=?';
+				// 	$data[] = ip2long($_SERVER['REMOTE_ADDR']);
+				// }
 
-				if (Db::getInstance(C('dbsh'))->exec($sql, $data)->rowCount() == 1) {
+				if (Db::getInstance()->exec('delete from test_order where order_no=? and uid=?', [$param['order_no'], Session('uid')])->rowCount() == 1) {
 					exitMsg(ErrorConst::API_SUCCESS_ERRNO, 'ok');
 
 				}
@@ -158,16 +159,16 @@ class Api extends WsignBase {
 		}*/
 
 		//if (isGetPostAjax('get')) {
-		//
-		$data = [];
-		$sql = 'select o.uip,p.name,o.order_no,o.pcount,o.price,o.payment,o.payment_type,o.status,o.payment_time,o.creat_time,o.platform_numbe from test_order o,test_product p where o.spid=p.id';
-		if (!Session('uid')) {
-			$sql = $sql . ' and uip=?';
-			$data[] = ip2long($_SERVER['REMOTE_ADDR']);
-		}
+		//$uid=;
+		//$data = [];
+		$sql = 'select p.name,o.order_no,o.pcount,o.price,o.payment,o.payment_type,o.status,o.payment_time,o.creat_time,o.platform_numbe from test_order o,test_product p where o.spid=p.id and o.uid=' . Session('uid');
+		// if (!Session('uid')) {
+		// 	$sql = $sql . ' and uip=?';
+		// 	$data[] = ip2long($_SERVER['REMOTE_ADDR']);
+		// }
 		//}
 
-		$res = Db::getInstance(C('dbsh'))->exec($sql, $data)->getAll();
+		$res = Db::getInstance()->exec($sql)->getAll();
 
 		$this->assign('count', count($res));
 		$this->assign('list', $res);

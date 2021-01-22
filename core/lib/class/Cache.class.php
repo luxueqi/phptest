@@ -8,7 +8,7 @@ class Cache {
 
 	static private $flag = true;
 
-	static public function read($conf = ['filename' => __M__ . '-' . __C__ . '-' . __A__ . '.html', 'time' => 1800, 'qflag' => false]) {
+	static public function read($conf = []) {
 		self::$conf = array_merge(self::$conf, $conf);
 
 		//var_dump(self::$conf);

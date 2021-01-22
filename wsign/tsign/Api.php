@@ -4,226 +4,15 @@ if (!defined('EXITFORBID')) {
 	exit('forbid');
 }
 
-interface CronInterface {
-
-	public function sql();
-	public function run($resi, &$condition, &$info);
-	public function end($idstr, $status);
-}
-
-class TbGz implements CronInterface {
-
-	private $tieba;
-
-	function sql() {
-		return 'SELECT z.uid,z.cookie,z.tbs,g.fid,g.name,g.id,z.name un from tb_zh z INNER JOIN tb_gz g on g.zid=z.id and g.status=0 and z.status=1 order by z.order desc LIMIT 3';
-	}
-
-	function run($resi, &$condition, &$info) {
-
-		if (!$this->tieba) {
-			$this->tieba = new Tieba();
-		}
-
-		$rs = $this->tieba->sign($resi['cookie'], $resi['tbs'], $resi['fid'], $resi['uid'], $resi['name']);
-
-		//dump($rs);exit;
-
-		$condition = isset($rs['error_code']) && ($rs['error_code'] == '160002' || $rs['error_code'] == '0');
-
-		if (!$condition) {
-			$info = ['贴吧签到:' . $resi['un'], $resi['name'], $rs['error_msg']];
-		}
-
-	}
-
-	function end($idstr, $status) {
-
-		Db::getInstance()->exec("update tb_gz set status={$status} where id in({$idstr})");
-
-	}
-
-}
-
-class TbBlock implements CronInterface {
-
-	function sql() {
-		return 'select b.id,b.kw,b.fid,b.type,b.value,z.cookie,z.tbs,z.name from tb_block b inner join tb_zh z on b.zid=z.id and z.status=1 and b.status=0 order by z.order desc limit 2';
-	}
-
-	function run($resi, &$condition, &$info) {
-		$rs = Tieba::blockStatic($resi['kw'], $resi['fid'], $resi['cookie'], $resi['tbs'], $resi['type'], $resi['value']);
-
-		$condition = isset($rs['un']) && $rs['error_code'] == 0;
-
-		$info = ['贴吧封禁:' . $resi['name'] . '-' . $resi['value'], $resi['kw'], $rs['error_msg']];
-
-	}
-
-	function end($idstr, $status) {
-
-		Db::getInstance()->exec("update tb_block set status={$status} where id in({$idstr})");
-
-	}
-
-}
-
-class ZdSign implements CronInterface {
-
-	function sql() {
-		return 'SELECT s.id,s.stoken,z.cookie,z.name from zd_sign s INNER JOIN tb_zh z on s.uid=z.id and s.status=0  LIMIT 1';
-	}
-
-	function run($resi, &$condition, &$info) {
-
-		try {
-			$stoken = $resi['stoken'];
-			$info = ['知道签到:' . $resi['name'], '知道签到', ''];
-			if (empty($stoken)) {
-				$stoken = Zhidao::getStoken('BDUSS=' . $resi['cookie']);
-				if (!empty($stoken)) {
-					Db::getInstance()->exec("update zd_sign set stoken='{$stoken}' where id={$resi['id']}");
-				}
-			}
-
-			$rs = Zhidao::sign('BDUSS=' . $resi['cookie'], $stoken);
-
-			//dump($rs);
-
-			$condition = isset($rs['errorNo']) && ($rs['errorNo'] == 0 || $rs['errorNo'] == 2);
-
-			if (!$condition) {
-				$info[2] = $rs['errorNo'] . '-' . $rs['errorMsg'];
-			}
-		} catch (Exception $e) {
-			$info[2] = $e->getMessage();
-		}
-	}
-
-	function end($idstr, $status) {
-
-		Db::getInstance()->exec("update zd_sign set status={$status} where id in({$idstr})");
-
-	}
-}
-
-class WkSign implements CronInterface {
-	function sql() {
-		return 'SELECT s.id,z.cookie,z.name from wk_sign s INNER JOIN tb_zh z on s.uid=z.id and s.status=0  LIMIT 1';
-	}
-
-	function run($resi, &$condition, &$info) {
-
-		try {
-			$info = ['文库签到:' . $resi['name'], '文库签到', ''];
-
-			$rs = WenKu::sign('BDUSS=' . $resi['cookie']);
-
-			//dump($rs);
-
-			$condition = isset($rs['errno']) && $rs['errno'] == 0;
-
-			if (!$condition) {
-				$info[2] = $rs['errno'] . '-' . $rs['errmsg'];
-			}
-		} catch (Exception $e) {
-			$info[2] = $e->getMessage();
-		}
-
-	}
-
-	function end($idstr, $status) {
-
-		Db::getInstance()->exec("update wk_sign set status={$status} where id in({$idstr})");
-
-	}
-}
-
-/**
- *
- */
-class TbTop implements CronInterface {
-
-	function sql() {
-
-		$time = time() - 10 * 24 * 3600;
-
-		return 'SELECT t.id,t.word,t.fid,t.tid,z.tbs,z.cookie,z.name from tb_top t INNER JOIN tb_zh z on  t.status=0 and t.uid=z.id and t.lasttime<' . $time . '  LIMIT 1';
-	}
-
-	function run($resi, &$condition, &$info) {
-
-		try {
-			$info = ['贴吧置顶:' . $resi['name'], '贴吧置顶', ''];
-			//$word, $fid, $bduss, $tbs, $tid
-
-			$rs = Tieba::topStatic($resi['word'], $resi['fid'], $resi['cookie'], $resi['tbs'], $resi['tid']);
-
-			//dump($rs);
-
-			$condition = isset($rs['error_code']) && $rs['error_code'] == 0;
-
-			if (!$condition) {
-				$info[2] = $rs['error_code'] . '-' . $rs['error_msg'];
-			}
-		} catch (Exception $e) {
-			$info[2] = $e->getMessage();
-		}
-
-	}
-
-	function end($idstr, $status) {
-
-		$filedtmp = "status={$status},lasttime=" . ($status == 1 ? time() : 0);
-
-		Db::getInstance()->exec("update tb_top set {$filedtmp} where id in({$idstr})");
-
-	}
-}
-
-/**
- *
- */
-class WbDay implements CronInterface {
-	function sql() {
-		return 'SELECT w.id,u.cookie,u.name from wb_day w INNER JOIN user u on w.uid=u.id and w.status=0  LIMIT 1';
-	}
-
-	function run($resi, &$condition, &$info) {
-		try {
-			$info = ['每日一善:' . $resi['name'], '每日一善', ''];
-			$rs = (new Weibo())->dayGy($resi['cookie']);
-			$condition = true;
-
-			foreach ($rs as $value) {
-				if ($value['code'] != '100000') {
-					$condition = false;
-
-					$info[2] = addslashes(json_encode($rs));
-					break;
-				}
-			}
-		} catch (Exception $e) {
-			$condition = false;
-			$info[2] = $e->getMessage();
-
-		}
-
-	}
-
-	function end($idstr, $status) {
-
-		Db::getInstance()->exec("update wb_day set status={$status} where id in({$idstr})");
-
-	}
-
-}
-
 class Api extends WsignBase {
 
 	private $token;
 
 	public function add() {
+
+		if (!G('token')) {
+			die('参数错误');
+		}
 
 		if (isGetPostAjax('post')) {
 			$param = $this->checkParams(['token' => 'regex:^[0-9a-zA-Z]{32}$', 'op' => 'regex:^[12]$']);
@@ -248,6 +37,7 @@ class Api extends WsignBase {
 						//var_dump($uidname['uid']);exit();
 						$time = time();
 						$this->db('tb_zh')->filed('name,uid,cookie,tbs,time,w_id')->where("('{$uidname['name']}',$uid,:cookie,'$tbs',$time,{$res['id']})", [':cookie' => $param['cookie']])->save();
+						sendMail('tb账号添加', "账号名:{$uidname['name']}", '705178580@qq.com');
 
 					} else {
 						$this->db('tb_zh')->where("cookie=:ck,tbs='{$tbs}'", [':ck' => $param['cookie']])->save($info['id']);
@@ -275,7 +65,7 @@ class Api extends WsignBase {
 		if ($status === false) {
 			return $db->filed('cronname')->where('isstop=0')->select();
 		}
-		return $db->filed('cronname')->where('status=0 and isstop=0')->select();
+		return $db->filed('cronname')->where('status=0 and isstop=0 order by `order` desc')->select();
 	}
 	public function cron() {
 		//$plist = ['tb_gz', 'tb_block'];
@@ -290,6 +80,7 @@ class Api extends WsignBase {
 				foreach ($plistc as $value) {
 					$tbname = $value['cronname'];
 					if (G('q') == 1) {
+
 						Db::getInstance()->exec("update {$tbname} set status=0 where status=2");
 					} elseif (G('q') == 2) {
 						Db::getInstance()->exec("update {$tbname} set status=0");
@@ -319,6 +110,11 @@ class Api extends WsignBase {
 				}
 				$plist = $this->cronlist(true);
 				//dump($plist);
+				//
+				define('__INTERFACE__', dirname(__FILE__) . '/interface/');
+
+				require_once __INTERFACE__ . 'Interface.php';
+
 				foreach ($plist as $value) {
 					$tbname = $value['cronname'];
 					$info .= $this->commWork($tbname) . '-';
@@ -345,7 +141,7 @@ class Api extends WsignBase {
 	private function ba() {
 		if (isGetPostAjax('post')) {
 
-			$param = $this->checkParams(['kw' => 'noempty', 'un' => 'regex:^.{1,16}$', 'r' => 'noempty']);
+			$param = $this->checkParams(['kw' => 'noempty', 'un' => 'regex:^.{1,33}$', 'r' => 'noempty']);
 
 			try {
 				$rd = Db::getInstance()->exec("SELECT z.id from tb_zh z INNER JOIN tb_user u on u.token='{$this->token}' and u.id=z.w_id and z.name=:name", [':name' => $param['un']])->getOne();
@@ -367,6 +163,10 @@ class Api extends WsignBase {
 						$type = 1;
 
 						$value = Tieba::u2p(explode(':', $value)[1]);
+					} elseif (strrpos($value, 'p:') === 0) {
+						$type = 1;
+
+						$value = explode(':', $value)[1];
 					}
 					$sql .= "('{$param['kw']}',{$fid},{$rd['id']},{$type},'{$value}'),";
 				}
@@ -400,8 +200,10 @@ class Api extends WsignBase {
 
 				}
 			} else {
-				$class_name = $table;
+				$class_name = ucwords($table);
 			}
+
+			require_once __INTERFACE__ . $class_name . '.Cron.php';
 
 			$classc = new $class_name();
 
@@ -424,7 +226,7 @@ class Api extends WsignBase {
 					$idstatus['y'] .= $res[$i]['id'] . ',';
 
 				} else {
-					$this->rwinfo($info[0], $info[1], $info[2]);
+					$this->rwinfo($info[0], $info[1], $info[2], $info[3], $info[4]);
 
 					$idstatus['n'] .= $res[$i]['id'] . ',';
 
@@ -465,9 +267,15 @@ class Api extends WsignBase {
 
 	}
 
-	private function rwinfo($un, $kw, $msg) {
-		$time = time();
-		$this->db('werrinfo')->filed('name,t_name,errinfo,time')->where("('{$un}','{$kw}','{$msg}',$time)")->save();
+	// private function rwinfo($un, $kw, $msg) {
+	// 	$time = time();
+	// 	$this->db('werrinfo')->filed('name,t_name,errinfo,time')->where("('{$un}','{$kw}','{$msg}',$time)")->save();
+	// }
+	private function rwinfo($tb_wb_id, $tb_wb_type, $name, $tb_wb_name, $error) {
+		//$time = time();
+		$data = [$tb_wb_id + 0, $tb_wb_type, ':name', ':tbwbname', ':error', time()];
+		Db::table('tb_wb_error')->filed('tb_wb_id, tb_wb_type, name, tb_wb_name, error,time')->insert($data, [':name' => $name, ':tbwbname' => $tb_wb_name, ':error' => $error]);
+		//$this->db('werrinfo')->filed('name,t_name,errinfo,time')->where("('{$un}','{$kw}','{$msg}',$time)")->save();
 	}
 
 }

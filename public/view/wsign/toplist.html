@@ -14,25 +14,29 @@
 	<table class="table table-border table-bordered table-hover table-bg table-sort">
 		<thead>
 			<tr class="text-c">
-				<th width="50">ID</th>
-				<th width="90">name</th>
-				<th width="90">word</th>
-				<th width="60">完成状态</th>
-				<th width="60">完成时间</th>
+				<th width="40">ID</th>
+				<th width="70">name</th>
+				<th width="60">word</th>
+				<th width="30">完成状态</th>
+				<th width="70">上次操作时间</th>
 				<th width="60">结束时间</th>
-				<th width="100">操作</th>
+				<th width="60">主题回贴</th>
+				<th width="60">吧务操作</th>
+				<th width="90">操作</th>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach($list as $v): ?>
 			<tr class="text-c">
 				<td><?php echo $v['id'];?></td>
-				<td><?php echo strReplaceStart($v['name'],0);?></td>
-				<td><?php echo strReplaceStart($v['word'],0);?></td>
+				<td><?php echo $v['name'];?></td>
+				<td><?php echo $v['word'];?></td>
 				<td><?php echo $v['status'];?></td>
-				<td><?php echo date('Y-m-d H:i:s',$v['lasttime']);?></td>
+				<td><?php echo $v['lasttime'];?></td>
 				<td><?php echo date('Y-m-d H:i:s',$v['endtime']);?></td>
-				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change(<?php echo $v['id'];?>,<?php echo $v['status'];?>)" style="text-decoration:none"><i class="Hui-iconfont"></i></a>
+				<td><?php echo $v['huitie'];?></td>
+				<td><?php echo $v['bawu'];?></td>
+				<td class="td-manage"><a title="编辑" href="javascript:;"  class="ml-5" onclick="status_change({id:<?php echo $v['id'];?>,status:<?php echo $v['status'];?>},'/wsign/info/topcs','/wsign-info-top.html?qflag=1')" style="text-decoration:none"><i class="Hui-iconfont"></i></a>
 				</td>
 			</tr>
 		<?php endforeach; ?>
@@ -47,6 +51,7 @@
 <script type="text/javascript" src="/public/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
 <script type="text/javascript" src="/public/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
 <script type="text/javascript" src="/public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="/public/static/bd/comm.js"></script>
 <script type="text/javascript">
 $(function(){
 	$('.table-sort').dataTable({
@@ -61,59 +66,6 @@ $(function(){
 	
 	
 });
-function status_change(id,status){
-	
-	layer.confirm('确认更改'+id+'状态吗？',function(index){
-		$.ajax({
-			type:'POSt',
-			url:'/wsign/info/topcs',
-			data:{id:id,status:status},
-			dataType:'json',
-			success:function(e){
-				
-				if(e.code==1){
-					
-					layer.alert('已成功!',{icon:1},function(){
-						location.href="/wsign-info-top.html?qflag=1";
-					});
-					
-				}else{
-					layer.alert(e.msg,{icon:2});
-					
-				}
-			}
-		});
-		
-		
-	});
-}
-function stopchange(id,stopstatus){
-	//console.log(id);
-	layer.confirm('确认更改'+id+'状态吗？',function(index){
-		$.ajax({
-			type:'POSt',
-			url:'/wsign/info/sstop',
-			data:{id:id,isstop:stopstatus},
-			dataType:'json',
-			success:function(e){
-				
-				if(e.code==1){
-					
-					layer.alert('已成功!',{icon:1},function(){
-						location.href="/wsign-info-cls.html?qflag=1";
-					});
-					
-				}else{
-					layer.alert(e.msg,{icon:2});
-					
-				}
-			}
-		});
-		
-		
-	});
-}
-
 
 </script> 
 </body>

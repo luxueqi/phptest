@@ -7,6 +7,10 @@ if (!defined('EXITFORBID')) {
 }
 class Api extends Base {
 
+	public function vue() {
+		$this->view();
+	}
+
 	public function index() {
 		//Request::ReDirectUrl();
 		$this->view();

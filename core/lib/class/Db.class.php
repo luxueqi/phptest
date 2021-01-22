@@ -23,6 +23,8 @@ class Db {
 
 	private static $conf;
 
+	private $islock = false;
+
 	private function __clone() {}
 
 	public static function getInstance($conf = []) {
@@ -59,7 +61,14 @@ class Db {
 	 */
 	public function exec($sql, $data = []) {
 		$sql = trim($sql);
-		//var_dump($data);
+
+		if ($this->islock) {
+			$sql .= ' for update';
+		} else {
+
+			$sql = str_replace(' for update', '', $sql);
+		}
+		//var_dump($sql);exit;
 		$this->echoSql($sql);
 		$this->smt = $this->db->prepare($sql);
 
@@ -79,6 +88,11 @@ class Db {
 
 		return $this;
 
+	}
+
+	public function lock($islock = false) {
+		$this->islock = $islock;
+		return $this;
 	}
 
 	public function commit() {

@@ -24,7 +24,7 @@ class Base {
 	//
 	public function __construct() {
 
-		$this->cacheitem(['time' => 1800, 'qflag' => G('qflag', false)]);
+		$this->cacheitem(['time' => 3600, 'qflag' => G('qflag', false)]);
 
 	}
 
@@ -138,6 +138,7 @@ class Base {
 			} elseif ($value == 'ip') {
 				$flag = Validate::R(G($key), Validate::VIP);
 			} elseif (strpos($value, 'regex:') === 0) {
+
 				$flag = Validate::R(G($key), $value);
 			}
 			if (!$flag) {

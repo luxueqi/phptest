@@ -23,11 +23,12 @@ class AliPay {
 	}
 
 	public static function notify() {
+		//exit;
 		$arr = $_POST;
 		$config = C('alipay');
 		$alipaySevice = new AlipayTradeService($config);
 		$alipaySevice->writeLog(var_export($_POST, true));
-		$result = $alipaySevice->check($arr);
+		$result = $alipaySevice->check($arr, 1);
 		if ($result) {
 			//验证成功
 
@@ -57,7 +58,7 @@ class AliPay {
 			//支付宝交易号
 
 			$trade_no = G('trade_no');
-			$db = Db::getInstance(C('dbsh'));
+			$db = Db::getInstance();
 
 			$res = $db->exec('select status,pcount,spid from test_order where order_no=?', [$out_trade_no])->getOne();
 
@@ -66,9 +67,16 @@ class AliPay {
 			}
 			//var_dump($e);exit;
 			if ($res['status'] == 0) {
+
+				if ($db->exec("update test_order set payment_type=1,status=1,payment_time=?,platform_numbe=? where order_no=? and status=0", [time(), $trade_no, $out_trade_no])->rowCount() === 1) {
+
+					$db->exec('update test_product set count=count-? where id=?', [$res['pcount'], $res['spid']]);
+
+				}
+
 				//$db->beginTransaction()->exec("update test_order set payment_type=1,status=1,payment_time=?,platform_numbe=? where order_no=?", [time(), $trade_no, $out_trade_no])->exec('update test_product set count=count-? where id=?', [$res['pcount'], $res['spid']])->commit();
 				//Db::table('test_order')->where('order_no=?', [$out_trade_no])->update(['payment_time' => time(), 'platform_numbe' => '?'], [$trade_no]);
-				$db->exec("update test_order set payment_type=1,status=1,payment_time=?,platform_numbe=? where order_no=?", [time(), $trade_no, $out_trade_no])->exec('update test_product set count=count-? where id=?', [$res['pcount'], $res['spid']]);
+				//$db->exec("update test_order set payment_type=1,status=1,payment_time=?,platform_numbe=? where order_no=?", [time(), $trade_no, $out_trade_no])->exec('update test_product set count=count-? where id=?', [$res['pcount'], $res['spid']]);
 
 			}
 
@@ -84,10 +92,13 @@ class AliPay {
 	}
 
 	public static function returnurl() {
+
 		$arr = $_GET;
 		$config = C('alipay');
 		$alipaySevice = new AlipayTradeService($config);
-		$result = $alipaySevice->check($arr);
+		// var_dump($arr);
+		// exit;
+		$result = $alipaySevice->check($arr, 1);
 
 		/* 实际验证过程建议商户添加以下校验。
 		1、商户需要验证该通知数据中的out_trade_no是否为商户系统中创建的订单号，

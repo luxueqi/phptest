@@ -41,7 +41,14 @@ class Request {
 	}
 
 	public static function Csrf() {
-		if (!preg_match('/^http(s)?:\/\/' . self::ServerName() . '/', self::Referer())) {
+
+		$tmp = self::ServerName();
+
+		if (strpos($tmp, 'http') !== 0) {
+			$tmp = self::Host();
+		}
+		//dump();
+		if (!preg_match('/^http(s)?:\/\/' . $tmp . '/', self::Referer())) {
 			exitMsg(ErrorConst::API_PARAMS_ERRNO, 'csrf');
 		}
 	}

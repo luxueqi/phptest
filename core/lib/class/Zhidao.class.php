@@ -33,6 +33,12 @@ class Zhidao {
 
 	}
 
+	// public static function chest($cookie, $stoken) {
+	// 	$http = new Http();
+	// 	return json_decode($http->request('https://zhidao.baidu.com/shop/submit/chest?type=SilverChest', 'itemId=129&stoken=' . $stoken, ['Cookie: ' . $cookie, 'Referer: https://zhidao.baidu.com/']), true);
+
+	// }
+
 }
 
 ?>

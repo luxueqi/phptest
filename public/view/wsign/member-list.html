@@ -26,11 +26,11 @@
 			<?php foreach($list as $v): ?>
 			<tr class="text-c">
 				<td><?php echo $v['id'];?></td>
-				<td><?php echo strReplaceStart($v['name'],0);?></td>
+				<td><?php echo strReplaceStart($v['name']);?></td>
 				<td><?php echo $v['wuid'];?></td>
 				<td><?php echo $v['wid'];?></td>
 				<td><?php echo $v['status'];?></td>
-				<td class="td-manage"><a title="编辑" href="javascript:;" onclick="member_edit('编辑用户:<?php echo $v["name"];?>','/wsign-admin-madd.html?id=<?php echo $v['id'];?>&wuid=<?php echo $v['wuid'];?>&status=<?php echo $v['status'];?>','4','','510')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>  <a title="删除" href="javascript:;" onclick="member_del(this,<?php echo $v['id'];?>)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+				<td class="td-manage"><a title="编辑" href="javascript:;" onclick="member_edit('编辑用户:<?php echo $v["name"];?>','/wsign-admin-madd.html?id=<?php echo $v['id'];?>&wuid=<?php echo $v['wuid'];?>&status=<?php echo $v['status'];?>','4','','510')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>  <a title="删除" href="javascript:;" onclick="member_del(this,<?php echo $v['id'];?>,'/wsign/admin/mdel')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
 			</tr>
 		<?php endforeach; ?>
 		</tbody>
@@ -44,6 +44,7 @@
 <script type="text/javascript" src="/public/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
 <script type="text/javascript" src="/public/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
 <script type="text/javascript" src="/public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="/public/static/bd/comm.js"></script>
 <script type="text/javascript">
 $(function(){
 	$('.table-sort').dataTable({
@@ -65,28 +66,7 @@ function member_edit(title,url,id,w,h){
 	//alert('');
 }
 
-/*用户-删除*/
-function member_del(obj,id){
-	layer.confirm('确认要删除吗？',function(index){
-		$.ajax({
-			type: 'POST',
-			url: '/wsign/admin/mdel',
-			data:{id:id},
-			dataType: 'json',
-			success: function(e){
-				if(e.code==1){
-					$(obj).parents("tr").remove();
-					layer.msg('已删除!',{icon:1,time:1000});
-				}else{
-					layer.msg(e.msg,{icon:2,time:1000});
-				}
-				
-				
 
-			}
-		});		
-	});
-}
 </script> 
 </body>
 </html>

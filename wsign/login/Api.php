@@ -9,6 +9,7 @@ if (!defined('EXITFORBID')) {
 class Api extends WsignBase {
 
 	public function __construct() {
+		//parent::__construct();
 		if ($this->checkLogin()) {
 
 			header("location:/wsign-admin-index.html");
@@ -24,7 +25,7 @@ class Api extends WsignBase {
 	private function decodersa($endata) {
 		$endata = pack('H*', $endata);
 		if (openssl_private_decrypt($endata, $dedata, C('login')['rsa_private'], OPENSSL_NO_PADDING)) {
-			//var_dump(strrev(trim($dedata)));exit;
+			//var_dump($dedata);exit;
 			return strrev(substr(trim($dedata), 13));
 		}
 
@@ -71,17 +72,22 @@ class Api extends WsignBase {
 
 				//$res = $db->exec("select id,name,lasttime,lastip from login where email=:un and pwd=:pwd", [':un' => $un, ':pwd' => $pwd])->getOne();
 
-				$res = $this->db('login')->filed('id,name')->where('email=:un and pwd=:pwd', [':un' => $un, ':pwd' => $pwd])->getOne();
+				$res = $this->db('login')->filed('id,name,pwduptime')->where('email=:un and pwd=:pwd', [':un' => $un, ':pwd' => $pwd])->getOne();
 				//var_dump($res);exit;
 
 				if (!empty($res)) {
 
 					if (isset($_POST['online'])) {
-						$this->wencookie($res['id'], $un, $pwd);
+						$this->wencookie($res['id'], $un, $res['pwduptime']);
 					}
 					$this->setLoginInfo($res);
 					//var_dump();exit;
 					//$db->exec('update login set lasttime=' . time() . ',lastip=' . ip2long($_SERVER['REMOTE_ADDR']) . ' where id=' . $res['id']);
+					// $r = G('r');
+					// if (!empty($r)) {
+					// 	header("location:{$r}");
+					// 	exit();
+					// }
 					exitMsg(ErrorConst::API_SUCCESS_ERRNO, '登陆成功');
 				}
 				exitMsg(2, '登陆失败,用户名或密码错误');

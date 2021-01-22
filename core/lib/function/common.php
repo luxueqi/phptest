@@ -12,10 +12,10 @@ function C($v) {
 
 }
 
-function dump($val) {
+function dump($val, ...$params) {
 
 	echo "<pre>";
-	var_dump($val);
+	var_dump($val, ...$params);
 	echo "</pre>";
 	exit;
 
@@ -127,7 +127,7 @@ function checkCaptcha($captcha) {
 	Session('captcha', null);
 }
 
-/**
+/**12341436153
  * [strMid description]
  * @param  [string]  $left  [截取文本的左边]
  * @param  [string]  $right [截取文本的右边]

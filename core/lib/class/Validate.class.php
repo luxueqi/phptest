@@ -33,7 +33,8 @@ class Validate {
 		} else {
 
 			$par = $r == 3 ? '/^1(3|5|6|7|8|9)\d{9}$/' : '/' . $match[1] . '/';
-			//var_dump($par);exit();
+
+			//var_dump($data, $par);
 			return self::Regexc($data, $par);
 		}
 

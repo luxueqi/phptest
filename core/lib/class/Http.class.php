@@ -24,8 +24,33 @@ class Http {
 		$this->header = $header;
 	}
 
-	public function getCookie() {
-		return $this->cookiec;
+	public function initClear() {
+		$this->url = '';
+		$this->data = '';
+		$this->ip = '';
+		$this->header = [];
+		$this->is_header = 0;
+		$this->cookiec = '';
+		return $this;
+	}
+
+	public function getCookie($key = '') {
+		$res = '';
+		if (!empty($key)) {
+			foreach ($this->cookiec as $v) {
+				$v = trim($v);
+				if (strpos($v, $key) === 0) {
+					$endindex = strpos($v, ';');
+					$startindex = strlen($key) + 1;
+					$res = substr($v, $startindex, $endindex - $startindex);
+					break;
+				}
+			}
+		} else {
+			$res = $this->cookiec;
+		}
+
+		return $res;
 	}
 	public function setIsHeader($v = 0) {
 		$this->is_header = $v;
@@ -55,6 +80,12 @@ class Http {
 		return $this;
 
 	}
+	public function setGet() {
+		$this->data = '';
+		return $this;
+
+	}
+
 	public function request($url, $data = '', $header = []) {
 
 		return $this->setUrl($url)->setHeader($header)->setData($data)->setIsHeader(0)->http();

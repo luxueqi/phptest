@@ -3,11 +3,11 @@ if (!defined('EXITFORBID')) {
 	exit('forbid');
 }
 class Api extends WsignBase {
-	protected $cachet = ['info' => ['time' => 1800], 'tinfo' => ['time' => 1800], 'einfo' => ['time' => 14400], 'binfo' => ['time' => 14400], 'cron' => ['time' => 1200], 'zinfo', 'winfo', 'dinfo', 'cls' => ['time' => 1200], 'top'];
+	protected $cachet = ['info' => ['time' => 900], 'tinfo' => ['time' => 900], 'einfo' => ['time' => 14400], 'binfo' => ['time' => 14400], 'cron' => ['time' => 1000], 'zinfo', 'winfo', 'dinfo', 'cls' => ['time' => 1200], 'top' => ['time' => 36000]];
 	//protected $cachefalg = false;
 	public function __construct() {
 
-		$this->needLogin('/wsign-login-login.html');
+		//$this->needLogin('/wsign-login-login.html');
 		parent::__construct();
 		//$this->cacheitem(['time' => 72000, 'qflag' => G('qflag', false)]);
 
@@ -42,23 +42,27 @@ class Api extends WsignBase {
 
 	public function cls() {
 		$this->strsatusinfo('cron_list', '完成');
-		$this->slist('id,cronname as name,status,isstop,endtime', 'cron_list', 'cronlist');
+		$this->slist('id,cronname as name,status,isstop,endtime,`order`', 'cron_list', 'cronlist');
 	}
 
 	public function top() {
 
 		$db = Db::getInstance();
 
-		$rs = $db->exec('SELECT t.id,t.word,t.fid,t.status,t.lasttime,t.endtime,z.name,z.tbs,z.cookie from tb_top t INNER JOIN tb_zh z on t.uid=z.id')->getAll();
+		$rs = $db->exec('SELECT t.id,t.word,t.fid,t.status,t.lasttime,z.name,z.tbs,z.cookie from tb_top t INNER JOIN tb_zh z on t.uid=z.id')->getAll();
+
+		//dump($rs);
 
 		foreach ($rs as &$v) {
 			$topendinfo = Tieba::topendTime($v['fid'], $v['cookie'], $v['tbs']);
-			$endtime = $topendinfo['data']['bawu_task']['end_time'] + 0;
-			if ($endtime != 0 && $v['endtime'] != $endtime) {
-				//dump(11111111111111);
-				$v['endtime'] = $endtime;
-				$db->exec('update tb_top set endtime=? where id=?', [$v['endtime'], $v['id']]);
-			}
+			$v['endtime'] = $topendinfo['data']['bawu_task']['end_time'] + 0;
+			$v['huitie'] = $topendinfo['data']['bawu_task']['task_list'][0]['task_status'];
+			$v['bawu'] = $topendinfo['data']['bawu_task']['task_list'][1]['task_status'];
+			// if ($endtime != 0 && $v['endtime'] != $endtime) {
+			// 	//dump(11111111111111);
+			// 	$v['endtime'] = $endtime;
+			// 	$db->exec('update tb_top set endtime=? where id=?', [$v['endtime'], $v['id']]);
+			// }
 
 		}
 		$this->strsatusinfo('tb_top', '置顶');
@@ -84,8 +88,20 @@ class Api extends WsignBase {
 		$this->assign('strstatus', $strstatus);
 	}
 
+	public function corder() {
+
+		$params = $this->checkParams(['id' => 'int', 'order' => 'int']);
+
+		$this->db('cron_list')->where('`order`=:order', [':order' => $params['order']])->save($params['id']);
+
+		exitMsg(ErrorConst::API_SUCCESS_ERRNO, '修改成功');
+
+	}
+
 	public function einfo() {
-		$this->slist('id,name,t_name as tname,errinfo info,time', 'werrinfo', 'einfo');
+		//	$type = ['贴吧签到', ''];
+		$this->slist('id,tb_wb_type,name,tb_wb_name,error,time', 'tb_wb_error order by id desc limit 30', 'einfo');
+		//$this->slist('id,name,t_name as tname,errinfo info,time', 'werrinfo order by id desc limit 30', 'einfo');
 	}
 
 	public function binfo() {
@@ -110,6 +126,35 @@ class Api extends WsignBase {
 	}*/
 	}
 
+	public function qzl() {
+
+		if (!isGetPostAjax('post')) {
+
+			exitMsg(ErrorConst::API_ERRNO, 'method err');
+
+		}
+
+		Request::Csrf();
+
+		$param = $this->checkParams(['id' => 'regex:^[01]$']);
+
+		$tablename = ['tb_gz', 'wgz'][$param['id']];
+
+		try {
+
+			$line = Db::getInstance()->exec("update {$tablename} set status=0 where status=2")->rowCount();
+
+			if ($line > 0) {
+				Db::table('cron_list')->where('cronname=?', [$tablename])->update(['status' => 0]);
+			}
+
+			exitMsg(ErrorConst::API_SUCCESS_ERRNO, $line);
+
+		} catch (PDOException $e) {
+			exitMsg(ErrorConst::API_CATCH_ERRNO, 'fail');
+		}
+	}
+
 	public function td() {
 
 		$this->comdel('tb_gz');
@@ -122,6 +167,7 @@ class Api extends WsignBase {
 
 	public function status() {
 		$this->statuscomm('wgz');
+
 	}
 
 	public function ts() {

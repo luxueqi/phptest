@@ -205,10 +205,11 @@ class AlipayTradeService {
 	 * @param $arr 验签支付宝返回的信息，使用支付宝公钥。
 	 * @return boolean
 	 */
-	function check($arr) {
+	function check($arr, $rorn) {
 		$aop = new AopClient();
 		$aop->alipayrsaPublicKey = $this->alipay_public_key;
-		$result = $aop->rsaCheckV1($arr, $this->alipay_public_key, $this->signtype);
+		$me = "rsaCheckV{$rorn}";
+		$result = $aop->$me($arr, $this->alipay_public_key, $this->signtype);
 
 		return $result;
 	}

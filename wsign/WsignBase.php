@@ -7,6 +7,7 @@ define('WSIGN_VIEW_PATH', ROOT_PATH . '/public/view/wsign');
 class WsignBase extends Base {
 
 	public function __construct() {
+
 		parent::__construct();
 	}
 
@@ -30,10 +31,16 @@ class WsignBase extends Base {
 				if (isGetPostAjax('post')) {
 					exitMsg(-1, 'no login');
 				}
-				header("location:{$redricturl}");
-				exit();
+				$this->jump($redricturl, '请先登录,正在跳转...');
+				// header("location:{$redricturl}");
+				// exit();
 			}
 		}
+
+	}
+
+	public static function needLoginS($redricturl, $needlist = []) {
+		(new self)->needLogin($redricturl, $needlist = []);
 
 	}
 	protected function setLoginInfo($info) {
@@ -56,10 +63,10 @@ class WsignBase extends Base {
 
 			if ($this->decookie($_COOKIE['auth'], $arr)) {
 				$id = $arr[0] + 0;
-				$info = $this->db('login')->filed('name,email,pwd')->where('id=' . $id)->getOne();
+				$info = $this->db('login')->filed('name,email,pwduptime')->where('id=' . $id)->getOne();
 				//$db = Db::getInstance();
 				//$info = $db->exec("select name,email,pwd,lastip,lasttime from login where id={$id}")->getOne();
-				if ($this->verifycookie($arr, $info['email'], $info['pwd'])) {
+				if ($this->verifycookie($arr, $info['email'], $info['pwduptime'])) {
 					$info['id'] = $id;
 					$this->setLoginInfo($info);
 
@@ -70,6 +77,7 @@ class WsignBase extends Base {
 		return false;
 	}
 	protected function comdel($table) {
+		Request::Csrf();
 
 		$params = $this->checkParams(['id' => 'int']);
 		$id = $params['id'];
@@ -94,10 +102,18 @@ class WsignBase extends Base {
 	}
 
 	protected function statuscomm($table, $filed = 'status') {
+
+		Request::Csrf();
 		$param = $this->checkParams(['id' => 'int', "{$filed}" => 'regex:^[012]$']);
 
 		try {
 			$this->db($table)->where("{$filed}=:status", [':status' => !$param[$filed] + 0])->save($param['id']);
+
+			if ($table != 'cron_list' && $param['status'] != 0) {
+				Db::table('cron_list')->where('cronname=?', [$table])->update(['status' => 0]);
+			}
+
+			//Db::getInstance()->exec('')
 			exitMsg(ErrorConst::API_SUCCESS_ERRNO, '更改成功');
 
 		} catch (PDOException $e) {

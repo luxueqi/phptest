@@ -5,13 +5,13 @@ if (!defined('EXITFORBID')) {
 
 class Core {
 
-	static public function init() {
+	public static function init() {
 		self::setHeader();
 		self::setTimezone();
 		self::setDebug();
 		self::setConstPath();
 		self::setLoad();
-		self::setSession();
+		//self::setSession();
 
 	}
 
@@ -41,16 +41,30 @@ class Core {
 		$path = './' . __M__ . '/' . __C__ . '/Api.php';
 
 		if (is_file($path)) {
-			require_once $path;
-			$ee = 'no api';
 
+			require_once $path;
+
+			$ee = 'no api';
+			//is_callable()
 			if (in_array(__A__, get_class_methods('Api'))) {
 				$a = __A__;
 
 				try {
+
+					$midpath = './' . __M__ . '/mid.php';
+
+					if (is_file($midpath)) {
+
+						require_once $midpath;
+
+						//mid();
+
+					}
+
 					(new Api)->$a();
+
 					return;
-				} catch (Exception $e) {
+				} catch (Throwable $e) {
 					$ee = 'api err';
 					if (DEBUG == true) {
 						$ee = "Exception " . $e->getCode() . " :" . $e->getMessage() . " in File " . $e->getFile() . " on line " . $e->getLine();
@@ -63,9 +77,17 @@ class Core {
 				}
 
 				//return;
+			} elseif (in_array('Error', get_class_methods('Api'))) {
+				(new Api)->Error();
+				exit;
 			}
 
 		}
+
+		// if (is_callable([ucfirst(__M__) . 'Base', 'Error'])) {
+		// 	(ucfirst(__M__) . 'Base')::Error();
+		// 	exit;
+		// }
 
 		if (isGetPostAjax('get') && !DEBUG) {
 			header("HTTP/1.1 404 Not Found");
@@ -77,20 +99,20 @@ class Core {
 		exitMsg(ErrorConst::API_ERRNO, $ee, [__M__, __C__, __A__]);
 
 	}
-	private static function setSession() {
-		session_name('wsign');
-		session_start();
+	// private static function setSession() {
+	// 	session_name('wsign');
+	// 	session_start();
 
-	}
-	static private function setTimezone() {
+	// }
+	private static function setTimezone() {
 		date_default_timezone_set('PRC');
 	}
 
-	static private function setHeader() {
+	private static function setHeader() {
 		header('Content-type:text/html;charset=utf-8');
 	}
 
-	static private function setConstPath() {
+	private static function setConstPath() {
 		define('CORE_PATH', ROOT_PATH . '/core');
 		define('CONF_PATH', CORE_PATH . '/conf');
 		define('LIB_PATH', CORE_PATH . '/lib');
@@ -98,7 +120,7 @@ class Core {
 		define('CACHE_PATH', PUBLIC_PATH . '/cache');
 	}
 
-	static private function setDebug() {
+	private static function setDebug() {
 		if (DEBUG) {
 			ini_set('display_errors', 'On');
 
@@ -112,7 +134,7 @@ class Core {
 		}
 	}
 
-	static private function setLoad() {
+	private static function setLoad() {
 		require LIB_PATH . '/function/common.php';
 
 		spl_autoload_register(function ($className) {
@@ -130,7 +152,8 @@ class Core {
 			if (is_file($path)) {
 				require_once $path;
 			} else {
-				exitMsg(ErrorConst::API_ERRNO, $className . ' not found');
+				exit("{$className}类不存在");
+				//exitMsg(ErrorConst::API_ERRNO, $className . ' not found');
 			}
 
 		}, TRUE, TRUE);

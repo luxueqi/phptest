@@ -21,13 +21,13 @@ class Weibo extends Http {
 	public function dayGy($cookie) {
 		$res = [];
 		$h = new HttpHeader();
-		$postdata = ['aj_profile_task' => 'task=sign&_t=0', 'aj_mblog_addmblog' => 'action=1&pid=&preview=false&gid=4&type=&shortURL=&task=repost&content=%23%E6%AF%8F%E6%97%A5%E4%B8%80%E5%96%84%23%20%20%E5%85%B3%E6%B3%A8%E4%BB%96%E4%BB%AC%EF%BC%8C%E5%B8%AE%E5%8A%A9%E4%BB%96%E4%BB%AC%EF%BC%8C%E4%B8%80%E6%AC%A1%E8%BD%AC%E5%8F%91%E8%83%BD%E8%AE%A9%E6%9B%B4%E5%A4%9A%E4%BA%BA%E8%A1%8C%E5%8A%A8%E8%B5%B7%E6%9D%A5%EF%BC%81&appkey=&style_type=1&location=partner&module=shissue&_t=0', 'aj_profile_task?__rnd=1582146752671' => 'task=repost&content=%23%E6%AF%8F%E6%97%A5%E4%B8%80%E5%96%84%23%20%20%E5%85%B3%E6%B3%A8%E4%BB%96%E4%BB%AC%EF%BC%8C%E5%B8%AE%E5%8A%A9%E4%BB%96%E4%BB%AC%EF%BC%8C%E4%B8%80%E6%AC%A1%E8%BD%AC%E5%8F%91%E8%83%BD%E8%AE%A9%E6%9B%B4%E5%A4%9A%E4%BA%BA%E8%A1%8C%E5%8A%A8%E8%B5%B7%E6%9D%A5%EF%BC%81&gid=4&_t=0'];
+		$postdata = ['aj_mblog_addmblog' => 'action=1&pid=&preview=false&gid=4&type=&shortURL=&task=repost&content=%23%E6%AF%8F%E6%97%A5%E4%B8%80%E5%96%84%23%20%20%E5%85%B3%E6%B3%A8%E4%BB%96%E4%BB%AC%EF%BC%8C%E5%B8%AE%E5%8A%A9%E4%BB%96%E4%BB%AC%EF%BC%8C%E4%B8%80%E6%AC%A1%E8%BD%AC%E5%8F%91%E8%83%BD%E8%AE%A9%E6%9B%B4%E5%A4%9A%E4%BA%BA%E8%A1%8C%E5%8A%A8%E8%B5%B7%E6%9D%A5%EF%BC%81&appkey=&style_type=1&location=partner&module=shissue&_t=0'];
 		$header = $h->setContentType()->setCookie($cookie)->setReferer('https://gongyi.weibo.com/2150961184/profile')->setUserAgent('Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Mobile Safari/537.36')->isAjax(true)->getHeader();
 		foreach ($postdata as $key => $value) {
 			//防止频繁
-			if ($key == 'aj_mblog_addmblog') {
-				sleep(3);
-			}
+			// if ($key == 'aj_mblog_addmblog') {
+			// 	sleep(3);
+			// }
 			$res[] = json_decode($this->request('https://gongyi.weibo.com/' . $key, $value, $header), true);
 		}
 
@@ -90,27 +90,58 @@ class Weibo extends Http {
 	private function report($guid, $rid) {
 
 		// $header = ['Content-Type: application/x-www-form-urlencoded', 'Cookie: ' . $this->cookie, 'Referer: https://service.account.weibo.com/reportspam?rid=' . $rid . '&from=10106&type=1&url=%2Fu%2F' . $guid . '&bottomnav=1&wvr=5', 'User-Agent: ' . HttpHeader::getUserAgent()];
-		$httpHeader = new HttpHeader();
-		$header = $httpHeader->setContentType()->setCookie($this->cookie)->setReferer('https://service.account.weibo.com/reportspam?rid=' . $rid . '&from=10106&type=1&url=%2Fu%2F' . $guid . '&bottomnav=1&wvr=5')->setUserAgent(HttpHeader::getUserAgent())->getHeader();
-		//category=1&tag_id=108
-		$ct = ['category=1&tag_id=108', 'category=8&tag_id=804'];
-		$data = $ct[array_rand($ct)] . '&url=%2Fu%2F' . $guid . '&type=1&rid=' . $rid . '&uid=' . $this->uid . '&r_uid=' . $guid . '&from=10106&getrid=' . $rid . '&appGet=0&weiboGet=0&blackUser=0&_t=0';
-		//var_dump($data);exit();
+		//
+		$url = 'https://service.account.weibo.com/reportspam?rid=' . $rid . '&from=20000&type=1&url=%2Fu%2F' . $guid . '&bottomnav=1&wvr=5';
 
+		$res = $this->setIsHeader(1)->setHeader(['Cookie: ' . $this->cookie])->setUrl($url)->setGet()->http();
+
+		//var_dump($res);
+
+		$ck = $this->getCookie('24efc99cc47fe52bf03caf14fc057836beb90f48');
+
+		$cktmp = $this->cookie;
+
+		if ($ck != '') {
+			$cktmp = $this->cookie . ';24efc99cc47fe52bf03caf14fc057836beb90f48=' . $ck;
+		} else {
+			throw new Exception("get report key err", -5);
+
+		}
+
+		//dump(isset($ck[0]), strpos(ltrim($ck[0]), '24efc99cc47fe52bf03caf14fc057836beb90f48') == 0, $ck);
+
+		// if (isset($ck[0]) && strpos(ltrim($ck[0]), '24efc99cc47fe52bf03caf14fc057836beb90f48') === 0) {
+		// 	$cktmp = $this->cookie . ';' . $ck[0];
+
+		// } else {
+		// 	throw new Exception("get report key err", -5);
+
+		// }
+
+		//echo $cktmp;
+		//dump($ck);
+
+		$httpHeader = new HttpHeader();
+		$header = $httpHeader->setContentType()->setCookie($cktmp)->setReferer($url)->setUserAgent(HttpHeader::getUserAgent())->getHeader();
+		//category=1&tag_id=108
+		$ct = ['category=8&tag_id=804', 'category=2&tag_id=202'];
+		$data = $ct[array_rand($ct)] . '&url=%2Fu%2F' . $guid . '&type=1&rid=' . $rid . '&uid=' . $this->uid . '&r_uid=' . $guid . '&from=20000&getrid=' . $rid . '&appGet=0&weiboGet=0&blackUser=1&_t=0';
+		//var_dump($data);exit();
+		//dump($header);
 		return $this->request(WeiboConst::REPORT_URL, $data, $header);
 
 	}
 
 	private function reportList($wlist, $blackarr = []) {
-		$res = '';
+		$restmp = '';
 
 		$len = count($wlist);
 
 		//echo $guid . '--' . $len . '<br>';
 		//
-		$counts = 0;
+		// $counts = 0;
 
-		$countd = 0;
+		// $countd = 0;
 
 		$counth = 0;
 
@@ -126,35 +157,40 @@ class Weibo extends Http {
 						continue;
 					}
 				}
-				$res = $this->report($guid, $wlist[$i]['mblog']['id']);
+				$rid = $wlist[$i]['mblog']['id'];
+				$res = json_decode($this->report($guid, $rid), true);
+
+				$restmp = isset($res['msg']) ? $res['msg'] : 'json err';
+
 				//$title = isset($wlist[$i]['mblog']['raw_text']) ? $wlist[$i]['mblog']['raw_text'] : $wlist[$i]['mblog']['text'];
 
 			} catch (Exception $e) {
-				$res = $e->getMessage();
+				$restmp = $e->getMessage();
 			}
-
+			echo ($i + 1) . '.' . $rid . '-' . $restmp . PHP_EOL;
+			//dump($res);
 			//echo $res . PHP_EOL;
 			//var_dump($res);exit();
-			if (stripos($res, 'code":"100002"') !== false) {
+			// if (stripos($res, 'code":"100002"') !== false) {
 
-				throw new Exception("cookie失效", Error::WEIBO_COOKIE_DEF);
+			// 	throw new Exception("cookie失效", Error::WEIBO_COOKIE_DEF);
 
-			}
-			if (stripos($res, 'code":"100000"') !== false) {
-				$counts++;
-			} else {
-				$countd++;
-			}
+			// }
+			// if (stripos($res, 'code":"100000"') !== false) {
+			// 	$counts++;
+			// } else {
+			// 	$countd++;
+			// }
 			// if (stripos($res, 'code":"100003"') === false) {
 
 			// 	echo date('m-d H:i:s', time()) . '-' . $guid . '-' . $len . '-' . ($i + 1) . '-' . $res . '<br>';
 
 			// }
-
+			//echo date('m-d H:i:s', time()) . '-' . $len . '-ok-' . $counts . '-no-' . $countd . '-bh-' . $counth . '<br>';
 			sleep(4);
 
 		}
-		echo '<font color="blue">' . date('m-d H:i:s', time()) . '</font>-' . $len . '-ok-<font color="red" size="5px">' . $counts . '</font>-no-' . $countd . '-bh-' . $counth . '<br>';
+		//echo '<font color="blue">' . date('m-d H:i:s', time()) . '</font>-' . $len . '-ok-<font color="red" size="5px">' . $counts . '</font>-no-' . $countd . '-bh-' . $counth . '<br>';
 	}
 
 	public function reportUid($guid, $pn = 1) {

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<p v-if="iss">111</p>
+		<p v-show></p>
+		<p>{{msg}}</p>
+		<p v-text="msg"></p>
+		<p v-html="htmls"></p>
+		<input type="button" name="tijiao" :title="title" value="tijao" v-on:click="show" >
+		<input type="button" value="start"  @click="paoma" >
+		<input type="button" value="stop" @click="stoppm">
+		<p v-text="pao"></p>
+	</div>
+	<script type="text/javascript">
+		var vue =new Vue({
+			el:'#app',
+			data:{
+				msg:'test',
+				iss:false,
+				htmls:'<h1>test</h1>',
+				title:'dianji',
+				pao:'逆我者亡',
+				intervalId:null
+			},
+			methods:{
+				show:function(){
+					alert('nihao');
+				},
+				paoma(){
+					this.intervalId=setInterval(() => {
+						var start=this.pao.substring(0,1)
+						var end=this.pao.substring(1)
+						this.pao=end+start
+					},400)
+				},
+				stoppm(){
+					clearInterval(this.intervalId)
+				}
+			}
+		});
+
+	</script>
+</body>
+</html>

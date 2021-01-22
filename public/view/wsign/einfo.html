@@ -9,14 +9,15 @@
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户中心 <span class="c-gray en">&gt;</span> 用户管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<?php qchche();?>
-	<div class="cl pd-5 bg-1 bk-gray mt-20">  <span class="r">共有数据：<strong><?php echo $count;?></strong> 条</span> </div>
+	<div class="cl pd-5 bg-1 bk-gray mt-20">  <span class="r">最新数据：<strong><?php echo $count;?></strong> 条</span> </div>
 	<div class="mt-20">
 	<table class="table table-border table-bordered table-hover table-bg table-sort">
 		<thead>
 			<tr class="text-c">
 				<th width="80">ID</th>
+				<th width="90">type</th>
 				<th width="90">name</th>
-				<th width="90">huiti</th>
+				<th width="90">tbwbname</th>
 				<th width="90">info</th>
 				<th width="90">time</th>
 			</tr>
@@ -25,10 +26,11 @@
 			<?php foreach($list as $v): ?>
 			<tr class="text-c">
 				<td><?php echo $v['id'];?></td>
-				<td><?php echo $v['name'];?></td>
-				<td><?php echo $v['tname'];?></td>
-				<td><?php echo $v['info'];?></td>
-				<td><?php echo date('Y-m-d',$v['time']);?></td>
+				<td><?php echo $v['tb_wb_type'];?></td>
+				<td><?php echo strReplaceStart($v['name']);?></td>
+				<td><?php echo $v['tb_wb_name'];?></td>
+				<td><?php echo $v['error'];?></td>
+				<td><?php echo date('Y-m-d H:i:s',$v['time']);?></td>
 			</tr>
 		<?php endforeach; ?>
 		</tbody>
