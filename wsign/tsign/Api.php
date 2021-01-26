@@ -15,15 +15,25 @@ class Api extends WsignBase {
 		}
 
 		if (isGetPostAjax('post')) {
-			$param = $this->checkParams(['token' => 'regex:^[0-9a-zA-Z]{32}$', 'op' => 'regex:^[12]$']);
+			$param = $this->checkParams(['token' => 'regex:^[0-9a-zA-Z]{32}$', 'op' => 'regex:^[123]$']);
 			$this->token = $param['token'];
 			if ($param['op'] == 2) {
 				$this->ba();
+			} elseif ($param['op'] == 3) {
+
+				$cc = Db::getInstance()->exec('delete from tb_zh where id=? and w_id=(select id from tb_user where token=?)', [G('dopt') + 0, $this->token])->rowCount();
+
+				if ($cc === 1) {
+					Db::getInstance()->exec('delete from tb_gz where zid=?', [G('dopt') + 0]);
+					exitMsg(ErrorConst::API_SUCCESS_ERRNO, 'ok');
+				}
+				exitMsg(3, "失败:" . $cc);
+
 			} else {
 				$param = $this->checkParams(['cookie' => 'noempty']);
 
 				try {
-					$res = $this->db('tb_user')->filed('id')->where("token='{$this->token}'")->getOne();
+					$res = $this->db('tb_user')->filed('id,tbcount')->where("token='{$this->token}'")->getOne();
 					if (empty($res)) {
 						exitMsg(2, '请确认token是否正确');
 					}
@@ -34,6 +44,13 @@ class Api extends WsignBase {
 					$info = $this->db('tb_zh')->filed('id')->where("uid={$uid}")->getOne();
 
 					if (empty($info)) {
+
+						$c_tb = $this->db('tb_zh')->filed('count(*) as c')->where("w_id={$res['id']}")->getOne()['c'];
+
+						if ($c_tb >= $res['tbcount']) {
+							exitMsg(2, "账号上限:{$res['tbcount']},目前已有:{$c_tb}");
+						}
+
 						//var_dump($uidname['uid']);exit();
 						$time = time();
 						$this->db('tb_zh')->filed('name,uid,cookie,tbs,time,w_id')->where("('{$uidname['name']}',$uid,:cookie,'$tbs',$time,{$res['id']})", [':cookie' => $param['cookie']])->save();
@@ -56,7 +73,131 @@ class Api extends WsignBase {
 
 		}
 
+		//$in = ;
+
+		$this->assign('zhinfo', Db::getInstance()->exec('select id,name from tb_zh where w_id=(select id from tb_user where token=?)', [G('token')])->getAll());
+		//dump($in);
+
 		$this->view('tadd');
+
+	}
+
+	public function info() {
+
+		$param = $this->checkParams(['token' => 'regex:^[0-9a-zA-Z]{32}$'], ['token' => 'token err']);
+
+		$db = Db::table('tb_user');
+
+		$wid = $db->filed('id')->where('token=?', [$param['token']])->find();
+
+		if (empty($wid)) {
+			die('用户不存在!!!');
+		}
+		$idres = $db->exec("select id from tb_zh where w_id={$wid['id']}")->getAll();
+
+		$idstr = '';
+		foreach ($idres as $value) {
+			$idstr .= $value['id'] . ',';
+		}
+		$idstr = rtrim($idstr, ',');
+
+		if (in_array(G('type', -1), [0, 1, 2])) {
+			$tables = ['tb_gz', 'tb_block', '"tb_gz" or cronname="tb_block"'];
+
+			$type = G('type');
+
+			$s = $type;
+			$e = $type;
+
+			if ($s == 2) {
+				$s = 0;
+				$e = 1;
+			}
+
+			for ($i = $s; $i <= $e; $i++) {
+				$db->exec("update {$tables[$i]} set status=0 where status=2 and zid in ($idstr)");
+			}
+
+			$ct = $type == 2 ? $tables[$type] : "'$tables[$type]'";
+
+			//die("update cron_list set status=0 where cronname={$ct}");
+
+			$db->exec("update cron_list set status=0 where cronname={$ct}");
+
+			$this->jump("/wsign/tsign/info?token={$param['token']}", '重置成功,正在返回...');
+
+		}
+		//die($idstr);
+		$errflag = -1;
+		$res = $db->exec("SELECT status,count(*) as c from tb_gz where zid in ($idstr) GROUP BY STATUS")->getAll();
+		$liststatus = [0, 0, 0];
+
+		foreach ($res as $value) {
+			$liststatus[$value['status']] = $value['c'];
+		}
+
+		$info = "<h3>签到</h3><hr>已签到:{$liststatus[1]},未签到:{$liststatus[0]},失败:{$liststatus[2]}";
+
+		if ($liststatus[2] !== 0) {
+			$errflag = $errflag + 1;
+			$now = mktime(0, 0, 0);
+			$res = $db->exec("select tb_wb_name,name,error from tb_wb_error where {$now}<=time and tb_wb_id in($idstr) and tb_wb_type='贴吧签到'")->getAll();
+			$info .= "<br>失败信息:<br>";
+
+			foreach ($res as $key => $value) {
+				$info .= $value['tb_wb_name'] . '-' . $value['name'] . '-' . $value['error'] . '<br>';
+				if ($key >= 9) {
+					$info .= '...<br>';
+					break;
+				}
+			}
+		}
+
+		$res = $db->exec("SELECT kw,status,count(*) as c from tb_block where zid in ($idstr) GROUP BY kw,STATUS")->getAll();
+		// $liststatus = [0, 0, 0];
+		$list = [];
+		$iserr = false;
+		foreach ($res as $value) {
+			if (!isset($list[$value['kw']])) {
+				$list[$value['kw']] = [0, 0, 0];
+			}
+			$list[$value['kw']][$value['status']] = $value['c'];
+			if ($list[$value['kw']][2] !== 0) {
+				$iserr = true;
+			}
+		}
+		$info .= "<h3>封禁</h3><hr>";
+		foreach ($list as $key => $value) {
+
+			$info .= "贴吧:{$key},已封禁:{$value[1]},未封禁:{$value[0]}失败:{$value[2]}<br>";
+		}
+
+		if ($iserr) {
+			$errflag = $errflag + 2;
+			$now = mktime(0, 0, 0);
+			$res = $db->exec("select tb_wb_name,name,error from tb_wb_error where {$now}<=time and tb_wb_id in($idstr) and tb_wb_type='贴吧封禁'")->getAll();
+			$info .= "失败信息:<br>";
+			foreach ($res as $key => $value) {
+				$info .= $value['tb_wb_name'] . '-' . $value['name'] . '-' . $value['error'] . '<br>';
+				if ($key >= 9) {
+					$info .= '...<br>';
+					break;
+				}
+			}
+		}
+
+		//$errflag = 2;
+
+		if ($errflag != -1) {
+			$info .= "<hr><a href='/wsign/tsign/info?type={$errflag}&&token={$param['token']}'>重置失败</a> ";
+		}
+
+		// if ($liststatus[2] !== 0 || $iserr) {
+		// 	$res = $db->exec("select tb_wb_type,tb_wb_name,name from tb_wb_error where tb_wb_id in($idstr) and (tb_wb_type='贴吧签到' || tb_wb_type='贴吧封禁')")->getAll();
+		// }
+
+		echo $info . "<a href='/wsign/tsign/add?token={$param['token']}'>添加账号</a>";
+		//dump($res);
 
 	}
 

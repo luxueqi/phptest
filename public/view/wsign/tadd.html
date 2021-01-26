@@ -16,6 +16,7 @@
 				<select class="select">
 					<option value="1">添加账号</option>
 					<option value="2">封禁账号</option>
+					<option value="3">删除账号</option>
 				</select>
 				</span> 
 			</div>
@@ -48,10 +49,29 @@
 				</div>
 			</div>
 		</div>
+		<div id="deldiv">
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3">账号：</label>
+				<div class="formControls col-xs-8 col-sm-5"> 
+					<span class="select-box">
+					<select class="select" id="delopt">
+						<?php 
+							$strc='';
+							foreach($zhinfo as $v){
+							$strc.="<option value='{$v["id"]}'>{$v['name']}</option>";
+						}
+							echo $strc;
+						?>
+					</select>
+					</span> 
+				</div>
+			</div>
+		</div>
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
 				<input id="btnc" class="btn btn-primary radius" type="button" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
 				<a href="/bduss" target="_blank" style="padding-left: 30px">获取BDUSS</a>
+				<a href="/wsign/tsign/info?token=<?php echo G('token');?>" target="_self" style="padding-left: 30px">日志信息</a>
 			</div>
 		</div>
 	</form>
@@ -65,10 +85,13 @@
 	$(function(){
 		opp();
 		$('#btnc').click(function(){
-			if($('.select').val()==1){
+			var sel=$('.select').val();
+			if(sel==1){
 				add_user();
-			}else{
+			}else if(sel==2){
 				add_block();
+			}else if(sel==3){
+				del_user();
 			}
 
 		});
@@ -84,10 +107,16 @@
 		var op=$('.select').val();
 			if(op==2){
 				$('#cdiv').hide();
+				$('#deldiv').hide();
 				$('#ddiv').show();
-			}else{
+			}else if(op==1){
 				$('#ddiv').hide();
+				$('#deldiv').hide();
 				$('#cdiv').show();
+			}else{
+				$('#cdiv').hide();
+				$('#ddiv').hide();
+				$('#deldiv').show();
 			}
 	}
 
@@ -108,6 +137,21 @@
 				}
 
 			},'json');
+	}
+
+	function del_user(){
+
+		var id=$('#delopt').val();
+		$.post('',{dopt:id,op:3},function(e){
+				if(e.code==1){
+					layer.alert('ok',{icon:1});
+					$('#delopt option[value='+id+']').remove();
+				}else{
+					layer.alert(e.msg,{icon:2});
+				}
+
+			},'json');
+
 	}
 
 	function add_block(){
