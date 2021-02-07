@@ -2,11 +2,13 @@
 if (!defined('EXITFORBID')) {
 	exit('forbid');
 }
+
 class Api extends WsignBase {
 	protected $cachet = ['info' => ['time' => 900], 'tinfo' => ['time' => 900], 'einfo' => ['time' => 14400], 'binfo' => ['time' => 14400], 'cron' => ['time' => 1000], 'zinfo', 'winfo', 'dinfo', 'cls' => ['time' => 1200], 'top' => ['time' => 36000]];
 	//protected $cachefalg = false;
 	public function __construct() {
-
+		//throw new Exception("Error Processing Request", 1);
+		//$this->checkParams(['a' => 'int']);
 		//$this->needLogin('/wsign-login-login.html');
 		parent::__construct();
 		//$this->cacheitem(['time' => 72000, 'qflag' => G('qflag', false)]);

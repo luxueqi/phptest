@@ -125,8 +125,13 @@ class Base {
 		$returnParam = [];
 		foreach ($param as $key => $value) {
 			if ($value == 'int') {
-
-				$flag = is_numeric(G($key)) && G($key) > 0;
+				//$tmp = ;
+				$flag = preg_match('/^[1-9][0-9]*$/', G($key));
+				//dump($flag, $_REQUEST[$key]);
+				// if ($flag) {
+				// 	$_REQUEST[$key] = intval($tmp);
+				// }
+				//$flag = is_numeric(G($key)) && G($key) > 0;
 			} elseif ($value == 'email') {
 				$flag = Validate::R(G($key), Validate::VEMAIL);
 			} elseif ($value == 'noempty') {

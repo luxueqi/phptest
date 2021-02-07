@@ -28,7 +28,7 @@
 				<td><?php echo $v['id'];?></td>
 				<td><?php echo $v['tb_wb_type'];?></td>
 				<td><?php echo strReplaceStart($v['name']);?></td>
-				<td><?php echo $v['tb_wb_name'];?></td>
+				<td><?php echo strReplaceStart($v['tb_wb_name'],0);?></td>
 				<td><?php echo $v['error'];?></td>
 				<td><?php echo date('Y-m-d H:i:s',$v['time']);?></td>
 			</tr>

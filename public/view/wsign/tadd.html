@@ -16,7 +16,7 @@
 				<select class="select">
 					<option value="1">添加账号</option>
 					<option value="2">封禁账号</option>
-					<option value="3">删除账号</option>
+					<option value="3">更新账号</option>
 				</select>
 				</span> 
 			</div>
@@ -58,7 +58,7 @@
 						<?php 
 							$strc='';
 							foreach($zhinfo as $v){
-							$strc.="<option value='{$v["id"]}'>{$v['name']}</option>";
+							$strc.="<option value='{$v["id"]}'>".strReplaceStart($v['name'],0)."</option>";
 						}
 							echo $strc;
 						?>
@@ -70,6 +70,8 @@
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
 				<input id="btnc" class="btn btn-primary radius" type="button" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+				<input id="btnbdel" class="btn btn-primary radius" type="button" value="&nbsp;&nbsp;删除&nbsp;&nbsp;">
+				<input id="btnsxgz" class="btn btn-primary radius" type="button" value="&nbsp;&nbsp;刷新&nbsp;&nbsp;">
 				<a href="/bduss" target="_blank" style="padding-left: 30px">获取BDUSS</a>
 				<a href="/wsign/tsign/info?token=<?php echo G('token');?>" target="_self" style="padding-left: 30px">日志信息</a>
 			</div>
@@ -82,6 +84,7 @@
 
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript">
+
 	$(function(){
 		opp();
 		$('#btnc').click(function(){
@@ -89,11 +92,26 @@
 			if(sel==1){
 				add_user();
 			}else if(sel==2){
-				add_block();
+				add_block('');
 			}else if(sel==3){
-				del_user();
+				layer.confirm('确认要删除吗？',function(index){
+					layer.close(index);
+					update_user('');
+				});
+				
 			}
 
+		});
+
+		$('#btnbdel').click(function(){
+			add_block('/wsign/tsign/bdel?token=<?php echo G('token');?>');
+		});
+
+		$('#btnsxgz').click(function(){
+			layer.confirm('确认要刷新吗？',function(index){
+					layer.close(index);
+					update_user('/wsign/tsign/upgz?token=<?php echo G('token');?>')
+				});
 		});
 
 		$('.select').on('change',function(){
@@ -104,19 +122,27 @@
 	});
 
 	function opp(){
+		$('#btnc').val('提交');
 		var op=$('.select').val();
 			if(op==2){
 				$('#cdiv').hide();
 				$('#deldiv').hide();
 				$('#ddiv').show();
+				$('#btnbdel').show();
+				$('#btnsxgz').hide();
 			}else if(op==1){
 				$('#ddiv').hide();
+				$('#btnbdel').hide();
 				$('#deldiv').hide();
 				$('#cdiv').show();
+				$('#btnsxgz').hide();
 			}else{
+				$('#btnc').val('删除账号');
 				$('#cdiv').hide();
 				$('#ddiv').hide();
+				$('#btnbdel').hide();
 				$('#deldiv').show();
+				$('#btnsxgz').show();
 			}
 	}
 
@@ -130,7 +156,7 @@
 			//alert(cookie[1]);
 			$.post('',{cookie:cookie[1],op:1},function(e){
 				if(e.code==1){
-					layer.alert('ok',{icon:1});
+					layer.alert(e.msg,{icon:1});
 					$('.textarea').val('');
 				}else{
 					layer.alert(e.msg,{icon:2});
@@ -139,13 +165,16 @@
 			},'json');
 	}
 
-	function del_user(){
+	function update_user(url){
 
 		var id=$('#delopt').val();
-		$.post('',{dopt:id,op:3},function(e){
+		$.post(url,{dopt:id,op:3},function(e){
 				if(e.code==1){
-					layer.alert('ok',{icon:1});
-					$('#delopt option[value='+id+']').remove();
+					layer.alert(e.msg,{icon:1});
+					if (url=='') {
+						$('#delopt option[value='+id+']').remove();
+					}
+					
 				}else{
 					layer.alert(e.msg,{icon:2});
 				}
@@ -154,7 +183,7 @@
 
 	}
 
-	function add_block(){
+	function add_block(url){
 		var r=$('#ddiv .textarea').val().trim();
 			var kw=$('#kw').val().trim();
 			var un=$('#un').val().trim();
@@ -164,9 +193,9 @@
 				return false;
 			}
 			//alert(cookie[1]);
-			$.post('',{kw:kw,r:r,un:un,op:2},function(e){
+			$.post(url,{kw:kw,r:r,un:un,op:2},function(e){
 				if(e.code==1){
-					layer.alert('ok',{icon:1});
+					layer.alert(e.msg,{icon:1});
 					$('.textarea').val('');
 					$('#kw').val('');
 					$('#un').val('');

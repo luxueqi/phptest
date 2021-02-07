@@ -60,22 +60,27 @@ class Db {
 	 * @return [type]       [description]
 	 */
 	public function exec($sql, $data = []) {
-		$sql = trim($sql);
+		try {
+			$sql = trim($sql);
 
-		if ($this->islock) {
-			$sql .= ' for update';
-		} else {
+			if ($this->islock) {
+				$sql .= ' for update';
+			} else {
 
-			$sql = str_replace(' for update', '', $sql);
-		}
-		//var_dump($sql);exit;
-		$this->echoSql($sql);
-		$this->smt = $this->db->prepare($sql);
+				$sql = str_replace(' for update', '', $sql);
+			}
+			//var_dump($sql);exit;
+			$this->echoSql($sql);
+			$this->smt = $this->db->prepare($sql);
 
-		if (empty($data)) {
-			$this->smt->execute();
-		} else {
-			$this->smt->execute($data);
+			if (empty($data)) {
+				$this->smt->execute();
+			} else {
+				$this->smt->execute($data);
+			}
+		} catch (PDOException $e) {
+			throw new PDOException("sql err:[{$sql}]:" . $e->getMessage());
+
 		}
 
 		return $this;

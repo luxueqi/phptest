@@ -40,15 +40,19 @@ class Weibo extends Http {
 
 		$res = json_decode($this->request($url), true);
 
+		//dump($res);
+
 		if (isset($res['data']['cards'])) {
 
 			$listw = $res['data']['cards'];
 
-			$index = 1;
+			//$index = 1;
+			//
+			//dump($listw);
 
 			foreach ($listw as $key => $value) {
 
-				if (isset($value['show_type'])) {
+				if (isset($value['show_type']) && $value['show_type'] == 1) {
 					$since_id = $res['data']['pageInfo']['since_id'];
 					return $value['card_group'];
 				}
@@ -87,11 +91,13 @@ class Weibo extends Http {
 
 	}
 
-	private function report($guid, $rid) {
+	private function report($guid, $rid, $ref = '') {
 
 		// $header = ['Content-Type: application/x-www-form-urlencoded', 'Cookie: ' . $this->cookie, 'Referer: https://service.account.weibo.com/reportspam?rid=' . $rid . '&from=10106&type=1&url=%2Fu%2F' . $guid . '&bottomnav=1&wvr=5', 'User-Agent: ' . HttpHeader::getUserAgent()];
-		//
-		$url = 'https://service.account.weibo.com/reportspam?rid=' . $rid . '&from=20000&type=1&url=%2Fu%2F' . $guid . '&bottomnav=1&wvr=5';
+		if (!$ref) {
+			$ref = '%2Fu%2F' . $guid;
+		}
+		$url = 'https://service.account.weibo.com/reportspam?rid=' . $rid . '&from=19999&type=1&url=' . $ref . '&bottomnav=1&wvr=5';
 
 		$res = $this->setIsHeader(1)->setHeader(['Cookie: ' . $this->cookie])->setUrl($url)->setGet()->http();
 
@@ -125,14 +131,14 @@ class Weibo extends Http {
 		$header = $httpHeader->setContentType()->setCookie($cktmp)->setReferer($url)->setUserAgent(HttpHeader::getUserAgent())->getHeader();
 		//category=1&tag_id=108
 		$ct = ['category=8&tag_id=804', 'category=2&tag_id=202'];
-		$data = $ct[array_rand($ct)] . '&url=%2Fu%2F' . $guid . '&type=1&rid=' . $rid . '&uid=' . $this->uid . '&r_uid=' . $guid . '&from=20000&getrid=' . $rid . '&appGet=0&weiboGet=0&blackUser=1&_t=0';
+		$data = $ct[array_rand($ct)] . '&url=%2Fu%2F' . $guid . '&type=1&rid=' . $rid . '&uid=' . $this->uid . '&r_uid=' . $guid . '&from=99&getrid=' . $rid . '&appGet=0&weiboGet=0&blackUser=1&_t=0';
 		//var_dump($data);exit();
 		//dump($header);
 		return $this->request(WeiboConst::REPORT_URL, $data, $header);
 
 	}
 
-	private function reportList($wlist, $blackarr = []) {
+	private function reportList($wlist, $blackarr = [], $ref = '') {
 		$restmp = '';
 
 		$len = count($wlist);
@@ -158,7 +164,7 @@ class Weibo extends Http {
 					}
 				}
 				$rid = $wlist[$i]['mblog']['id'];
-				$res = json_decode($this->report($guid, $rid), true);
+				$res = json_decode($this->report($guid, $rid, $ref), true);
 
 				$restmp = isset($res['msg']) ? $res['msg'] : 'json err';
 
@@ -225,8 +231,8 @@ class Weibo extends Http {
 			for ($i = 0; $i < $since_id; $i++) {
 				$wlist = array_merge($wlist, $this->getHuatiList($huati, $sid));
 			}
-			//var_dump($wlist);exit;
-			$this->reportList($wlist, $blackarr);
+			//dump($wlist);
+			$this->reportList($wlist, $blackarr, '%2Fp%2Faj%2Fv6%2Fmblog%2Fmbloglist');
 
 		} catch (Exception $ee) {
 			//var_dump($ee->getCode());exit();

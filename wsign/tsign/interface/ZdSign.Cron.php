@@ -31,8 +31,6 @@ class ZdSign implements CronInterface {
 
 			if (!$condition) {
 				$info[4] = $rs['errorNo'] . '-' . $rs['errorMsg'];
-			} else {
-				//Zhidao::chest('BDUSS=' . $resi['cookie'], $stoken);
 			}
 		} catch (Exception $e) {
 			$info[4] = $e->getMessage();

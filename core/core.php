@@ -65,13 +65,13 @@ class Core {
 
 					return;
 				} catch (Throwable $e) {
-					$ee = 'api err';
-					if (DEBUG == true) {
-						$ee = "Exception " . $e->getCode() . " :" . $e->getMessage() . " in File " . $e->getFile() . " on line " . $e->getLine();
-					} else {
+					//$ee = 'api err';
+					$ee = "Exception " . $e->getCode() . " :" . $e->getMessage() . " in File " . $e->getFile() . " on line " . $e->getLine();
+					FileLog::Log('log.txt', '../mytest', $ee);
+					if (!DEBUG) {
 						header('HTTP/1.1 500 Internal Server Error');
 						exit;
-
+						//$ee = $mee;
 					}
 
 				}

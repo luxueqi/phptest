@@ -172,9 +172,9 @@ class HttpHeader {
 		];
 		$ua = [];
 		if (!$isMobile) {
-			$ua = array_merge($user_agent_list_1, $user_agent_list_2, $user_agent_list_3);
-		} else {
 			$ua = array_merge($user_agent_list_1, $user_agent_list_2);
+		} else {
+			$ua = $user_agent_list_3;
 		}
 
 		//
